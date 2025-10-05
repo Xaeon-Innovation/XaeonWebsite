@@ -10,7 +10,11 @@ import Home from "./Pages/Home.tsx";
 import LoginSignup from "./Pages/LoginSignup.tsx";
 import Blog from "./Pages/Blog.tsx";
 import About from "./Pages/About.tsx";
-import RequestService from "./Pages/RequestService.tsx";
+import BookNow from "./Pages/BookNow.tsx";
+import Services from "./Pages/Services.tsx";
+import OurWork from "./Pages/OurWork.tsx";
+import Packages from "./Pages/Packages.tsx";
+import Policy from "./Pages/Policy.tsx";
 
 const router = createBrowserRouter([
   {
@@ -23,20 +27,36 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "login",
-        element: <LoginSignup />,
+        path: "about-us",
+        element: <About />,
+      },
+      {
+        path: "services",
+        element: <Services />,
+      },
+      {
+        path: "our-work",
+        element: <OurWork />,
+      },
+      {
+        path: "packages",
+        element: <Packages />,
       },
       {
         path: "blog",
         element: <Blog />,
       },
       {
-        path: "about-us",
-        element: <About />,
+        path: "login",
+        element: <LoginSignup />,
       },
       {
-        path: "request-service",
-        element: <RequestService />,
+        path: "book-now",
+        element: <BookNow />,
+      },
+      {
+        path: "policy",
+        element: <Policy />,
       },
     ],
   },
