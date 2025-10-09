@@ -7,8 +7,6 @@ const app = express();
 import db from "./config/database.config";
 db();
 
-app.use();
-
 // Routes Setup
 import authRouter from "./routes/auth.routes";
 import blogPostRouter from "./routes/blogPost.routes";
