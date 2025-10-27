@@ -1,0 +1,202 @@
+.services {
+  padding: 6rem 0;
+  background-color: #181818;
+}
+
+.container {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.servicesContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.scrollButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(16, 185, 129, 0.9);
+  border: none;
+  color: white;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.scrollButton:hover:not(.disabled) {
+  background: rgba(16, 185, 129, 1);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.scrollButton.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.scrollLeft {
+  left: -1.5rem;
+}
+
+.scrollRight {
+  right: -1.5rem;
+}
+
+.servicesScroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  flex: 1;
+}
+
+.servicesScroll::-webkit-scrollbar {
+  display: none;
+}
+
+.servicesGrid {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem 0;
+  min-width: max-content;
+}
+
+.serviceCard {
+  background: #374151;
+  border-radius: 1rem;
+  overflow: hidden;
+  min-width: 300px;
+  max-width: 300px;
+  transition: all 0.3s ease;
+  border: 1px solid #4b5563;
+}
+
+.serviceCard:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+  border-color: #10b981;
+}
+
+.serviceImage {
+  height: 200px;
+  background: #4b5563;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imagePlaceholder {
+  width: 80px;
+  height: 80px;
+  background: rgba(16, 185, 129, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imageIcon {
+  font-size: 2rem;
+}
+
+.serviceContent {
+  padding: 1.5rem;
+}
+
+.serviceTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.serviceDescription {
+  color: #d1d5db;
+  line-height: 1.6;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .scrollButton {
+    display: none;
+  }
+  
+  .servicesScroll {
+    padding: 0 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .services {
+    padding: 4rem 0;
+  }
+  
+  .container {
+    padding: 0 1rem;
+  }
+  
+  .title {
+    font-size: 1.25rem;
+  }
+  
+  .header {
+    margin-bottom: 3rem;
+  }
+  
+  .serviceCard {
+    min-width: 280px;
+    max-width: 280px;
+  }
+  
+  .serviceImage {
+    height: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1rem;
+  }
+  
+  .serviceCard {
+    min-width: 250px;
+    max-width: 250px;
+  }
+  
+  .serviceImage {
+    height: 160px;
+  }
+  
+  .serviceContent {
+    padding: 1rem;
+  }
+}

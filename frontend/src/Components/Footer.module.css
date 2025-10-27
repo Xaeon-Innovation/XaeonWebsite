@@ -1,0 +1,334 @@
+/* Footer Base Styles */
+.footer {
+  background-color: #181818;
+  width: 100%;
+  padding: 0;
+}
+
+.container {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Logo Section */
+.logoSection {
+  text-align: center;
+  padding: 1rem 0 0.25rem 0;
+}
+
+.logo {
+  height: 10rem;
+  width: auto;
+  /*filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%);*/
+}
+
+/* CTA Section */
+.ctaSection {
+  text-align: center;
+  padding: 0 0 2rem 0;
+}
+
+.ctaHeadline {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: white;
+  margin: 0 0 2rem 0;
+  line-height: 1.2;
+}
+
+.accentText {
+  color: #72C04F;
+}
+
+.ctaDescription {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: #e5e7eb;
+  margin: 0;
+  line-height: 1.6;
+  max-width: 50rem;
+  margin: 0 auto;
+}
+
+/* Contact Locations Section */
+.contactLocations {
+  padding: 0 0 3rem 0;
+}
+
+.locationBlocks {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 3rem;
+}
+
+.locationBlock {
+  text-align: left;
+}
+
+.locationTitle {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: white;
+  margin: 0 0 0.5rem 0;
+}
+
+.locationAddress,
+.locationStatus {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #e5e7eb;
+  margin: 0;
+}
+
+.locationSeparator {
+  width: 1px;
+  height: 3rem;
+  background-color: #6b7280;
+  margin: 0 1rem;
+}
+
+/* Contact Strip */
+.contactStrip {
+  padding: 0 0 4rem 0;
+}
+
+.contactStripContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.contactLabel {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #e5e7eb;
+}
+
+.socialIcons {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.socialIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  background-color: #374151;
+  border-radius: 50%;
+  color: #e5e7eb;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.socialIcon:hover {
+  background-color: #72C04F;
+  color: white;
+  transform: scale(1.1);
+}
+
+.contactInfo {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #e5e7eb;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.contactInfo:hover {
+  color: #72C04F;
+}
+
+.separator {
+  width: 1px;
+  height: 1rem;
+  background-color: #6b7280;
+}
+
+/* Copyright & Legal Section */
+.copyrightSection {
+  text-align: center;
+  padding: 0 0 3rem 0;
+}
+
+.legalLinks {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.legalLink {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: #e5e7eb;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: color 0.3s ease;
+}
+
+.legalLink:hover {
+  color: #72C04F;
+}
+
+.legalSeparator {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.copyrightText {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #9ca3af;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .ctaHeadline {
+    font-size: 2.5rem;
+  }
+  
+  .ctaDescription {
+    font-size: 1.125rem;
+  }
+  
+  .locationBlocks {
+    gap: 2rem;
+  }
+  
+  .locationTitle {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
+  
+  .logoSection {
+    padding: 4rem 0 3rem 0;
+  }
+  
+  .logo {
+    height: 3rem;
+  }
+  
+  .ctaSection {
+    padding: 0 0 4rem 0;
+  }
+  
+  .ctaHeadline {
+    font-size: 2rem;
+  }
+  
+  .ctaDescription {
+    font-size: 1rem;
+  }
+  
+  .locationBlocks {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+  
+  .locationBlock {
+    text-align: center;
+  }
+  
+  .locationSeparator {
+    width: 3rem;
+    height: 1px;
+    margin: 0;
+  }
+  
+  .contactStripContent {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .separator {
+    width: 3rem;
+    height: 1px;
+  }
+  
+  .legalLinks {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .logoSection {
+    padding: 3rem 0 2rem 0;
+  }
+  
+  .logo {
+    height: 2.5rem;
+  }
+  
+  .ctaSection {
+    padding: 0 0 3rem 0;
+  }
+  
+  .ctaHeadline {
+    font-size: 1.75rem;
+  }
+  
+  .ctaDescription {
+    font-size: 0.875rem;
+  }
+  
+  .locationTitle {
+    font-size: 1.25rem;
+  }
+  
+  .locationAddress,
+  .locationStatus {
+    font-size: 0.875rem;
+  }
+  
+  .contactStrip {
+    padding: 0 0 3rem 0;
+  }
+  
+  .contactLabel,
+  .contactInfo {
+    font-size: 0.875rem;
+  }
+  
+  .socialIcon {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+  
+  .copyrightSection {
+    padding: 0 0 2rem 0;
+  }
+  
+  .legalLink {
+    font-size: 0.75rem;
+  }
+  
+  .copyrightText {
+    font-size: 0.625rem;
+  }
+}
