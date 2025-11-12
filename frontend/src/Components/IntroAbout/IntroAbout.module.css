@@ -1,0 +1,111 @@
+/* IntroAbout Base Styles */
+.introAbout {
+  padding: 8rem 0;
+  background-color: #181818;
+  position: relative;
+}
+
+.container {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+/* Left Content - Headline */
+.leftContent {
+  display: flex;
+  align-items: flex-start;
+}
+
+.headline {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: white;
+  margin: 0;
+  text-align: left;
+}
+
+/* Right Content - Supporting Text */
+.rightContent {
+  display: flex;
+  align-items: flex-start;
+}
+
+.supportingText {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #e5e7eb;
+  margin: 0;
+  text-align: left;
+  letter-spacing: 0.02em;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .introAbout {
+    padding: 6rem 0;
+  }
+  
+  .content {
+    gap: 3rem;
+  }
+  
+  .headline {
+    font-size: 2rem;
+  }
+  
+  .supportingText {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .introAbout {
+    padding: 4rem 0;
+  }
+  
+  .container {
+    padding: 0 1rem;
+  }
+  
+  .content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .headline {
+    font-size: 1.75rem;
+    text-align: center;
+  }
+  
+  .supportingText {
+    font-size: 0.9rem;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .introAbout {
+    padding: 3rem 0;
+  }
+  
+  .headline {
+    font-size: 1.5rem;
+  }
+  
+  .supportingText {
+    font-size: 0.85rem;
+  }
+}
+
