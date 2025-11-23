@@ -21,20 +21,20 @@ const About = () => {
     {
       number: "01",
       title: "OUR MISSION",
-      description: "AT XAEON, WE EMBRACE CREATIVITY AND TECHNOLOGY TO DELIVER EXCEPTIONAL DIGITAL SOLUTIONS THAT DRIVE BUSINESS GROWTH AND INNOVATION.",
-      linkText: "Read More »"
+      description: "AT XAEON, WE MERGE CREATIVITY WITH TECHNOLOGY TO CRAFT BOLD, FUTURE-READY BRAND EXPERIENCES THAT DRIVE GROWTH, CLARITY, AND LASTING IMPACT.",
+      linkText: "Read More >"
     },
     {
       number: "02", 
-      title: "OUR VISION",
-      description: "TO BE THE LEADING CREATIVE-TECHNOLOGY HOUSE THAT TRANSFORMS IDEAS INTO DIGITAL REALITY, SHAPING THE FUTURE OF BRANDING AND DIGITAL INNOVATION.",
-      linkText: "Read More »"
+      title: "OUR EXPERTISE",
+      description: "AT XAEON, WE COMBINE EXPERTISE IN BRANDING, DESIGN, AND TECHNOLOGY TO HELP AMBITIOUS BUSINESSES SHAPE IDENTITIES, LAUNCH PRODUCTS, AND CREATE EXPERIENCES THAT RESONATE GLOBALLY.",
+      linkText: "Read More >"
     },
     {
       number: "03",
-      title: "OUR VALUES",
-      description: "WE BELIEVE IN COLLABORATION, INNOVATION, AND EXCELLENCE. EVERY PROJECT IS AN OPPORTUNITY TO PUSH BOUNDARIES AND CREATE SOMETHING EXTRAORDINARY.",
-      linkText: "Read More »"
+      title: "OUR PROCESS",
+      description: "AT XAEON, WE TURN INSIGHT INTO BOLD SOLUTIONS THAT BLEND DESIGN AND TECHNOLOGY—CRAFTING SEAMLESS, DISTINCTIVE BRAND EXPERIENCES BUILT FOR THE FUTURE.",
+      linkText: "Read More >"
     }
   ];
 
@@ -48,41 +48,30 @@ const About = () => {
           viewport={{ once: true }}
           className={styles.header}
         >
-          <h2 className={styles.title}>ABOUT XAEON</h2>
+          <h2 className={styles.title}>
+            ABOUT <span className={styles.titleAccent} style={{ color: '#72C04F' }}>XAEON</span>
+          </h2>
         </motion.div>
 
-        <div className={styles.content}>
-          {/* Laptop Image */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className={styles.imageContainer}
-          >
-            <div className={styles.laptopPlaceholder}>
-              <div className={styles.screen}>
-                <div className={styles.screenContent}>
-                  <div className={styles.codeLine}></div>
-                  <div className={styles.codeLine}></div>
-                  <div className={styles.codeLine}></div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Cards Grid */}
-          <div className={styles.cardsGrid}>
-            {aboutCards.map((card, index) => (
-              <AboutCard
-                key={index}
-                number={card.number}
-                title={card.title}
-                description={card.description}
-                linkText={card.linkText}
-              />
-            ))}
+        <div className={styles.timelineContainer}>
+          <div className={styles.timelineLine}></div>
+          <div className={styles.timelineMarkers}>
+            <div className={styles.marker}></div>
+            <div className={styles.marker}></div>
+            <div className={styles.marker}></div>
           </div>
+        </div>
+
+        <div className={styles.cardsGrid}>
+          {aboutCards.map((card, index) => (
+            <AboutCard
+              key={index}
+              number={card.number}
+              title={card.title}
+              description={card.description}
+              linkText={card.linkText}
+            />
+          ))}
         </div>
       </div>
     </section>
