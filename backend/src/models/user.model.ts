@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { type Document, Schema } from "mongoose";
 
 export interface IUser extends Document {
   email: string;
@@ -10,6 +10,7 @@ export interface IUser extends Document {
   phone_number: string;
   service_requests: mongoose.Types.ObjectId[];
   createdAt: Date;
+  updatedAt: Date;
 }
 
 const UserSchema: Schema<IUser> = new Schema({
@@ -23,8 +24,7 @@ const UserSchema: Schema<IUser> = new Schema({
   service_requests: [
     { type: Schema.Types.ObjectId, ref: "ServiceRequest", default: [] },
   ],
-  createdAt: { type: Date, default: Date.now },
-});
+}, { timestamps: true });
 
 const User = mongoose.model<IUser>("User", UserSchema);
 

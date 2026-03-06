@@ -1,12 +1,14 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { type Document, Schema } from "mongoose";
 
 export interface IServiceRequest extends Document {
   title: string;
   description: string;
   status: "Pending Review" | "Accepted" | "Rejected";
   meeting_date: Date;
-  createdAt: Date;
   user: mongoose.Types.ObjectId;
+  package: mongoose.Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const ServiceRequestSchema: Schema<IServiceRequest> = new Schema({
@@ -18,13 +20,13 @@ const ServiceRequestSchema: Schema<IServiceRequest> = new Schema({
     default: "Pending Review",
   },
   meeting_date: { type: Date, required: true },
-  createdAt: { type: Date, required: true, default: Date.now },
   user: { type: Schema.Types.ObjectId, ref: "User", required: true },
-});
+  package: { type: Schema.Types.ObjectId, ref: "Package" },
+}, { timestamps: true });
 
 const ServiceRequest = mongoose.model<IServiceRequest>(
   "ServiceRequest",
-  ServiceRequestSchema
+  ServiceRequestSchema,
 );
 
 export default ServiceRequest;

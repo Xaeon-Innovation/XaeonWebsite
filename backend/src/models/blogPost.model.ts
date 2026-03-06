@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { type Document, Schema } from "mongoose";
 
 export interface IBlogPost extends Document {
   title: string;
@@ -6,6 +6,7 @@ export interface IBlogPost extends Document {
   author: mongoose.Types.ObjectId;
   // images: ;
   createdAt: Date;
+  updatedAt: Date;
 }
 
 const BlogPostSchema: Schema<IBlogPost> = new Schema({
@@ -16,8 +17,7 @@ const BlogPostSchema: Schema<IBlogPost> = new Schema({
     ref: "Employee",
     required: true,
   },
-  createdAt: { type: Date, required: true, default: Date.now },
-});
+}, { timestamps: true });
 
 const BlogPost = mongoose.model<IBlogPost>("BlogPost", BlogPostSchema);
 

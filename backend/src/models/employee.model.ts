@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { type Document, Schema } from "mongoose";
 
 export interface IEmployee extends Document {
   email: string;
@@ -18,6 +18,7 @@ export interface IEmployee extends Document {
     | "Admin";
   projects: mongoose.Types.ObjectId[];
   createdAt: Date;
+  updatedAt: Date;
 }
 
 const EmployeeSchema: Schema<IEmployee> = new Schema({
@@ -41,8 +42,7 @@ const EmployeeSchema: Schema<IEmployee> = new Schema({
     ],
   },
   projects: [{ type: Schema.Types.ObjectId, ref: "Project", default: [] }],
-  createdAt: { type: Date, default: Date.now },
-});
+}, { timestamps: true });
 
 const Employee = mongoose.model<IEmployee>("Employee", EmployeeSchema);
 
