@@ -1,7 +1,14 @@
 import { motion } from 'framer-motion';
 import styles from './About.module.css';
 
-const AboutCard = ({ number, title, description, linkText }) => (
+interface AboutCardProps {
+  number: string;
+  title: string;
+  description: string;
+  linkText: string;
+}
+
+const AboutCard = ({ number, title, description, linkText }: AboutCardProps) => (
   <motion.div
     initial={{ opacity: 0, y: 30 }}
     whileInView={{ opacity: 1, y: 0 }}
@@ -17,7 +24,7 @@ const AboutCard = ({ number, title, description, linkText }) => (
 );
 
 const About = () => {
-  const aboutCards = [
+  const aboutCards: AboutCardProps[] = [
     {
       number: "01",
       title: "OUR MISSION",
@@ -25,7 +32,7 @@ const About = () => {
       linkText: "Read More »"
     },
     {
-      number: "02", 
+      number: "02",
       title: "OUR VISION",
       description: "TO BE THE LEADING CREATIVE-TECHNOLOGY HOUSE THAT TRANSFORMS IDEAS INTO DIGITAL REALITY, SHAPING THE FUTURE OF BRANDING AND DIGITAL INNOVATION.",
       linkText: "Read More »"

@@ -1,0 +1,177 @@
+.section {
+  background: #000;
+  padding: clamp(3rem, 6vw, 4.75rem) 0 clamp(3.25rem, 7vw, 5rem);
+}
+
+.inner {
+  width: 100%;
+  max-width: 82rem;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 3vw, 2rem);
+}
+
+.title {
+  position: relative;
+  margin: 0 auto;
+  text-align: center;
+  color: #f8fafc;
+  font-size: clamp(1.65rem, 3.4vw, 2.65rem);
+  letter-spacing: 0.03em;
+}
+
+.title::before,
+.title::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: clamp(3.5rem, 14vw, 9rem);
+  height: 1px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.title::before {
+  right: calc(50% + clamp(3.7rem, 8vw, 5.8rem));
+}
+
+.title::after {
+  left: calc(50% + clamp(3.7rem, 8vw, 5.8rem));
+}
+
+.subtitle {
+  margin: 1.35rem auto 2.2rem;
+  max-width: 56rem;
+  text-align: center;
+  color: #f8fafc;
+  font-size: clamp(1.02rem, 1.45vw, 1.3rem);
+  line-height: 1.5;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.9rem, 1.8vw, 1.2rem);
+}
+
+.card {
+  position: relative;
+  min-height: clamp(11rem, 18vw, 13rem);
+  padding: 1rem 1rem 1.1rem;
+  border-radius: 0.4rem;
+  overflow: hidden;
+  background: #111;
+  isolation: isolate;
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    filter 0.35s ease;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-position: center;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  z-index: -2;
+  transition: transform 0.45s ease, filter 0.45s ease;
+}
+
+.bg1::before {
+  background-image: url("/assets/backgrounds/value-1.png");
+}
+
+.bg2::before {
+  background-image: url("/assets/backgrounds/value-2.png");
+  background-position: 52% 58%;
+  background-size: 118% 118%;
+}
+
+.bg3::before {
+  background-image: url("/assets/backgrounds/value-3.png");
+}
+
+.bg4::before {
+  background-image: url("/assets/backgrounds/value-4.png");
+}
+
+.bg5::before {
+  background-image: url("/assets/backgrounds/value-5.png");
+  background-position: 50% 38%;
+  background-size: 116% 116%;
+}
+
+.bg6::before {
+  background-image: url("/assets/backgrounds/value-6.png");
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 10, 10, 0.2) 0%,
+    rgba(10, 10, 10, 0.58) 62%,
+    rgba(10, 10, 10, 0.82) 100%
+  );
+  z-index: -1;
+  transition: background 0.35s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.42);
+  filter: saturate(1.08);
+}
+
+.card:hover::before {
+  transform: scale(1.05);
+  filter: saturate(1.12);
+}
+
+.card:hover::after {
+  background: linear-gradient(
+    180deg,
+    rgba(10, 10, 10, 0.12) 0%,
+    rgba(10, 10, 10, 0.46) 62%,
+    rgba(10, 10, 10, 0.74) 100%
+  );
+}
+
+.card:focus-within {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.38);
+}
+
+.cardTitle {
+  margin: 0 0 0.45rem;
+  color: #f8fafc;
+  font-family: var(--font-body);
+  font-size: clamp(1.08rem, 1.4vw, 1.25rem);
+  font-weight: 700;
+}
+
+.cardDescription {
+  margin: 0;
+  color: rgba(248, 250, 252, 0.9);
+  font-size: clamp(0.84rem, 1.02vw, 0.96rem);
+  line-height: 1.45;
+}
+
+@media (max-width: 960px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .title::before,
+  .title::after {
+    display: none;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

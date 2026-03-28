@@ -1,7 +1,7 @@
 /* IntroAbout Base Styles */
 .introAbout {
   padding: 8rem 0;
-  background-color: #181818;
+  background-color: var(--color-bg);
   position: relative;
 }
 
@@ -25,13 +25,19 @@
 }
 
 .headline {
-  font-family: 'Inter', system-ui, sans-serif;
-  font-size: 2.5rem;
+  position: relative;
+  z-index: 0;
+  font-family: var(--font-heading);
+  font-size: var(--section-intro-headline);
   font-weight: 700;
   line-height: 1.2;
-  color: white;
+  color: #ffffff;
   margin: 0;
   text-align: left;
+}
+
+.brandName {
+  color: var(--color-accent);
 }
 
 /* Right Content - Supporting Text */
@@ -41,11 +47,13 @@
 }
 
 .supportingText {
-  font-family: 'Inter', system-ui, sans-serif;
+  position: relative;
+  z-index: 0;
+  font-family: var(--font-body);
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.6;
-  color: #e5e7eb;
+  color: #ffffff;
   margin: 0;
   text-align: left;
   letter-spacing: 0.02em;
@@ -62,7 +70,7 @@
   }
   
   .headline {
-    font-size: 2rem;
+    font-size: 2.5rem;
   }
   
   .supportingText {
@@ -85,7 +93,7 @@
   }
   
   .headline {
-    font-size: 1.75rem;
+    font-size: 2.1875rem;
     text-align: center;
   }
   
@@ -101,7 +109,7 @@
   }
   
   .headline {
-    font-size: 1.5rem;
+    font-size: 1.875rem;
   }
   
   .supportingText {

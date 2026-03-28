@@ -3,7 +3,7 @@ import Package from "../models/package.model";
 
 export const getPackages = async (req: Request, res: Response) => {
   try {
-    const packages = await Package.find();
+    const packages = await Package.find().populate("project_type", "title stages");
     res.status(200).json({ packages });
   } catch (err) {
     console.error(err);
@@ -15,7 +15,10 @@ export const getPackages = async (req: Request, res: Response) => {
 
 export const getPackageById = async (req: Request, res: Response) => {
   try {
-    const pkg = await Package.findById(req.params.id);
+    const pkg = await Package.findById(req.params.id).populate(
+      "project_type",
+      "title stages"
+    );
     if (!pkg) {
       res.status(404).json({ error: "Package not found" });
       return;

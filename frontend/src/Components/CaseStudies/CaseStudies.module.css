@@ -1,0 +1,416 @@
+.casesSection {
+  --case-studies-font-display: var(--font-heading);
+  --case-studies-font-body: var(--font-body);
+  position: relative;
+  height: calc(var(--case-count, 4) * 120vh);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.casesSticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.casesSticky::before,
+.casesSticky::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 180px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.casesSticky::before {
+  left: 0;
+  background: linear-gradient(
+    to right,
+    var(--color-bg) 20%,
+    transparent
+  );
+}
+
+.casesSticky::after {
+  right: 0;
+  background: linear-gradient(
+    to left,
+    var(--color-bg) 20%,
+    transparent
+  );
+}
+
+.casesHeader {
+  position: absolute;
+  top: calc(var(--nav-offset) + 0.75rem);
+  left: 0;
+  right: 0;
+  z-index: 20;
+}
+
+.sectionLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--section-kicker-size);
+  font-weight: 700;
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-family: var(--case-studies-font-body);
+  margin-bottom: 0.35rem;
+}
+
+.sectionLabel::before {
+  content: "";
+  display: block;
+  width: 18px;
+  height: 1px;
+  background: var(--color-accent);
+  opacity: 0.7;
+}
+
+.casesHeading {
+  font-size: var(--section-title-size);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  font-family: var(--case-studies-font-display);
+  margin: 0;
+  color: var(--color-text);
+}
+
+.casesHeadingAccent {
+  color: var(--color-accent);
+}
+
+.titleDisplay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 30;
+  pointer-events: none;
+  width: 70%;
+  max-width: 650px;
+}
+
+.tagClip {
+  overflow: hidden;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.titleClip {
+  overflow: hidden;
+}
+
+.subClip {
+  overflow: hidden;
+  margin-top: 0.6rem;
+}
+
+.activeTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(0, 0, 0, 0.55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--color-text);
+  font-family: var(--case-studies-font-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.8rem;
+  border-radius: 9999px;
+  will-change: transform, opacity;
+}
+
+.tagDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.activeTitle {
+  display: block;
+  font-family: var(--case-studies-font-display);
+  font-size: clamp(3.4375rem, 7.5vw, 7.5rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--color-text);
+  will-change: transform;
+}
+
+.activeSubtitle {
+  display: block;
+  font-family: var(--case-studies-font-body);
+  font-size: clamp(0.78rem, 1.25vw, 1rem);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  will-change: transform, opacity;
+}
+
+.imagesStrip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  will-change: transform;
+  z-index: 2;
+}
+
+.caseImgWrap {
+  flex-shrink: 0;
+  width: clamp(180px, 20vw, 280px);
+  height: clamp(120px, 15vw, 200px);
+  margin: 0 1rem;
+  border-radius: 0.875rem;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition:
+    width 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.45s ease,
+    border-color 0.45s ease;
+}
+
+.caseImgWrapActive {
+  width: clamp(380px, 50vw, 660px);
+  height: clamp(260px, 36vw, 460px);
+  border-color: color-mix(in srgb, var(--color-accent) 30%, transparent);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--color-accent) 20%, transparent),
+    0 20px 80px rgba(0, 0, 0, 0.6),
+    0 8px 32px color-mix(in srgb, var(--color-accent) 12%, transparent);
+  z-index: 5;
+}
+
+.caseImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: brightness(0.4) saturate(0.7);
+  transition:
+    filter 0.55s ease,
+    transform 0.65s ease;
+}
+
+.caseImgWrapActive .caseImg {
+  filter: brightness(0.65) saturate(1.05);
+  transform: scale(1.03);
+}
+
+.progressBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.05);
+  z-index: 20;
+}
+
+.progressFill {
+  height: 100%;
+  width: 0%;
+  background: var(--color-accent);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent) 50%, transparent);
+}
+
+.progressDots {
+  position: absolute;
+  bottom: 1.8rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  z-index: 20;
+}
+
+.pdot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  transition:
+    background 0.3s,
+    transform 0.3s,
+    width 0.3s;
+}
+
+.pdotActive {
+  background: var(--color-accent);
+  transform: scale(1.3);
+  width: 20px;
+  border-radius: 9999px;
+}
+
+.caseCounter {
+  position: absolute;
+  bottom: 1.6rem;
+  right: 2.5rem;
+  font-family: var(--case-studies-font-body);
+  font-size: 0.78rem;
+  color: #444;
+  letter-spacing: 0.08em;
+  z-index: 20;
+}
+
+.caseCounterCurrent {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.scrollHint {
+  position: absolute;
+  bottom: 1.6rem;
+  left: 2.5rem;
+  font-family: var(--case-studies-font-body);
+  font-size: 0.76rem;
+  color: #333;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: opacity 0.5s;
+}
+
+.scrollHintHidden {
+  opacity: 0;
+}
+
+.bounce {
+  animation: bounce 1.4s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+/* Reduced-motion: static grid */
+.staticSection {
+  padding: 6rem 0;
+  background: var(--color-bg);
+}
+
+.staticContainer {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.staticTitle {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0 0 2.5rem;
+  font-family: var(--case-studies-font-display);
+}
+
+.staticGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+.staticCard {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 35%, transparent);
+  background: var(--card-glass);
+}
+
+.staticImage {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  display: block;
+}
+
+.staticMeta {
+  padding: 1.25rem;
+}
+
+.staticTag {
+  display: inline-block;
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(198, 213, 156, 0.35);
+  color: var(--color-accent);
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  font-family: var(--case-studies-font-body);
+}
+
+.staticCardTitle {
+  margin: 0 0 0.35rem;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--color-text);
+  font-family: var(--case-studies-font-display);
+}
+
+.staticCardSub {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--color-text-muted);
+  font-family: var(--case-studies-font-body);
+}
+
+@media (max-width: 900px) {
+  .staticGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .casesHeader {
+    left: 1rem;
+    top: calc(var(--nav-offset) + 0.5rem);
+  }
+
+  .caseCounter {
+    right: 1rem;
+  }
+
+  .scrollHint {
+    left: 1rem;
+  }
+
+  .staticContainer {
+    padding: 0 1rem;
+  }
+}

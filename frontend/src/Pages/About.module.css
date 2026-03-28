@@ -1,0 +1,32 @@
+.separatorSection {
+  background: #000;
+  margin-top: 0;
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+}
+
+.firstSeparator {
+  margin-top: 0;
+}
+
+.separatorInverted .separatorImage {
+  transform: scaleY(-1);
+}
+
+.separatorImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  margin: 0 auto;
+  object-fit: cover;
+  object-position: center;
+  transform: none;
+}
+
+.teamOverlap {
+  position: relative;
+  z-index: 2;
+  margin-top: 0;
+}

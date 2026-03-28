@@ -1,0 +1,92 @@
+.section {
+  background: #000;
+  padding: clamp(1.1rem, 3vw, 2rem) 0 clamp(2.2rem, 5vw, 3.2rem);
+}
+
+.inner {
+  width: 100%;
+  max-width: 82rem;
+  margin: 0 auto;
+  padding: 0 clamp(0.5rem, 2.5vw, 1.25rem);
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  color: #f8fafc;
+  font-size: clamp(1.5rem, 3.2vw, 2.35rem);
+  letter-spacing: 0.03em;
+}
+
+.titleAccent {
+  color: #72c04f;
+}
+
+.subtitle {
+  max-width: 50rem;
+  margin: 0.8rem auto 1.8rem;
+  color: #f1f5f9;
+  font-size: clamp(1rem, 1.55vw, 1.45rem);
+  line-height: 1.5;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.7vw, 1.1rem);
+  margin: 0 auto 1.8rem;
+}
+
+.card {
+  border-radius: 0.4rem;
+  overflow: hidden;
+  background: #0f1114;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.avatar {
+  height: clamp(8.5rem, 17vw, 13rem);
+  background:
+    radial-gradient(circle at 50% 28%, #727b88 0%, #4b5460 20%, transparent 21%),
+    radial-gradient(circle at 50% 56%, #8d95a3 0%, #4d5663 28%, #2a313b 57%, #171b21 100%);
+  filter: grayscale(100%);
+}
+
+.cardMeta {
+  padding: 0.7rem 0.65rem 0.85rem;
+  text-align: left;
+}
+
+.cardName {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.cardRole {
+  margin: 0.1rem 0 0;
+  color: #b3bdc8;
+  font-size: 0.72rem;
+  line-height: 1.35;
+}
+
+.bodyCopy {
+  margin: 0 auto;
+  max-width: 58rem;
+  color: #f1f5f9;
+  font-size: clamp(0.95rem, 1.25vw, 1.2rem);
+  line-height: 1.45;
+}
+
+@media (max-width: 960px) {
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,319 @@
+.heroTitle {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.03;
+  font-size: clamp(2.7rem, 5.4vw, 5.2rem);
+  color: var(--color-text);
+  text-shadow: 0 0 28px rgba(255, 255, 255, 0.07);
+}
+
+.heroTitleAccent {
+  color: var(--color-accent);
+}
+
+.heroSub {
+  margin: 0.9rem 0 0;
+  max-width: 34rem;
+  font-family: var(--font-body);
+  font-size: clamp(0.95rem, 1.35vw, 1.1rem);
+  line-height: 1.7;
+  color: var(--color-text-muted);
+  letter-spacing: 0.01em;
+}
+
+.heroKicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.35);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: rgba(255, 255, 255, 0.82);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+}
+
+.heroKickerDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 14px rgba(114, 192, 79, 0.6);
+}
+
+.blackHero {
+  min-height: 55vh;
+  background: #000;
+  display: grid;
+  place-items: center;
+  padding-top: var(--nav-offset);
+  padding-bottom: 3rem;
+}
+
+.heroInner {
+  width: min(70rem, 100%);
+  padding: 0 clamp(1rem, 3vw, 2rem);
+  text-align: center;
+}
+
+.heroContext {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.68);
+  margin-bottom: 1.1rem;
+}
+
+.heroTitleShadow {
+  font-size: clamp(2.4rem, 6vw, 4.8rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow:
+    0 18px 60px rgba(0, 0, 0, 0.75),
+    0 0 22px rgba(114, 192, 79, 0.18);
+  white-space: nowrap;
+}
+
+.heroPhrase {
+  margin: 1.1rem auto 0;
+  max-width: 46rem;
+  font-family: var(--font-body);
+  font-size: clamp(0.98rem, 1.35vw, 1.15rem);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.72);
+  text-shadow: 0 10px 28px rgba(0, 0, 0, 0.75);
+}
+
+/* Layer positioning for the parallax collage */
+.l1 {
+  width: clamp(170px, 22vw, 280px);
+  height: clamp(170px, 22vw, 280px);
+  top: 16%;
+  left: 8%;
+  opacity: 0.55;
+  transform: rotate(-8deg);
+}
+
+.l2 {
+  width: clamp(220px, 28vw, 360px);
+  height: clamp(220px, 28vw, 360px);
+  top: 10%;
+  right: 10%;
+  opacity: 0.7;
+  transform: rotate(10deg);
+}
+
+.l3 {
+  width: clamp(260px, 34vw, 460px);
+  height: clamp(260px, 34vw, 460px);
+  top: 44%;
+  left: 50%;
+  transform: translateX(-50%) rotate(4deg);
+  opacity: 0.9;
+}
+
+.l4 {
+  width: clamp(170px, 22vw, 300px);
+  height: clamp(170px, 22vw, 300px);
+  bottom: 12%;
+  left: 14%;
+  opacity: 0.62;
+  transform: rotate(6deg);
+}
+
+.l5 {
+  width: clamp(190px, 24vw, 330px);
+  height: clamp(190px, 24vw, 330px);
+  bottom: 9%;
+  right: 14%;
+  opacity: 0.6;
+  transform: rotate(-6deg);
+}
+
+@media (max-width: 768px) {
+  .l1 {
+    top: 12%;
+    left: -6%;
+  }
+  .l2 {
+    top: 9%;
+    right: -10%;
+  }
+  .l4 {
+    bottom: 10%;
+    left: -8%;
+  }
+  .l5 {
+    bottom: 8%;
+    right: -10%;
+  }
+}
+
+.casesSection {
+  padding: 0 0 6rem;
+  margin-top: -8rem;
+  position: relative;
+  z-index: 5;
+  background: transparent;
+}
+
+.casesContainer {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.casesHeader {
+  margin-bottom: 2.25rem;
+  padding-top: 5rem;
+}
+
+.casesTitle {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(1.9rem, 3vw, 2.5rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+
+.casesNote {
+  margin: 0.65rem 0 0;
+  max-width: 52rem;
+  font-family: var(--font-body);
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  font-size: 0.98rem;
+}
+
+.casesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.35rem;
+  align-items: start;
+  grid-auto-flow: row dense;
+  grid-auto-rows: 10px;
+}
+
+.caseCard {
+  position: relative;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 0 0 1px rgba(114, 192, 79, 0.05),
+    0 18px 60px rgba(0, 0, 0, 0.5);
+  height: auto;
+}
+
+.caseCardTall {
+  grid-row: span 52;
+}
+
+.caseCardShort {
+  grid-row: span 36;
+}
+
+.caseMedia {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: brightness(0.78) saturate(1.02);
+  transform: scale(1.01);
+  transition:
+    transform 500ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 500ms ease;
+}
+
+.caseCard:hover .caseMedia {
+  transform: scale(1.06);
+  filter: brightness(0.92) saturate(1.06);
+}
+
+.caseOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.05) 0%,
+    rgba(0, 0, 0, 0.25) 45%,
+    rgba(0, 0, 0, 0.82) 100%
+  );
+  pointer-events: none;
+}
+
+.caseMeta {
+  position: absolute;
+  left: 1.1rem;
+  right: 1.1rem;
+  bottom: 1rem;
+  display: grid;
+  gap: 0.35rem;
+  z-index: 2;
+}
+
+.caseTag {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(0, 0, 0, 0.35);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: rgba(255, 255, 255, 0.9);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.caseTitle {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.caseSub {
+  margin: 0;
+  font-family: var(--font-body);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 900px) {
+  .casesContainer {
+    padding: 0 1rem;
+  }
+  .casesGrid {
+    grid-template-columns: 1fr;
+  }
+  .caseCardTall {
+    grid-row: span 46;
+  }
+  .caseCardShort {
+    grid-row: span 38;
+  }
+}
+

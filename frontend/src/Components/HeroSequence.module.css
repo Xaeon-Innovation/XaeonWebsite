@@ -1,0 +1,218 @@
+.section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: var(--color-bg, #0a0a0a);
+}
+
+/* Absolute within .section only — fixed would cover the entire viewport and hide the footer while scrolling */
+.video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+  pointer-events: none;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Contained to .section so it scrolls away — fixed would dim the entire viewport on scroll */
+.vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 90% 80% at 50% 48%,
+    transparent 0%,
+    rgba(0, 0, 0, 0.22) 70%,
+    rgba(0, 0, 0, 0.45) 100%
+  );
+  transition: background 1.5s ease;
+}
+
+.vignetteEnded {
+  background: radial-gradient(
+    ellipse 90% 80% at 50% 48%,
+    transparent 0%,
+    rgba(0, 0, 0, 0.3) 65%,
+    rgba(0, 0, 0, 0.62) 100%
+  );
+}
+
+.vignette::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.35);
+  transition: background-color 1.5s ease;
+  pointer-events: none;
+}
+
+.vignetteEnded::after {
+  background-color: rgba(0, 0, 0, 0.55);
+}
+
+.overlay {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+/* Outer shell: only composited transform — avoids repainting heavy text-shadows each frame */
+.sloganLift {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+.sloganLiftFloating {
+  animation: sloganFloat 6.5s cubic-bezier(0.42, 0, 0.58, 1) infinite;
+}
+
+@keyframes sloganFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -10px, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sloganLiftFloating {
+    animation: none;
+  }
+}
+
+.slogan {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.12em;
+  text-align: center;
+}
+
+.sloganStatic .headlineRow,
+.sloganStatic .subline {
+  opacity: 1;
+  transform: none;
+}
+
+.subline {
+  margin: clamp(0.65rem, 2vw, 1.1rem) 0 0;
+  padding: 0.65rem 1.35rem;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  font-family: var(--font-body);
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: rgba(248, 250, 252, 0.95);
+  line-height: 1.35;
+  opacity: 0;
+  transform: translateY(16px);
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.65);
+  pointer-events: auto;
+  cursor: pointer;
+  border: 2px solid rgba(248, 250, 252, 0.85);
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    transform 0.2s ease;
+}
+
+.subline:hover {
+  background: rgba(248, 250, 252, 0.12);
+  border-color: #f8fafc;
+  color: #f8fafc;
+}
+
+.subline:focus-visible {
+  outline: 2px solid var(--color-accent, #72c04f);
+  outline-offset: 3px;
+}
+
+
+.headlineRow {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: clamp(3rem, 7vw, 8rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  opacity: 0;
+  transform: translateY(20px);
+  text-shadow:
+    0 2px 40px rgba(0, 0, 0, 0.8),
+    0 0 60px rgba(29, 185, 84, 0.25),
+    0 0 120px rgba(29, 185, 84, 0.1);
+}
+
+.wordWhite {
+  color: #ffffff;
+}
+
+.wordGreen {
+  color: #1db954;
+}
+
+.typedCursor {
+  color: #1db954;
+  margin-left: 0.06em;
+}
+
+.scrollIndicator {
+  position: absolute;
+  bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 8;
+  color: rgba(255, 255, 255, 0.85);
+  pointer-events: none;
+  animation: heroScrollBounce 2.2s ease-in-out infinite;
+}
+
+.scrollIndicatorHidden {
+  display: none;
+}
+
+@keyframes heroScrollBounce {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+    opacity: 0.65;
+  }
+  50% {
+    transform: translateX(-50%) translateY(8px);
+    opacity: 1;
+  }
+}
+
+.scrollIcon {
+  width: 2rem;
+  height: 2rem;
+  display: block;
+}

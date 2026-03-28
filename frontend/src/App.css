@@ -1,8 +1,95 @@
 #root {
-  width: 100%;
-  margin: 0;
-  padding: 0;
   text-align: left;
+}
+
+.app-container {
+  animation: appSlideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Scroll-to-top button (global) */
+.scroll-top-btn {
+  position: fixed;
+  right: clamp(0.85rem, 2.5vw, 1.25rem);
+  bottom: clamp(0.85rem, 2.5vw, 1.25rem);
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(10, 10, 10, 0.7);
+  color: var(--color-text);
+  display: grid;
+  place-items: center;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 50;
+  opacity: 0;
+  transform: translateY(10px) scale(0.98);
+  pointer-events: none;
+  transition:
+    opacity 180ms ease,
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 180ms ease,
+    border-color 180ms ease;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  font-family: var(--font-heading);
+  animation: scrollTopCaretBounce 950ms cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.scroll-top-btn.is-visible {
+  animation: scrollTopCaretBounce 950ms cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.scroll-top-btn:not(.is-visible) {
+  animation: none;
+}
+
+@keyframes scrollTopCaretBounce {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-0.28rem) scale(1);
+  }
+}
+
+.scroll-top-btn.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.scroll-top-btn:hover {
+  background: rgba(20, 20, 20, 0.78);
+  border-color: rgba(114, 192, 79, 0.55);
+  transform: translateY(0) scale(1.06);
+}
+
+.scroll-top-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Avoid transform here - it breaks position:fixed descendants (e.g. navbar) site-wide */
+@keyframes appSlideUp {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-container {
+    animation: none;
+  }
+
+  .scroll-top-btn {
+    transition: none;
+    animation: none;
+  }
 }
 
 .logo {

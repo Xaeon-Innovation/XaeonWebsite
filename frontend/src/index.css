@@ -1,4 +1,39 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Aldo+the+Apache&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap");
+
+:root {
+  --font-heading: "Aldo the Apache", system-ui, sans-serif;
+  --font-body: "Montserrat", system-ui, sans-serif;
+  /* Legacy token: marquee / velocity rails use body font for a two-font system */
+  --font-velocity: var(--font-body);
+  --sage-green: #72c04f;
+  --eerie-black: #c6d59c;
+  --deep-teal: #1b3d50;
+  --mantis: #0a0a0a;
+  --color-accent: #72c04f;
+  --color-accent-strong: #5ea83f;
+  --color-on-accent: #0b1207;
+  --color-bg: #000000;
+  --color-bg-elevated: #141414;
+  --color-surface: #1f2937;
+  --color-surface-soft: #2a3441;
+  --color-surface-hero: #0a0a0a;
+  --color-text: #f9fafb;
+  --color-text-muted: #d1d5db;
+  --color-text-subtle: #9ca3af;
+  --color-border: #374151;
+  --color-border-strong: #4b5563;
+  --shadow-soft: rgba(0, 0, 0, 0.2);
+  --shadow-medium: rgba(0, 0, 0, 0.35);
+  --card-glass: rgba(255, 255, 255, 0.04);
+  /* Navbar: .navContent height — pad pinned/full-bleed sections so titles sit below the fixed bar */
+  --nav-content-height: 4.25rem;
+  --nav-offset: calc(env(safe-area-inset-top, 0px) + var(--nav-content-height));
+  /* Section titles: ~1.25× base (between original and the old 3× pass) */
+  --section-title-size: clamp(1.625rem, 2.625vw, 2.1875rem);
+  --section-kicker-size: 1rem;
+  --section-intro-headline: 3.125rem;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,23 +42,65 @@
   * {
     box-sizing: border-box;
   }
-  
+
+  html {
+    scroll-behavior: smooth;
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+  }
+
   body {
-    background-color: #181818;
-    color: white;
-    font-family: 'Inter', system-ui, sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
     font-feature-settings: "rlig" 1, "calt" 1;
     margin: 0;
     padding: 0;
-    overflow-x: hidden;
+    overflow-x: clip;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
-  
-  html {
-    scroll-behavior: smooth;
+
+  #root {
+    overflow-x: clip;
+  }
+
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
   }
 }
 
 @layer components {
+  /**
+   * Shared horizontal rail for section titles (same as Our Stack .stackInner).
+   * max-width 90rem, centered, responsive horizontal padding.
+   */
+  .section-title-rail {
+    width: 100%;
+    max-width: 90rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: clamp(1rem, 4vw, 2.5rem);
+    padding-right: clamp(1rem, 4vw, 2.5rem);
+    box-sizing: border-box;
+  }
+
+  .section-header-spacing {
+    margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
+    text-align: left;
+  }
+
   /* Background helpers */
   .bg-hero {
     background-size: cover;
@@ -52,26 +129,26 @@
   }
 
   .btn-primary {
-    background-color: #72C04F;
-    color: white;
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
     font-weight: 600;
     padding: 0.75rem 1.5rem;
     border-radius: 0.5rem;
     transition: all 0.3s;
     transform: scale(1);
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px 0 var(--shadow-soft);
   }
   
   .btn-primary:hover {
-    background-color: #5ea83f;
+    background-color: var(--color-accent-strong);
     transform: scale(1.05);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 15px -3px var(--shadow-medium);
   }
   
   .btn-secondary {
     background-color: transparent;
-    border: 2px solid #72C04F;
-    color: #72C04F;
+    border: 2px solid var(--color-accent);
+    color: var(--color-accent);
     font-weight: 600;
     padding: 0.75rem 1.5rem;
     border-radius: 0.5rem;
@@ -79,8 +156,8 @@
   }
   
   .btn-secondary:hover {
-    background-color: #72C04F;
-    color: white;
+    background-color: var(--color-accent);
+    color: var(--color-on-accent);
   }
   
   .section-padding {
@@ -104,7 +181,7 @@
     margin: 0 auto;
     width: 100%;
     padding: 0 2rem;
-    overflow-x: hidden;
+    overflow-x: clip;
   }
   
   .section-full-width {
@@ -113,7 +190,7 @@
   }
   
   .text-gradient {
-    background: linear-gradient(to right, #72C04F, #5ea83f);
+    background: linear-gradient(to right, var(--color-accent), var(--color-accent-strong));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -126,5 +203,20 @@
   .card-hover:hover {
     transform: scale(1.05);
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+
+  @keyframes xaeon-blink-cursor {
+    0%,
+    49% {
+      opacity: 1;
+    }
+    50%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  .xaeon-blink-cursor {
+    animation: xaeon-blink-cursor 1s step-end infinite;
   }
 }

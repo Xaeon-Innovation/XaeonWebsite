@@ -1,14 +1,22 @@
-import { Helmet } from 'react-helmet-async';
-import Hero from '../components/Hero/Hero';
-import IntroAbout from '../components/IntroAbout/IntroAbout';
-import CreativeTech from '../components/CreativeTech/CreativeTech';
-import About from '../components/About/About';
-import WhyChooseUs from '../components/WhyChooseUs/WhyChooseUs';
-import Services from '../components/Services/Services';
-import Blogs from '../components/Blogs/Blogs';
-import CallToAction from '../components/CallToAction/CallToAction';
+import { useEffect } from "react";
+import { Helmet } from "react-helmet-async";
+import { HeroSequence } from "../Components/HeroSequence";
+import IntroAbout from "../Components/IntroAbout/IntroAbout";
+import CreativeTech from "../Components/CreativeTech/CreativeTech";
+import WhyChooseUs from "../Components/WhyChooseUs/WhyChooseUs";
+import Services from "../Components/Services/Services";
+import Blogs from "../Components/Blogs/Blogs";
+import CaseStudies from "../Components/CaseStudies/CaseStudies";
+import OurStack from "../Components/OurStack/OurStack";
+import CallToAction from "../Components/CallToAction/CallToAction";
+import { initGsapScrollReveals } from "../lib/gsapScroll";
 
 const Home = () => {
+  useEffect(() => {
+    const cleanup = initGsapScrollReveals();
+    return cleanup;
+  }, []);
+
   return (
     <>
       <Helmet>
@@ -21,13 +29,25 @@ const Home = () => {
         <meta name="twitter:card" content="summary_large_image" />
       </Helmet>
 
-      <Hero />
-      <IntroAbout />
-      <CreativeTech />
-      <About />
+      <HeroSequence />
+      <div data-gsap="reveal">
+        <IntroAbout />
+      </div>
+      <div data-gsap="reveal">
+        <CreativeTech />
+      </div>
+      {/* No data-gsap wrapper: parent reveal tweens would add transforms and conflict with
+          WhyChooseUs’s internal GSAP ScrollTrigger scrub (cards + SVG paths). */}
       <WhyChooseUs />
       <Services />
-      <Blogs />
+      {/* CaseStudies uses pinned ScrollTrigger + scrub; a parent data-gsap reveal would conflict */}
+      <CaseStudies />
+      <div data-gsap="reveal">
+        <Blogs />
+      </div>
+      <div data-gsap="reveal">
+        <OurStack />
+      </div>
       <CallToAction />
     </>
   );

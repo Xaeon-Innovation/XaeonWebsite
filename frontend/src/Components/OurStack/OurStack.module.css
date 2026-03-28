@@ -1,0 +1,237 @@
+.stack {
+  --section-header-font-display: var(--font-heading);
+  --section-header-font-body: var(--font-body);
+  position: relative;
+  overflow: hidden;
+  padding: 5rem 0 6rem;
+  background-color: var(--color-bg);
+}
+
+.stackForeground {
+  position: relative;
+  z-index: 1;
+}
+
+.stackInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(260px, 0.88fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+
+.stackLeft {
+  min-width: 0;
+  align-self: start;
+}
+
+.sectionLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--section-kicker-size);
+  font-weight: 700;
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-family: var(--section-header-font-body);
+  margin-bottom: 0.35rem;
+}
+
+.sectionLabel::before {
+  content: "";
+  display: block;
+  width: 18px;
+  height: 1px;
+  background: var(--color-accent);
+  opacity: 0.7;
+}
+
+.sectionHeading {
+  font-size: var(--section-title-size);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  font-family: var(--section-header-font-display);
+  margin: 0;
+  color: var(--color-text);
+  line-height: 1.2;
+}
+
+.sectionHeadingAccent {
+  color: var(--color-accent);
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.tabBtn {
+  font-family: var(--section-header-font-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.45rem 1.1rem;
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, var(--color-text) 12%, transparent);
+  background: transparent;
+  color: var(--color-text-subtle);
+  cursor: pointer;
+  transition:
+    background 0.32s ease,
+    color 0.32s ease,
+    border-color 0.32s ease,
+    transform 0.28s ease,
+    box-shadow 0.28s ease;
+}
+
+.tabBtn:hover {
+  color: var(--color-text);
+  border-color: color-mix(in srgb, var(--color-text) 25%, transparent);
+}
+
+.tabBtn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.tabBtnActive {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-on-accent);
+  font-weight: 700;
+  box-shadow: 0 4px 18px color-mix(in srgb, var(--color-accent) 28%, transparent);
+}
+
+.stackGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.stackCard {
+  background: color-mix(in srgb, var(--color-text) 4%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent);
+  border-radius: 0.875rem;
+  padding: 1.5rem 1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  cursor: default;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+  opacity: 0;
+  transform: translateY(16px) scale(0.97);
+}
+
+.stackCard:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 35%, transparent);
+  box-shadow: 0 4px 24px color-mix(in srgb, var(--color-accent) 12%, transparent);
+  transform: translateY(-3px) scale(1);
+}
+
+.stackIconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+}
+
+.stackIcon {
+  color: #dff6c8;
+  filter: drop-shadow(0 0 5px rgba(114, 192, 79, 0.75))
+    drop-shadow(0 0 14px rgba(114, 192, 79, 0.35))
+    drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+}
+
+.stackCardName {
+  font-family: var(--section-header-font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: 1.3;
+}
+
+.stackRight {
+  position: sticky;
+  top: 6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  justify-self: end;
+  width: 100%;
+  max-width: min(28rem, 100%);
+  margin-left: auto;
+  gap: 0.75rem;
+}
+
+.cloudPanel {
+  position: relative;
+  display: flex;
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 1;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-inline: auto;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in srgb, var(--color-accent) 10%, transparent) 0%,
+    transparent 72%
+  );
+  will-change: opacity, transform;
+}
+
+.cloudCanvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}
+
+.canvasCloudIcon {
+  color: #dff6c8;
+}
+
+.cloudLabel {
+  font-family: var(--section-header-font-body);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--color-text-subtle);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  margin-top: 0.25rem;
+}
+
+@media (max-width: 768px) {
+  .stackInner {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .stackRight {
+    position: static;
+    margin-top: 2rem;
+    justify-self: center;
+    max-width: min(22rem, 100%);
+    margin-left: 0;
+  }
+
+  .stackGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .stackGrid {
+    grid-template-columns: 1fr;
+  }
+}
