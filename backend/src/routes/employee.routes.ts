@@ -6,7 +6,10 @@ import {
   getEmployees,
   updateEmployee,
 } from "../controllers/employee.controller";
+import { requireAdmin, requireAuth } from "../middleware/auth";
 const router = express.Router();
+
+router.use(requireAuth, requireAdmin);
 
 router.get("/", getEmployees);
 router.get("/:id", getEmployeeById);
