@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Link, useLocation, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,13 +28,8 @@ type RegisterValues = z.infer<typeof registerSchema>;
 type Mode = "login" | "register";
 
 const LoginSignup = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-
-  const mode: Mode = useMemo(
-    () => (location.pathname === "/register" ? "register" : "login"),
-    [location.pathname]
-  );
+  const [mode, setMode] = useState<Mode>("login");
 
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
@@ -58,9 +53,18 @@ const LoginSignup = () => {
     },
   });
 
+  const switchMode = (nextMode: Mode) => {
+    if (nextMode === mode) return;
+
+    setSubmitError(null);
+    setSubmitSuccess(null);
+    setMode(nextMode);
+  };
+
   const onLogin = loginForm.handleSubmit(async (values) => {
     setSubmitError(null);
     setSubmitSuccess(null);
+
     try {
       const res = await api.post("/auth/login", values);
       const role = res.data?.user?.role as string | undefined;
@@ -73,6 +77,7 @@ const LoginSignup = () => {
   const onRegister = registerForm.handleSubmit(async (values) => {
     setSubmitError(null);
     setSubmitSuccess(null);
+
     try {
       await api.post("/auth/register", values);
       setSubmitSuccess("Account created. You’re logged in.");
@@ -83,7 +88,10 @@ const LoginSignup = () => {
   });
 
   return (
-    <section className={styles.wrap} aria-label={mode === "login" ? "Log in" : "Register"}>
+    <section
+      className={styles.wrap}
+      aria-label={mode === "login" ? "Log in" : "Register"}
+    >
       <Helmet>
         <title>{mode === "login" ? "Log in" : "Register"} — Xaeon</title>
       </Helmet>
@@ -93,21 +101,25 @@ const LoginSignup = () => {
       <div className={styles.card}>
         <div className={styles.left}>
           <div className={styles.modeRow}>
-            <Link
-              to="/login"
+            <button
+              type="button"
               className={`${styles.modeLink} ${mode === "login" ? styles.modeActive : ""}`}
+              onClick={() => switchMode("login")}
             >
               Log in
-            </Link>
-            <Link
-              to="/register"
+            </button>
+            <button
+              type="button"
               className={`${styles.modeLink} ${mode === "register" ? styles.modeActive : ""}`}
+              onClick={() => switchMode("register")}
             >
               Register
-            </Link>
+            </button>
           </div>
 
-          <h1 className={styles.title}>{mode === "login" ? "Log In" : "Register"}</h1>
+          <h1 className={styles.title}>
+            {mode === "login" ? "Log In" : "Register"}
+          </h1>
 
           {mode === "login" ? (
             <form className={styles.form} onSubmit={onLogin} noValidate>
@@ -123,7 +135,9 @@ const LoginSignup = () => {
                   {...loginForm.register("email")}
                 />
                 {loginForm.formState.errors.email?.message && (
-                  <p className={styles.error}>{loginForm.formState.errors.email.message}</p>
+                  <p className={styles.error}>
+                    {loginForm.formState.errors.email.message}
+                  </p>
                 )}
               </div>
 
@@ -140,14 +154,20 @@ const LoginSignup = () => {
                   {...loginForm.register("password")}
                 />
                 {loginForm.formState.errors.password?.message && (
-                  <p className={styles.error}>{loginForm.formState.errors.password.message}</p>
+                  <p className={styles.error}>
+                    {loginForm.formState.errors.password.message}
+                  </p>
                 )}
               </div>
 
               {submitError && <p className={styles.submitError}>{submitError}</p>}
               {submitSuccess && <p className={styles.success}>{submitSuccess}</p>}
 
-              <button className={styles.btn} type="submit" disabled={loginForm.formState.isSubmitting}>
+              <button
+                className={styles.btn}
+                type="submit"
+                disabled={loginForm.formState.isSubmitting}
+              >
                 {loginForm.formState.isSubmitting ? "Signing in..." : "Log in"}
               </button>
             </form>
@@ -203,7 +223,9 @@ const LoginSignup = () => {
                   {...registerForm.register("company")}
                 />
                 {registerForm.formState.errors.company?.message && (
-                  <p className={styles.error}>{registerForm.formState.errors.company.message}</p>
+                  <p className={styles.error}>
+                    {registerForm.formState.errors.company.message}
+                  </p>
                 )}
               </div>
 
@@ -237,7 +259,9 @@ const LoginSignup = () => {
                   {...registerForm.register("email")}
                 />
                 {registerForm.formState.errors.email?.message && (
-                  <p className={styles.error}>{registerForm.formState.errors.email.message}</p>
+                  <p className={styles.error}>
+                    {registerForm.formState.errors.email.message}
+                  </p>
                 )}
               </div>
 
@@ -254,7 +278,9 @@ const LoginSignup = () => {
                   {...registerForm.register("password")}
                 />
                 {registerForm.formState.errors.password?.message && (
-                  <p className={styles.error}>{registerForm.formState.errors.password.message}</p>
+                  <p className={styles.error}>
+                    {registerForm.formState.errors.password.message}
+                  </p>
                 )}
               </div>
 

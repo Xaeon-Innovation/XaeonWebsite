@@ -50,12 +50,19 @@
 }
 
 .modeLink {
-  font-size: 14px;
-  padding: 10px 14px;
-  border-radius: 999px;
+  appearance: none;
+  -webkit-appearance: none;
+  background: none;
   border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 10px 14px;
+  margin: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1;
   color: rgba(255, 255, 255, 0.88);
   text-decoration: none;
+  cursor: pointer;
   transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
 }
 
@@ -63,6 +70,11 @@
   transform: translateY(-1px);
   border-color: rgba(255, 255, 255, 0.22);
   background: rgba(255, 255, 255, 0.06);
+}
+
+.modeLink:focus-visible {
+  outline: 2px solid rgba(120, 255, 120, 0.55);
+  outline-offset: 2px;
 }
 
 .modeActive {
