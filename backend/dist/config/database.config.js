@@ -5,6 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const db = async (retries = 5, delay = 2500) => {
+    if (!process.env.DB_URI) {
+        console.error("❌ DB_URI is not set. Create backend/.env and set DB_URI.");
+        process.exit(1);
+    }
     try {
         await mongoose_1.default.connect(process.env.DB_URI);
         console.log("✅ MongoDB connected successfully");

@@ -29,7 +29,6 @@ export const register = async (req: Request, res: Response) => {
   try {
     const {
       email,
-      password,
       first_name,
       last_name,
       company,
@@ -38,7 +37,6 @@ export const register = async (req: Request, res: Response) => {
 
     if (
       typeof email !== "string" ||
-      typeof password !== "string" ||
       typeof first_name !== "string" ||
       typeof last_name !== "string" ||
       typeof phone_number !== "string"
@@ -54,7 +52,8 @@ export const register = async (req: Request, res: Response) => {
       return;
     }
 
-    const hashed = await bcrypt.hash(password, 12);
+    const phonePassword = phone_number.trim();
+    const hashed = await bcrypt.hash(phonePassword, 12);
     const role = "user";
 
     const user = await User.create({
@@ -64,7 +63,7 @@ export const register = async (req: Request, res: Response) => {
       last_name: last_name.trim(),
       name: `${first_name.trim()} ${last_name.trim()}`.trim(),
       company: typeof company === "string" ? company.trim() : "",
-      phone_number: phone_number.trim(),
+      phone_number: phonePassword,
       role,
     });
 

@@ -6,7 +6,10 @@ import {
   getUsers,
   updateUser,
 } from "../controllers/user.controller";
+import { requireAdmin, requireAuth } from "../middleware/auth";
 const router = express.Router();
+
+router.use(requireAuth, requireAdmin);
 
 router.get("/", getUsers);
 router.get("/:id", getUserById);
