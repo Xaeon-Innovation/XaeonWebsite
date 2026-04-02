@@ -1,5 +1,7 @@
 import mongoose, { type Document, Schema } from "mongoose";
 
+export type UserRole = "admin" | "user";
+
 export interface IUser extends Document {
   email: string;
   password: string;
@@ -9,6 +11,7 @@ export interface IUser extends Document {
   company: string;
   phone_number: string;
   service_requests: mongoose.Types.ObjectId[];
+  role: UserRole;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -24,6 +27,12 @@ const UserSchema: Schema<IUser> = new Schema({
   service_requests: [
     { type: Schema.Types.ObjectId, ref: "ServiceRequest", default: [] },
   ],
+  role: {
+    type: String,
+    enum: ["admin", "user"],
+    default: "user",
+    required: true,
+  },
 }, { timestamps: true });
 
 const User = mongoose.model<IUser>("User", UserSchema);

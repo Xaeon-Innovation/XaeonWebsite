@@ -1,0 +1,89 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #000;
+  box-sizing: border-box;
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px)
+    env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+  display: grid;
+  grid-template: 1fr / 1fr;
+  min-height: 100svh;
+  min-height: 100dvh;
+}
+
+.overlayHidden {
+  pointer-events: none;
+}
+
+/* Default to contain for smaller screens to avoid aggressive cropping. */
+.video {
+  grid-area: 1 / 1 / 2 / 2;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  min-height: 0;
+  min-width: 0;
+  object-fit: contain;
+  object-position: center center;
+  align-self: stretch;
+  justify-self: stretch;
+  z-index: 0;
+}
+
+/* Desktop: fill the viewport edge-to-edge for cinematic splash presentation. */
+@media (min-width: 1024px) {
+  .video {
+    object-fit: cover;
+  }
+}
+
+.controls {
+  grid-area: 1 / 1 / 2 / 2;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  pointer-events: none;
+}
+
+.skipButton {
+  pointer-events: auto;
+  position: absolute;
+  right: max(1rem, env(safe-area-inset-right, 0px));
+  top: max(1rem, env(safe-area-inset-top, 0px));
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.55rem 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.skipButton:hover {
+  transform: translateY(-1px);
+  background: rgba(0, 0, 0, 0.55);
+  border-color: rgba(114, 192, 79, 0.7);
+}
+
+.fadeOut {
+  animation: fadeOut 550ms ease forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

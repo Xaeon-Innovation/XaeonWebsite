@@ -1,0 +1,79 @@
+.hero {
+  --hero-nav-height: var(--nav-content-height, 4.25rem);
+  position: relative;
+  width: 100%;
+  min-height: clamp(18rem, 46svh, 30rem);
+  display: grid;
+  place-items: center;
+  padding-top: var(--hero-nav-height);
+  overflow: hidden;
+  background-color: var(--color-surface-hero);
+}
+
+.heroBg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url("/assets/backgrounds/contact-hero-desktop-16.png");
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  filter: saturate(1.05) contrast(1.05);
+  transform: scale(1.02);
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(circle at 65% 45%, rgba(114, 192, 79, 0.15), transparent 55%),
+    linear-gradient(
+      115deg,
+      rgba(0, 0, 0, 0.62) 0%,
+      rgba(0, 0, 0, 0.28) 40%,
+      rgba(0, 0, 0, 0.55) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.5) 0%,
+      rgba(0, 0, 0, 0.72) 65%,
+      var(--color-bg) 100%
+    );
+}
+
+.container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 max(1.25rem, env(safe-area-inset-right, 0px)) 3.25rem
+    max(1.25rem, env(safe-area-inset-left, 0px));
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: clamp(2.2rem, 5.2vw, 3.6rem);
+  color: #f8fafc;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.75);
+}
+
+.subtitle {
+  margin: 0.65rem auto 0;
+  max-width: 42rem;
+  font-size: clamp(1rem, 1.65vw, 1.15rem);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding-bottom: 2.5rem;
+  }
+}

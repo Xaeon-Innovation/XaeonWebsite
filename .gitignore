@@ -1,1 +1,32 @@
 Documents
+
+# Dependencies (npm packages)
+node_modules/
+
+# Raw design/asset library (keep out of git)
+/images/
+images/
+
+# Curated public assets only (avoid committing huge asset dumps)
+frontend/public/assets/
+frontend/public/assets/**
+
+!frontend/public/assets/backgrounds/
+!frontend/public/assets/backgrounds/hero.jpg
+!frontend/public/assets/backgrounds/laptop.png
+!frontend/public/assets/backgrounds/logo.jpg
+!frontend/public/assets/backgrounds/logo.png
+!frontend/public/assets/backgrounds/xaeon-stack-logo.jpg
+!frontend/public/assets/backgrounds/section.jpg
+
+!frontend/public/assets/case-studies/
+!frontend/public/assets/case-studies/case-1.jpg
+!frontend/public/assets/case-studies/case-2.jpg
+!frontend/public/assets/case-studies/case-3.jpg
+!frontend/public/assets/case-studies/case-4.jpg
+
+# Environment files (never commit secrets)
+.env
+.env.*
+backend/.env
+frontend/.env

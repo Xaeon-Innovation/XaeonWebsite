@@ -2,6 +2,18 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
+## Project structure conventions
+
+This codebase currently keeps feature folders in PascalCase (`src/Components`, `src/Pages`) and follows that convention consistently.
+
+- Top-level frontend folders: `.env` (optional/local), `src`, `public`, `node_modules`
+- `public`: static files such as `assets/` (images, audio, video, etc.)
+- `src`: application code, primarily:
+  - `Components/` for reusable UI pieces
+  - `Pages/` for route-level screens
+  - `layouts/` for route shell/layout components
+  - `context/` for React context providers
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh

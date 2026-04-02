@@ -1,7 +1,7 @@
 /* CreativeTech Base Styles */
 .creativeTech {
   padding: 8rem 0;
-  background-color: #181818;
+  background-color: var(--color-bg);
   position: relative;
 }
 
@@ -26,54 +26,62 @@
 }
 
 .headline {
-  font-family: 'Inter', system-ui, sans-serif;
-  font-size: 2.5rem;
+  position: relative;
+  z-index: 0;
+  font-family: var(--font-heading);
+  font-size: var(--section-intro-headline);
   font-weight: 700;
   line-height: 1.2;
-  color: white;
+  color: #ffffff;
   margin: 0;
   text-align: left;
-}
-
-.accentText {
-  color: #72C04F;
 }
 
 .description {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--font-body);
   font-size: 1.125rem;
   font-weight: 400;
   line-height: 1.6;
-  color: #e5e7eb;
+  color: #ffffff;
   margin: 0;
   text-align: left;
 }
 
-/* Right Content - Image */
+.accentWord {
+  color: var(--color-accent);
+}
+
+/* Quotation marks match body */
+.descQuote {
+  color: #ffffff;
+}
+
+/* Right: brand poster */
 .rightContent {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.imageContainer {
+.gridPanel {
   position: relative;
   width: 100%;
-  max-width: 500px;
-  height: auto;
+  max-width: 520px;
+  aspect-ratio: 3 / 2;
+  margin: 0 auto;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--color-bg);
+  border: 1px solid color-mix(in srgb, var(--color-border) 55%, transparent);
+  box-shadow: 0 24px 56px var(--shadow-medium);
 }
 
-.laptopImage {
+.posterImage {
+  display: block;
   width: 100%;
-  height: auto;
-  object-fit: contain;
-  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3));
-  transition: all 0.3s ease;
-}
-
-.laptopImage:hover {
-  transform: translateY(-10px);
-  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.4));
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 /* Responsive Design */
@@ -87,15 +95,15 @@
   }
   
   .headline {
-    font-size: 2rem;
+    font-size: 2.5rem;
   }
   
   .description {
     font-size: 1rem;
   }
   
-  .imageContainer {
-    max-width: 400px;
+  .gridPanel {
+    max-width: 440px;
   }
 }
 
@@ -122,10 +130,9 @@
     font-size: 0.95rem;
     text-align: center;
   }
-  
-  .imageContainer {
-    max-width: 350px;
-    margin: 0 auto;
+
+  .gridPanel {
+    max-width: min(100%, 380px);
   }
 }
 
@@ -135,15 +142,15 @@
   }
   
   .headline {
-    font-size: 1.5rem;
+    font-size: 1.875rem;
   }
   
   .description {
     font-size: 0.9rem;
   }
   
-  .imageContainer {
-    max-width: 300px;
+  .gridPanel {
+    max-width: min(100%, 320px);
   }
 }
 

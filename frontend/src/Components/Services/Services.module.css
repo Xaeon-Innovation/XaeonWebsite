@@ -1,202 +1,227 @@
 .services {
-  padding: 6rem 0;
-  background-color: #181818;
+  --section-header-font-display: var(--font-heading);
+  --section-header-font-body: var(--font-body);
+  position: relative;
+  background-color: var(--color-bg);
+  overflow: visible;
 }
 
-.container {
-  max-width: 80rem;
-  margin: 0 auto;
-  padding: 0 2rem;
+.sectionHeader {
+  flex-shrink: 0;
+  width: 100%;
 }
 
-.header {
-  text-align: center;
-  margin-bottom: 4rem;
-}
-
-.title {
-  font-size: 1.5rem;
+.sectionLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--section-kicker-size);
   font-weight: 700;
-  color: white;
+  color: var(--color-accent);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin: 0;
-  line-height: 1.4;
+  letter-spacing: 0.12em;
+  font-family: var(--section-header-font-body);
+  margin-bottom: 0.35rem;
 }
 
-.servicesContainer {
+.sectionLabel::before {
+  content: "";
+  display: block;
+  width: 18px;
+  height: 1px;
+  background: var(--color-accent);
+  opacity: 0.7;
+}
+
+.sectionHeading {
+  font-size: var(--section-title-size);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  font-family: var(--section-header-font-display);
+  margin: 0;
+  color: var(--color-text);
+  line-height: 1.2;
+}
+
+.sectionHeadingAccent {
+  color: var(--color-accent);
+}
+
+/*
+ * Tall outer track: scroll distance = min-height. Tune --services-scroll-height
+ * (e.g. 250vh–400vh) for slower/faster passage through the marquee.
+ */
+.scrollTrack {
+  --services-scroll-height: 300vh;
+  position: relative;
+  width: 100%;
+  min-height: var(--services-scroll-height);
+}
+
+/* Pinned stage: GSAP pin keeps this in view while .scrollTrack scrolls past */
+.stickyPanel {
+  box-sizing: border-box;
   position: relative;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  /* Clear fixed navbar + safe area so section title / marquee aren’t clipped underneath */
+  padding-top: max(1rem, calc(var(--nav-offset) + 0.75rem));
+  padding-bottom: clamp(1.25rem, 4vmin, 2.5rem);
 }
 
-.scrollButton {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(16, 185, 129, 0.9);
-  border: none;
-  color: white;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50%;
+.scrollTrackReduced {
+  min-height: 0;
+}
+
+.stickyPanelReduced {
+  min-height: 0;
+  padding-bottom: clamp(2rem, 6vmin, 4rem);
+}
+
+.viewport {
+  flex: 1 1 auto;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 10;
+  gap: clamp(0.35rem, 2vmin, 1rem);
+  width: 100%;
+  min-height: 0;
+  overflow: visible;
+  /* Extra room for large uppercase ascenders in marquee rows */
+  padding-top: 0.35rem;
+  padding-bottom: 0.25rem;
 }
 
-.scrollButton:hover:not(.disabled) {
-  background: rgba(16, 185, 129, 1);
-  transform: translateY(-50%) scale(1.1);
+.row {
+  position: relative;
+  width: 100%;
+  overflow: visible;
+  padding: 0.2rem 0;
 }
 
-.scrollButton.disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-.scrollLeft {
-  left: -1.5rem;
-}
-
-.scrollRight {
-  right: -1.5rem;
-}
-
-.servicesScroll {
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  flex: 1;
-}
-
-.servicesScroll::-webkit-scrollbar {
-  display: none;
-}
-
-.servicesGrid {
+.track {
   display: flex;
-  gap: 2rem;
-  padding: 1rem 0;
-  min-width: max-content;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: baseline;
+  width: max-content;
+  max-width: none;
+  will-change: transform;
 }
 
-.serviceCard {
-  background: #374151;
-  border-radius: 1rem;
-  overflow: hidden;
-  min-width: 300px;
-  max-width: 300px;
-  transition: all 0.3s ease;
-  border: 1px solid #4b5563;
+.itemLink {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-shrink: 0;
+  margin-right: clamp(0.5rem, 2vw, 1.25rem);
+  text-decoration: none;
+  color: inherit;
+  border-radius: 0.25rem;
+  outline: none;
+  transition: opacity 0.2s ease;
 }
 
-.serviceCard:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-  border-color: #10b981;
+.itemLink:hover .itemTitle,
+.itemLink:focus-visible .itemTitle {
+  color: var(--color-accent);
 }
 
-.serviceImage {
-  height: 200px;
-  background: #4b5563;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.itemLink:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--color-bg),
+    0 0 0 4px color-mix(in srgb, var(--color-accent) 70%, transparent);
 }
 
-.imagePlaceholder {
-  width: 80px;
-  height: 80px;
-  background: rgba(16, 185, 129, 0.2);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.itemIndex {
+  font-family: var(--font-velocity);
+  font-size: clamp(0.75rem, 1.75vw, 0.95rem);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--color-text-subtle);
+  line-height: 1.2;
+  margin-bottom: 0.15em;
 }
 
-.imageIcon {
-  font-size: 2rem;
-}
-
-.serviceContent {
-  padding: 1.5rem;
-}
-
-.serviceTitle {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 0.75rem;
+.itemTitle {
+  font-family: var(--font-velocity);
+  font-size: clamp(1.5rem, 6.5vmin, 4.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+  color: var(--color-text);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  white-space: nowrap;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
 }
 
-.serviceDescription {
-  color: #d1d5db;
-  line-height: 1.6;
-  font-size: 0.875rem;
-  margin: 0;
+.sep {
+  flex-shrink: 0;
+  align-self: baseline;
+  font-family: var(--font-velocity);
+  font-size: clamp(1.15rem, 5.25vmin, 3.75rem);
+  font-weight: 600;
+  color: color-mix(in srgb, var(--color-text-subtle) 85%, var(--color-text) 15%);
+  opacity: 0.85;
+  margin-right: clamp(0.5rem, 2vw, 1.25rem);
+  line-height: 1;
+  transform: translateY(0.08em);
 }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .scrollButton {
-    display: none;
-  }
-  
-  .servicesScroll {
-    padding: 0 1rem;
-  }
+.progressWrap {
+  margin-top: auto;
+  width: 100%;
+  padding-top: clamp(1rem, 3vmin, 1.75rem);
 }
 
-@media (max-width: 768px) {
-  .services {
-    padding: 4rem 0;
-  }
-  
-  .container {
-    padding: 0 1rem;
-  }
-  
-  .title {
-    font-size: 1.25rem;
-  }
-  
-  .header {
-    margin-bottom: 3rem;
-  }
-  
-  .serviceCard {
-    min-width: 280px;
-    max-width: 280px;
-  }
-  
-  .serviceImage {
-    height: 180px;
-  }
+.progressTrack {
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-text-subtle) 35%, transparent);
+  overflow: hidden;
 }
 
-@media (max-width: 480px) {
-  .title {
-    font-size: 1rem;
+.progressFill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  border-radius: inherit;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
+}
+
+.scrollHint {
+  margin: 0.65rem 0 0;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+  transition: opacity 0.35s ease;
+}
+
+.hintHidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    will-change: auto;
   }
-  
-  .serviceCard {
-    min-width: 250px;
-    max-width: 250px;
-  }
-  
-  .serviceImage {
-    height: 160px;
-  }
-  
-  .serviceContent {
-    padding: 1rem;
+
+  .progressFill {
+    will-change: auto;
+    transform: scaleX(1);
   }
 }

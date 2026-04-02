@@ -1,6 +1,6 @@
 .about {
   padding: 6rem 0;
-  background-color: #181818;
+  background-color: var(--color-bg);
 }
 
 .container {
@@ -15,9 +15,9 @@
 }
 
 .title {
-  font-size: 3rem;
+  font-size: 3.75rem;
   font-weight: 900;
-  color: white;
+  color: var(--color-text);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin: 0;
@@ -40,7 +40,7 @@
   width: 100%;
   max-width: 400px;
   aspect-ratio: 16/10;
-  background: linear-gradient(135deg, #374151, #4b5563);
+  background: linear-gradient(135deg, var(--color-surface), var(--color-border-strong));
   border-radius: 1rem;
   padding: 1rem;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
@@ -50,7 +50,7 @@
 .screen {
   width: 100%;
   height: 100%;
-  background: #000;
+  background: var(--color-bg-elevated);
   border-radius: 0.5rem;
   padding: 1rem;
   display: flex;
@@ -64,7 +64,7 @@
 
 .codeLine {
   height: 0.5rem;
-  background: #10b981;
+  background: var(--color-accent);
   margin-bottom: 0.5rem;
   border-radius: 0.25rem;
   animation: pulse 2s infinite;
@@ -98,44 +98,44 @@
 }
 
 .card {
-  background: #374151;
+  background: var(--color-surface);
   padding: 2rem;
   border-radius: 1rem;
-  border: 1px solid #4b5563;
+  border: 1px solid var(--color-border);
   transition: all 0.3s ease;
 }
 
 .card:hover {
   transform: translateY(-4px);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-  border-color: #10b981;
+  border-color: var(--color-accent);
 }
 
 .cardNumber {
   font-size: 2rem;
   font-weight: 900;
-  color: #10b981;
+  color: var(--color-accent);
   margin-bottom: 1rem;
 }
 
 .cardTitle {
   font-size: 1.25rem;
   font-weight: 700;
-  color: white;
+  color: var(--color-text);
   margin-bottom: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .cardDescription {
-  color: #d1d5db;
+  color: var(--color-text-muted);
   line-height: 1.6;
   margin-bottom: 1.5rem;
   font-size: 0.875rem;
 }
 
 .cardLink {
-  color: #10b981;
+  color: var(--color-accent);
   text-decoration: none;
   font-weight: 600;
   font-size: 0.875rem;
@@ -143,7 +143,7 @@
 }
 
 .cardLink:hover {
-  color: #059669;
+  color: var(--color-accent-strong);
 }
 
 /* Responsive Design */
@@ -169,7 +169,7 @@
   }
   
   .title {
-    font-size: 2rem;
+    font-size: 2.5rem;
   }
   
   .header {
@@ -187,7 +187,7 @@
 
 @media (max-width: 480px) {
   .title {
-    font-size: 1.75rem;
+    font-size: 2.1875rem;
   }
   
   .card {

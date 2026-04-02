@@ -1,127 +1,295 @@
 .whyChooseUs {
-  padding: 6rem 0;
-  background-color: #181818;
-}
-
-.container {
-  max-width: 80rem;
-  margin: 0 auto;
-  padding: 0 2rem;
-}
-
-.header {
-  text-align: center;
-  margin-bottom: 4rem;
-}
-
-.title {
-  font-size: 3rem;
-  font-weight: 900;
-  color: white;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin: 0;
-}
-
-.featuresGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 2rem;
-}
-
-.card {
-  background: #1f2937;
-  padding: 2.5rem;
-  border-radius: 1rem;
-  border: 1px solid #374151;
-  transition: all 0.3s ease;
+  --section-header-font-display: var(--font-heading);
+  --section-header-font-body: var(--font-body);
+  /* Match .section-title-rail horizontal padding */
+  --why-header-inset-x: clamp(1rem, 4vw, 2.5rem);
   position: relative;
-  overflow: hidden;
+  background-color: var(--color-bg);
+  padding: clamp(3rem, 8vw, 5rem) 0 clamp(3.5rem, 9vw, 7rem);
 }
 
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #10b981, #059669);
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
-}
-
-.card:hover::before {
-  transform: scaleX(1);
-}
-
-.card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-  border-color: #10b981;
-}
-
-.cardTitle {
-  font-size: 1.5rem;
+.sectionLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--section-kicker-size);
   font-weight: 700;
-  color: white;
-  margin-bottom: 1rem;
+  color: var(--color-accent);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.35rem;
+  font-family: var(--section-header-font-body);
 }
 
-.cardDescription {
-  color: #d1d5db;
-  line-height: 1.7;
-  font-size: 0.95rem;
+.sectionLabel::before {
+  content: "";
+  display: block;
+  width: 18px;
+  height: 1px;
+  background: var(--color-accent);
+  opacity: 0.7;
+}
+
+.heading {
+  font-family: var(--section-header-font-display);
+  font-size: var(--section-title-size);
+  font-weight: 900;
+  letter-spacing: -0.02em;
   margin: 0;
+  line-height: 1.2;
+  color: var(--color-text);
 }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .featuresGrid {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
+.headingAccent {
+  color: var(--color-accent);
+}
+
+.pipelineWrap {
+  position: relative;
+  padding: 0 var(--why-header-inset-x);
+  /* Narrower track so cards don’t span the full viewport */
+  max-width: 56rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pipelineSvg {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: auto;
+  height: auto;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 0;
+}
+
+.reasonRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(5.5rem, 15vw, 11rem);
+  align-items: stretch;
+  /* Space between stacked rows (horizontal connector + vertical run) */
+  margin-bottom: clamp(3.75rem, 8vw, 5.5rem);
+  position: relative;
+  z-index: 1;
+}
+
+.reasonCard {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  background: color-mix(in srgb, var(--color-bg) 88%, var(--color-accent) 6%);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 18%, transparent);
+  border-radius: 0.875rem;
+  padding: 1.2rem 1.35rem;
+  position: relative;
+  opacity: 0;
+  /* No translate/scale here — pipeline SVG is measured to dot positions; transforms would desync lines */
+  transform: none;
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent) 0%, transparent);
+  transition:
+    box-shadow 0.5s ease,
+    border-color 0.5s ease;
+}
+
+.reasonCard.visible {
+  box-shadow:
+    0 0 24px color-mix(in srgb, var(--color-accent) 10%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--color-accent) 12%, transparent);
+}
+
+.reasonNum {
+  position: absolute;
+  top: -11px;
+  left: 1rem;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  padding: 0.18rem 0.6rem;
+  border-radius: 9999px;
+}
+
+.reasonIcon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.65rem;
+  color: var(--color-accent);
+}
+
+.reasonIcon svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.reasonTitle {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.4rem;
+  color: var(--color-text);
+  line-height: 1.25;
+}
+
+.reasonDesc {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  line-height: 1.55;
+}
+
+.dot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--color-accent);
+  border-radius: 50%;
+  border: 2px solid var(--color-bg);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent) 80%, transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+
+.reasonCard.visible .dot {
+  opacity: 1;
+}
+
+/* Entry: right column — from left neighbor (horizontal segment in the gap) */
+.reasonCard[data-card-col="right"] .dotEntry {
+  left: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Entry: left column, row 2+ — from pipeline above (vertical segment in row margin) */
+.reasonCard[data-card-col="left"]:not([data-hide-entry="true"]) .dotEntry {
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.reasonCard[data-hide-entry="true"] .dotEntry {
+  display: none;
+}
+
+/* Exit: left column — to right sibling (horizontal in gap) */
+.reasonCard[data-card-col="left"]:not([data-hide-exit="true"]) .dotExit {
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Exit: right column — to next row (vertical in margin between rows) */
+.reasonCard[data-card-col="right"]:not([data-hide-exit="true"]) .dotExit {
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.reasonCard[data-hide-exit="true"] .dotExit {
+  display: none;
+}
+
+.pipelineEnd {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(1rem, 3vw, 1.75rem);
+  opacity: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.endBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 900;
+  padding: 0.7rem 1.75rem;
+  border-radius: 9999px;
+}
+
+.endBadge svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+/* Reduced motion: skip scrub; show final UI */
+.whyChooseUs[data-reduced-motion="true"] .reasonCard {
+  opacity: 1;
+  transform: none;
+}
+
+.whyChooseUs[data-reduced-motion="true"] .reasonCard.visible .dot,
+.whyChooseUs[data-reduced-motion="true"] .reasonCard .dot {
+  opacity: 1;
+}
+
+.whyChooseUs[data-reduced-motion="true"] .pipelineEnd {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reasonCard {
+    transition: box-shadow 0.5s ease, border-color 0.5s ease;
+  }
+
+  .dot {
+    transition: none;
   }
 }
 
+/* Single column: paths are vertical; dots top/bottom only */
 @media (max-width: 768px) {
-  .whyChooseUs {
-    padding: 4rem 0;
-  }
-  
-  .container {
-    padding: 0 1rem;
-  }
-  
-  .title {
-    font-size: 2rem;
-  }
-  
-  .header {
-    margin-bottom: 3rem;
-  }
-  
-  .featuresGrid {
+  .reasonRow {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 2rem;
   }
-  
-  .card {
-    padding: 2rem;
-  }
-}
 
-@media (max-width: 480px) {
-  .title {
-    font-size: 1.75rem;
+  .reasonCard[data-hide-entry="true"] .dotEntry {
+    display: none;
   }
-  
-  .card {
-    padding: 1.5rem;
+
+  .reasonCard:not([data-hide-entry="true"]) .dotEntry {
+    display: block;
+    top: -5px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
   }
-  
-  .cardTitle {
-    font-size: 1.25rem;
+
+  .reasonCard[data-hide-exit="true"] .dotExit {
+    display: none;
+  }
+
+  .reasonCard:not([data-hide-exit="true"]) .dotExit {
+    display: block;
+    bottom: -5px;
+    top: auto;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
   }
 }

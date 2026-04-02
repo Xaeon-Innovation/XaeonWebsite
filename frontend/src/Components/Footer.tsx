@@ -1,16 +1,17 @@
 import { motion } from 'framer-motion';
-import { Facebook, Instagram, Linkedin, Twitter, Mail, Phone } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Twitter, Mail } from 'lucide-react';
 import styles from './Footer.module.css';
 
+const COPYRIGHT_YEAR = 2025;
+
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
 
   const socialLinks = [
     { name: 'Facebook', icon: Facebook, href: '#' },
     { name: 'Instagram', icon: Instagram, href: '#' },
     { name: 'LinkedIn', icon: Linkedin, href: '#' },
     { name: 'Twitter', icon: Twitter, href: '#' },
-    { name: 'Email', icon: Mail, href: 'mailto:info@xaeoninnovation.com' },
+    { name: 'Email', icon: Mail, href: 'mailto:info@xaeons.com' },
   ];
 
   return (
@@ -24,9 +25,9 @@ const Footer = () => {
           viewport={{ once: true }}
           className={styles.logoSection}
         >
-          <img 
-            src="/assets/backgrounds/logo.png" 
-            alt="XAEON Logo" 
+          <img
+            src="/assets/backgrounds/logo.png"
+            alt="XAEON"
             className={styles.logo}
           />
         </motion.div>
@@ -43,7 +44,7 @@ const Footer = () => {
             Let's Build Something <span className={styles.accentText}>Timeless</span>
           </h2>
           <p className={styles.ctaDescription}>
-            Whether you're rethinking your brand or launching something new Xaeon is built to help you lead— with clarity, impact, and purpose.
+            Whether you're rethinking your brand or launching something new Xaeon is built to help you lead with clarity, impact, and purpose.
           </p>
         </motion.div>
 
@@ -58,7 +59,9 @@ const Footer = () => {
           <div className={styles.locationBlocks}>
             <div className={styles.locationBlock}>
               <h3 className={styles.locationTitle}>Alexandria</h3>
-              <p className={styles.locationAddress}>73 Mostafa Kamel Street, Alexandria, Egypt</p>
+              <p className={styles.locationAddress}>
+                13 Roushdy Basha, Mustafa Kamel WA Bolkli, Sidi Gaber, Alexandria, Egypt
+              </p>
             </div>
             
             <div className={styles.locationSeparator}></div>
@@ -91,15 +94,15 @@ const Footer = () => {
                   className={styles.socialIcon}
                   aria-label={social.name}
                 >
-                  <social.icon size={16} />
+                  <social.icon size={14} strokeWidth={1.75} />
                 </a>
               ))}
             </div>
             
             <div className={styles.separator}></div>
             
-            <a href="mailto:info@xaeoninnovation.com" className={styles.contactInfo}>
-              info@xaeoninnovation.com
+            <a href="mailto:info@xaeons.com" className={styles.contactInfo}>
+              info@xaeons.com
             </a>
             
             <div className={styles.separator}></div>
@@ -124,7 +127,7 @@ const Footer = () => {
             <a href="/privacy" className={styles.legalLink}>PRIVACY POLICY</a>
           </div>
           <p className={styles.copyrightText}>
-            © {currentYear} Xaeon. All Right Reserved
+            © {COPYRIGHT_YEAR} Xaeon. All Right Reserved
           </p>
         </motion.div>
       </div>

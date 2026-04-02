@@ -1,0 +1,70 @@
+.root {
+  position: relative;
+  width: 7.5rem;
+  height: 7.5rem;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .root {
+    width: 10rem;
+    height: 10rem;
+  }
+}
+
+.svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.circle {
+  fill: none;
+  opacity: 1;
+}
+
+.value {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: fit-content;
+  height: fit-content;
+  font-size: clamp(1.25rem, 4vw, 1.75rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+/* Lift hub slightly so the gap label sits in the open arc at the bottom */
+.centerWithGap {
+  align-items: center;
+  padding-bottom: 11%;
+  box-sizing: border-box;
+}
+
+/* Sits in the bottom opening of the 270° arc (below the ring) */
+.gapPercent {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(0.1rem, 4.5%, 0.55rem);
+  transform: translateX(-50%);
+  z-index: 2;
+  font-size: clamp(0.8rem, 2.6vw, 1.05rem);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  color: var(--color-accent, #72c04f);
+  line-height: 1;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.55);
+  pointer-events: none;
+}
