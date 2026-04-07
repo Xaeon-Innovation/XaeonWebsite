@@ -6,15 +6,16 @@ import {
   getPackages,
   updatePackage,
 } from "../controllers/package.controller";
+import { requireAuth, requireAdmin } from "../middleware/auth";
 const router = express.Router();
 
 router.get("/", getPackages);
 router.get("/:id", getPackageById);
 
-router.post("/", createPackage);
+router.post("/", requireAuth, requireAdmin, createPackage);
 
-router.put("/", updatePackage);
+router.put("/", requireAuth, requireAdmin, updatePackage);
 
-router.delete("/:id", deletePackage);
+router.delete("/:id", requireAuth, requireAdmin, deletePackage);
 
 export default router;

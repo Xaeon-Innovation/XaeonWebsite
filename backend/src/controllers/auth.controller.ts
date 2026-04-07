@@ -29,21 +29,18 @@ export const register = async (req: Request, res: Response) => {
   try {
     const {
       email,
+      password,
       first_name,
       last_name,
       company,
       phone_number,
     } = (req.body ?? {}) as Record<string, unknown>;
 
-    if (
-      typeof email !== "string" ||
-      typeof first_name !== "string" ||
-      typeof last_name !== "string" ||
-      typeof phone_number !== "string"
-    ) {
-      res.status(400).json({ error: "Invalid registration payload" });
-      return;
-    }
+    if (typeof email !== "string" || email.trim() === "") return res.status(400).json({ error: "Valid email is required" });
+    if (typeof password !== "string" || password.length < 6) return res.status(400).json({ error: "Password must be at least 6 characters" });
+    if (typeof first_name !== "string" || first_name.trim() === "") return res.status(400).json({ error: "First name is required" });
+    if (typeof last_name !== "string" || last_name.trim() === "") return res.status(400).json({ error: "Last name is required" });
+    if (typeof phone_number !== "string" || phone_number.trim() === "") return res.status(400).json({ error: "Phone number is required" });
 
     const normalizedEmail = email.trim().toLowerCase();
     const existing = await User.findOne({ email: normalizedEmail });
@@ -52,8 +49,7 @@ export const register = async (req: Request, res: Response) => {
       return;
     }
 
-    const phonePassword = phone_number.trim();
-    const hashed = await bcrypt.hash(phonePassword, 12);
+    const hashed = await bcrypt.hash(password, 12);
     const role = "user";
 
     const user = await User.create({
@@ -63,7 +59,7 @@ export const register = async (req: Request, res: Response) => {
       last_name: last_name.trim(),
       name: `${first_name.trim()} ${last_name.trim()}`.trim(),
       company: typeof company === "string" ? company.trim() : "",
-      phone_number: phonePassword,
+      phone_number: phone_number.trim(),
       role,
     });
 
@@ -81,6 +77,7 @@ export const register = async (req: Request, res: Response) => {
       },
     });
   } catch (err) {
+    console.error("Register Error:", err);
     res.status(500).json({
       error: err instanceof Error ? err.message : "Failed to register",
     });
@@ -123,6 +120,7 @@ export const login = async (req: Request, res: Response) => {
       },
     });
   } catch (err) {
+    console.error("Login Error:", err);
     res.status(500).json({
       error: err instanceof Error ? err.message : "Failed to login",
     });
@@ -142,6 +140,6 @@ export const logout = async (_req: Request, res: Response) => {
 
 export const me = async (req: Request, res: Response) => {
   // requireAuth middleware attaches req.user
-  res.status(200).json({ user: req.user });
+  res.status(200).json({ user: (req as any).user });
 };
 

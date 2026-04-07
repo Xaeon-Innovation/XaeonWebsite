@@ -7,16 +7,17 @@ import {
   incrementProjectStatus,
   updateProject,
 } from "../controllers/project.controller";
+import { requireAuth, requireAdmin } from "../middleware/auth";
 const router = express.Router();
 
 router.get("/", getProjects);
 router.get("/:id", getProjectById);
 
-router.post("/", createProject);
-router.post("/increment-status", incrementProjectStatus);
+router.post("/", requireAuth, requireAdmin, createProject);
+router.post("/increment-status", requireAuth, requireAdmin, incrementProjectStatus);
 
-router.put("/", updateProject);
+router.put("/", requireAuth, requireAdmin, updateProject);
 
-router.delete("/:id", deleteProject);
+router.delete("/:id", requireAuth, requireAdmin, deleteProject);
 
 export default router;

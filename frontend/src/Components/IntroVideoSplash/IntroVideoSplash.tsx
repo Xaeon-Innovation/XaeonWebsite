@@ -30,10 +30,14 @@ export default function IntroVideoSplash({ src, className, onComplete }: IntroVi
     }, FADE_DURATION_MS);
   }, [isDone, isFading, onComplete]);
 
+  // Hard fallback: always dismiss within 8s, even if video never loads/plays.
   useEffect(() => {
+    const id = setTimeout(() => finish(), 8000);
     return () => {
+      clearTimeout(id);
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -46,15 +50,24 @@ export default function IntroVideoSplash({ src, className, onComplete }: IntroVi
     const v = videoRef.current;
     if (!v) return;
 
+    // If the video src returns 404 or can't load, fire finish immediately.
+    const onLoadError = () => finish();
+    v.addEventListener("error", onLoadError);
+
     const tryPlay = async () => {
       try {
         await v.play();
       } catch {
-        // Autoplay can be blocked on some devices; user can still wait or skip.
+        // Autoplay blocked — user can click Skip, or 8s fallback will fire.
       }
     };
 
     tryPlay();
+
+    return () => {
+      v.removeEventListener("error", onLoadError);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (isDone) return null;
