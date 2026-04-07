@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import api from "../lib/api";
 import styles from "./LoginSignup.module.css";
+import { useAuth } from "../context/AuthContext";
 
 const loginSchema = z.object({
   email: z.string().trim().email("Please enter a valid email."),
@@ -53,6 +54,8 @@ const LoginSignup = () => {
     },
   });
 
+  const { login, refresh } = useAuth();
+
   const switchMode = (nextMode: Mode) => {
     if (nextMode === mode) return;
 
@@ -66,9 +69,8 @@ const LoginSignup = () => {
     setSubmitSuccess(null);
 
     try {
-      const res = await api.post("/auth/login", values);
-      const role = res.data?.user?.role as string | undefined;
-      navigate(role === "admin" ? "/admin" : "/", { replace: true });
+      const user = await login(values.email, values.password);
+      navigate(user.role === "admin" ? "/admin" : "/", { replace: true });
     } catch (e) {
       setSubmitError(e instanceof Error ? e.message : "Login failed.");
     }
@@ -80,6 +82,7 @@ const LoginSignup = () => {
 
     try {
       await api.post("/auth/register", values);
+      await refresh();
       setSubmitSuccess("Account created. You’re logged in.");
       navigate("/", { replace: true });
     } catch (e) {

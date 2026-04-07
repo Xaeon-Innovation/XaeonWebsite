@@ -6,15 +6,16 @@ import {
   getProjectTypes,
   updateProjectType,
 } from "../controllers/projectType.controller";
+import { requireAuth, requireAdmin } from "../middleware/auth";
 const router = express.Router();
 
 router.get("/", getProjectTypes);
 router.get("/:id", getProjectTypeById);
 
-router.post("/", createProjectType);
+router.post("/", requireAuth, requireAdmin, createProjectType);
 
-router.put("/", updateProjectType);
+router.put("/", requireAuth, requireAdmin, updateProjectType);
 
-router.delete("/:id", deleteProjectType);
+router.delete("/:id", requireAuth, requireAdmin, deleteProjectType);
 
 export default router;

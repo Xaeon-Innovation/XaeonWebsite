@@ -27,8 +27,13 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Handle unauthorized access
-      window.location.href = '/login';
+      // Handle unauthorized access, but ignore for auth checks to prevent infinite redirect loops
+      const url = error.config?.url || '';
+      const isAuthCheck = url.includes('/auth/me') || url.includes('/auth/login');
+      
+      if (!isAuthCheck && window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }

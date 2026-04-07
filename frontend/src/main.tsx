@@ -74,6 +74,20 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: "admin",
+    lazy: () => import("./layouts/AdminLayout"),
+    children: [
+      { index: true, lazy: () => import("./Pages/admin/Dashboard") },
+      { path: "users", lazy: () => import("./Pages/admin/UsersPage") },
+      { path: "employees", lazy: () => import("./Pages/admin/EmployeesPage") },
+      { path: "projects", lazy: () => import("./Pages/admin/ProjectsPage") },
+      { path: "project-types", lazy: () => import("./Pages/admin/ProjectTypesPage") },
+      { path: "packages", lazy: () => import("./Pages/admin/PackagesPage") },
+      { path: "blog-posts", lazy: () => import("./Pages/admin/BlogPostsPage") },
+      { path: "service-requests", lazy: () => import("./Pages/admin/ServiceRequestsPage") },
+    ],
+  },
 ]);
 
 createRoot(document.getElementById("root")!).render(
@@ -83,3 +97,4 @@ createRoot(document.getElementById("root")!).render(
     </ContextProviders>
   </StrictMode>
 );
+
