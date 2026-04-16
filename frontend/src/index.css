@@ -107,14 +107,14 @@
     background-position: center;
     background-repeat: no-repeat;
     /* Default to public hero if present */
-    background-image: url('/assets/backgrounds/hero.jpg');
+    background-image: url('/assets/backgrounds/hero.webp');
   }
 
   .bg-section {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-image: url('/assets/backgrounds/section.jpg');
+    background-image: url('/assets/backgrounds/section.webp');
   }
 
   .bg-overlay-dark {

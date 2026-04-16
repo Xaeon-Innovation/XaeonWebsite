@@ -37,7 +37,7 @@ export default function MainLayout() {
     <HelmetProvider>
       {!splashComplete ? (
         <IntroVideoSplash
-          src="/assets/intro/video-project.mp4"
+          src="/assets/intro/video-project.webm"
           onComplete={() => setSplashComplete(true)}
         />
       ) : (

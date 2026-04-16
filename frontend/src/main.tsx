@@ -17,6 +17,10 @@ import Packages from "./Pages/Packages.tsx";
 import Policy from "./Pages/Policy.tsx";
 import MainLayout from "./layouts/MainLayout.tsx";
 import ContextProviders from "./context/ContextProviders.tsx";
+import RequireUser from "./context/RequireUser.tsx";
+import ClientDashboard from "./Pages/ClientDashboard.tsx";
+import { dashboardLoader, serviceRequestsLoader } from "./lib/adminLoaders.ts";
+import { clientDashboardLoader } from "./lib/clientPortalLoaders.ts";
 
 const router = createBrowserRouter([
   {
@@ -69,6 +73,15 @@ const router = createBrowserRouter([
         element: <BookNow />,
       },
       {
+        path: "dashboard",
+        loader: clientDashboardLoader,
+        element: (
+          <RequireUser>
+            <ClientDashboard />
+          </RequireUser>
+        ),
+      },
+      {
         path: "policy",
         element: <Policy />,
       },
@@ -78,14 +91,14 @@ const router = createBrowserRouter([
     path: "admin",
     lazy: () => import("./layouts/AdminLayout"),
     children: [
-      { index: true, lazy: () => import("./Pages/admin/Dashboard") },
+      { index: true, lazy: () => import("./Pages/admin/Dashboard"), loader: dashboardLoader },
       { path: "users", lazy: () => import("./Pages/admin/UsersPage") },
       { path: "employees", lazy: () => import("./Pages/admin/EmployeesPage") },
       { path: "projects", lazy: () => import("./Pages/admin/ProjectsPage") },
       { path: "project-types", lazy: () => import("./Pages/admin/ProjectTypesPage") },
       { path: "packages", lazy: () => import("./Pages/admin/PackagesPage") },
       { path: "blog-posts", lazy: () => import("./Pages/admin/BlogPostsPage") },
-      { path: "service-requests", lazy: () => import("./Pages/admin/ServiceRequestsPage") },
+      { path: "service-requests", lazy: () => import("./Pages/admin/ServiceRequestsPage"), loader: serviceRequestsLoader },
     ],
   },
 ]);

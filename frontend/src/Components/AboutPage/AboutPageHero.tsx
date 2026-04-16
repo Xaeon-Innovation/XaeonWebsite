@@ -29,7 +29,7 @@ const AboutPageHero = () => {
           preload="auto"
           aria-hidden
         >
-          <source src="/assets/videos/about.mp4" type="video/mp4" />
+          <source src="/assets/videos/about.webm" type="video/webm" />
         </video>
       )}
 

@@ -24,9 +24,10 @@ const UserSchema: Schema<IUser> = new Schema({
   name: { type: String, required: true },
   company: { type: String },
   phone_number: { type: String, required: true },
-  service_requests: [
-    { type: Schema.Types.ObjectId, ref: "ServiceRequest", default: [] },
-  ],
+  service_requests: {
+    type: [{ type: Schema.Types.ObjectId, ref: "ServiceRequest" }],
+    default: [],
+  },
   role: {
     type: String,
     enum: ["admin", "user"],

@@ -5,7 +5,7 @@ import { ChevronDown } from "lucide-react";
 import { TypingAnimation } from "./ui/TypingAnimation";
 import styles from "./HeroSequence.module.css";
 
-const VIDEO_SRC = "/assets/videos/hero2.mp4";
+const VIDEO_SRC = "/assets/videos/hero2.webm";
 
 /** Length of the segment to repeat after the first full playthrough. */
 const TAIL_LOOP_DURATION_SEC = 1.7;

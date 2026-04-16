@@ -100,3 +100,24 @@
 .secondaryCta:hover {
   background: color-mix(in srgb, var(--color-accent) 12%, transparent);
 }
+
+.enquirySection {
+  margin-top: 2.75rem;
+  padding-top: 2.25rem;
+  border-top: 1px solid color-mix(in srgb, var(--color-text-muted) 22%, transparent);
+}
+
+.enquiryHeading {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 0.5rem;
+}
+
+.enquiryLead {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+  margin: 0 0 1.25rem;
+}

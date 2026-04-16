@@ -52,6 +52,21 @@
   gap: 0.95rem;
 }
 
+.packageContext {
+  margin: 0;
+  padding: 0.65rem 0.75rem;
+  border-radius: 0.4rem;
+  border: 1px solid rgba(109, 224, 90, 0.28);
+  background: rgba(109, 224, 90, 0.08);
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: rgba(248, 250, 252, 0.88);
+}
+
+.packageContext strong {
+  color: #6de05a;
+}
+
 .field {
   display: grid;
   gap: 0.45rem;

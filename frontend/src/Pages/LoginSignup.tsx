@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import api from "../lib/api";
+import api, { getApiErrorMessage } from "../lib/api";
 import styles from "./LoginSignup.module.css";
 import { useAuth } from "../context/AuthContext";
 
@@ -69,10 +69,10 @@ const LoginSignup = () => {
     setSubmitSuccess(null);
 
     try {
-      const user = await login(values.email, values.password);
+      const user = await login(values);
       navigate(user.role === "admin" ? "/admin" : "/", { replace: true });
     } catch (e) {
-      setSubmitError(e instanceof Error ? e.message : "Login failed.");
+      setSubmitError(getApiErrorMessage(e, "Login failed."));
     }
   });
 
@@ -86,7 +86,7 @@ const LoginSignup = () => {
       setSubmitSuccess("Account created. You’re logged in.");
       navigate("/", { replace: true });
     } catch (e) {
-      setSubmitError(e instanceof Error ? e.message : "Registration failed.");
+      setSubmitError(getApiErrorMessage(e, "Registration failed."));
     }
   });
 

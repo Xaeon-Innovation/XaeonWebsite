@@ -20,7 +20,7 @@ const Services = () => {
       <div className={styles.hero}>
         <video
           className={styles.heroVideo}
-          src="/assets/videos/services-hero.mp4"
+          src="/assets/videos/services-hero.webm"
           autoPlay
           muted
           loop
@@ -34,7 +34,7 @@ const Services = () => {
 
       <section className={styles.servicesTitleSection} aria-hidden="true">
         <img
-          src="/assets/backgrounds/servicespng.png"
+          src="/assets/backgrounds/servicespng.webp"
           alt=""
           className={styles.servicesTitleImage}
         />

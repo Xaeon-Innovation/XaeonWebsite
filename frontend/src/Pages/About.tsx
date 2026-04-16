@@ -21,7 +21,7 @@ const About = () => {
       <section className={`${styles.separatorSection} ${styles.firstSeparator}`} aria-hidden>
         <img
           className={styles.separatorImage}
-          src="/assets/backgrounds/about-separator.png"
+          src="/assets/backgrounds/about-separator.webp"
           alt=""
           loading="lazy"
         />
@@ -35,7 +35,7 @@ const About = () => {
       >
         <img
           className={styles.separatorImage}
-          src="/assets/backgrounds/about-separator.png"
+          src="/assets/backgrounds/about-separator.webp"
           alt=""
           loading="lazy"
         />

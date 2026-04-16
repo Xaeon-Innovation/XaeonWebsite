@@ -1,74 +1,14 @@
-import { useEffect, useState } from "react";
+import { useLoaderData } from "react-router";
 import { Helmet } from "react-helmet-async";
 import { Users, UserCog, FolderKanban, MessageSquareText } from "lucide-react";
 
-import api from "../../lib/api";
 import KpiCard from "../../Components/admin/KpiCard";
 import StatusBadge from "../../Components/admin/StatusBadge";
-
-type Kpis = {
-  users: number;
-  employees: number;
-  projects: number;
-  pendingRequests: number;
-};
-
-type ServiceReq = {
-  _id: string;
-  title: string;
-  status: string;
-  createdAt: string;
-};
-
-type Project = {
-  _id: string;
-  title: string;
-  status_count: number;
-  deadline: string;
-};
+import { type DashboardLoaderData } from "../../lib/adminLoaders";
 
 export function Component() {
-  const [kpis, setKpis] = useState<Kpis>({ users: 0, employees: 0, projects: 0, pendingRequests: 0 });
-  const [loading, setLoading] = useState(true);
-  const [recentRequests, setRecentRequests] = useState<ServiceReq[]>([]);
-  const [recentProjects, setRecentProjects] = useState<Project[]>([]);
-
-  useEffect(() => {
-    setLoading(true);
-    Promise.all([
-      api.get("/user"),
-      api.get("/employee"),
-      api.get("/project"),
-      api.get("/system-request"),
-    ])
-      .then(([usersRes, empRes, projRes, reqRes]) => {
-        const users = usersRes.data?.users ?? [];
-        const employees = empRes.data?.employees ?? [];
-        const projects = projRes.data?.projects ?? [];
-        const requests = reqRes.data?.serviceRequests ?? [];
-
-        setKpis({
-          users: users.length,
-          employees: employees.length,
-          projects: projects.length,
-          pendingRequests: requests.filter((r: ServiceReq) => r.status === "Pending Review").length,
-        });
-
-        setRecentRequests(
-          [...requests]
-            .sort((a: ServiceReq, b: ServiceReq) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-            .slice(0, 5),
-        );
-
-        setRecentProjects(
-          [...projects]
-            .sort((a: Project, b: Project) => new Date(b.deadline).getTime() - new Date(a.deadline).getTime())
-            .slice(0, 5),
-        );
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, []);
+  const { kpis, recentRequests, recentProjects } = useLoaderData<DashboardLoaderData>();
+  const loading = false;
 
   return (
     <>

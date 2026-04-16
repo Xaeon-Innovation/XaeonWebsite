@@ -1,0 +1,8 @@
+.tableRowActions {
+  display: flex;
+  gap: 6px;
+}
+
+.tableIconBtn {
+  padding: 4px 8px;
+}

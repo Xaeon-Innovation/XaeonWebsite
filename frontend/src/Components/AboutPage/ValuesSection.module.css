@@ -78,31 +78,31 @@
 }
 
 .bg1::before {
-  background-image: url("/assets/backgrounds/value-1.png");
+  background-image: url("/assets/backgrounds/value-1.webp");
 }
 
 .bg2::before {
-  background-image: url("/assets/backgrounds/value-2.png");
+  background-image: url("/assets/backgrounds/value-2.webp");
   background-position: 52% 58%;
   background-size: 118% 118%;
 }
 
 .bg3::before {
-  background-image: url("/assets/backgrounds/value-3.png");
+  background-image: url("/assets/backgrounds/value-3.webp");
 }
 
 .bg4::before {
-  background-image: url("/assets/backgrounds/value-4.png");
+  background-image: url("/assets/backgrounds/value-4.webp");
 }
 
 .bg5::before {
-  background-image: url("/assets/backgrounds/value-5.png");
+  background-image: url("/assets/backgrounds/value-5.webp");
   background-position: 50% 38%;
   background-size: 116% 116%;
 }
 
 .bg6::before {
-  background-image: url("/assets/backgrounds/value-6.png");
+  background-image: url("/assets/backgrounds/value-6.webp");
 }
 
 .card::after {

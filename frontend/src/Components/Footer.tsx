@@ -26,7 +26,7 @@ const Footer = () => {
           className={styles.logoSection}
         >
           <img
-            src="/assets/backgrounds/logo.png"
+            src="/assets/backgrounds/logo.webp"
             alt="XAEON"
             className={styles.logo}
           />

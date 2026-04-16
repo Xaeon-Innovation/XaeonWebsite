@@ -43,7 +43,7 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background-image: url("/assets/backgrounds/cta-desktop-16.png");
+  background-image: url("/assets/backgrounds/cta-desktop-16.webp");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
