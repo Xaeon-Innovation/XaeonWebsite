@@ -3,10 +3,12 @@ import { Link, useLocation } from 'react-router';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from './Navbar.module.css';
+import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { user } = useAuth();
 
   const navItems = [
     { name: 'Home', path: '/' },
@@ -24,7 +26,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className={styles.logo}>
             <img
-              src="/assets/backgrounds/logo.png"
+              src="/assets/backgrounds/logo.webp"
               alt="XAEON"
               className={styles.logoImage}
             />
@@ -55,11 +57,27 @@ const Navbar = () => {
             </div>
 
             <div className={styles.navActions}>
-              <Link to="/login" className={`${styles.actionLink} ${styles.loginLink}`}>
-                Log In
-              </Link>
-              <Link to="/book-now" className={`${styles.actionLink} ${styles.bookNowLink}`}>
-                Book Now
+              {user?.role === 'user' ? (
+                <Link
+                  to="/dashboard"
+                  className={`${styles.actionLink} ${styles.loginLink}`}
+                >
+                  My dashboard
+                </Link>
+              ) : user?.role === 'admin' ? (
+                <Link to="/admin" className={`${styles.actionLink} ${styles.loginLink}`}>
+                  Admin
+                </Link>
+              ) : (
+                <Link to="/login" className={`${styles.actionLink} ${styles.loginLink}`}>
+                  Log In
+                </Link>
+              )}
+              <Link
+                to={user?.role === 'user' ? '/dashboard' : '/book-now'}
+                className={`${styles.actionLink} ${styles.bookNowLink}`}
+              >
+                {user?.role === 'user' ? 'Request' : 'Book Now'}
               </Link>
             </div>
           </div>
@@ -97,19 +115,37 @@ const Navbar = () => {
                   </Link>
                 ))}
                 <div className={styles.mobileActionGroup}>
+                  {user?.role === 'user' ? (
+                    <Link
+                      to="/dashboard"
+                      onClick={() => setIsOpen(false)}
+                      className={`${styles.mobileNavLink} ${styles.mobileLoginLink}`}
+                    >
+                      My dashboard
+                    </Link>
+                  ) : user?.role === 'admin' ? (
+                    <Link
+                      to="/admin"
+                      onClick={() => setIsOpen(false)}
+                      className={`${styles.mobileNavLink} ${styles.mobileLoginLink}`}
+                    >
+                      Admin
+                    </Link>
+                  ) : (
+                    <Link
+                      to="/login"
+                      onClick={() => setIsOpen(false)}
+                      className={`${styles.mobileNavLink} ${styles.mobileLoginLink}`}
+                    >
+                      Log In
+                    </Link>
+                  )}
                   <Link
-                    to="/login"
-                    onClick={() => setIsOpen(false)}
-                    className={`${styles.mobileNavLink} ${styles.mobileLoginLink}`}
-                  >
-                    Log In
-                  </Link>
-                  <Link
-                    to="/book-now"
+                    to={user?.role === 'user' ? '/dashboard' : '/book-now'}
                     onClick={() => setIsOpen(false)}
                     className={`${styles.mobileNavLink} ${styles.mobileBookNowLink}`}
                   >
-                    Book Now
+                    {user?.role === 'user' ? 'Request' : 'Book Now'}
                   </Link>
                 </div>
               </div>

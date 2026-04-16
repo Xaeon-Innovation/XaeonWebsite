@@ -2,13 +2,13 @@ import { Helmet } from "react-helmet-async";
 import CaseSlider, { type CaseSlide } from "../Components/CaseSlider/CaseSlider";
 import styles from "./OurWork.module.css";
 import CallToAction from "../Components/CallToAction/CallToAction";
-import { LineShadowText } from "../Components/ui/LineShadowText";
+import { TypingAnimation } from "../Components/ui/TypingAnimation";
 
 const OurWork = () => {
   const slides: CaseSlide[] = [
     {
       id: "case1",
-      imageSrc: "/assets/case-studies/case1.jpg",
+      imageSrc: "/assets/case-studies/case1.webp",
       title: "CMS",
       subtitle: "Client",
       description: "Custom software solution · web app development",
@@ -16,7 +16,7 @@ const OurWork = () => {
     },
     {
       id: "case2",
-      imageSrc: "/assets/case-studies/case2.jpg",
+      imageSrc: "/assets/case-studies/case2.webp",
       title: "Creative Intelligent",
       subtitle: "Client",
       description: "Branding",
@@ -24,7 +24,7 @@ const OurWork = () => {
     },
     {
       id: "case3",
-      imageSrc: "/assets/case-studies/case3.jpg",
+      imageSrc: "/assets/case-studies/case3.webp",
       title: "Little Medical School",
       subtitle: "Client",
       description: "Campaign",
@@ -32,7 +32,7 @@ const OurWork = () => {
     },
     {
       id: "case4",
-      imageSrc: "/assets/case-studies/case4.png",
+      imageSrc: "/assets/case-studies/case4.webp",
       title: "Sony Alpha Festival",
       subtitle: "Client",
       description: "Photography",
@@ -40,7 +40,7 @@ const OurWork = () => {
     },
     {
       id: "case5",
-      imageSrc: "/assets/case-studies/case5.png",
+      imageSrc: "/assets/case-studies/case5.webp",
       title: "Egycon",
       subtitle: "Client",
       description: "Photography",
@@ -48,7 +48,7 @@ const OurWork = () => {
     },
     {
       id: "case6",
-      imageSrc: "/assets/case-studies/case6.png",
+      imageSrc: "/assets/case-studies/case6.webp",
       title: "Winter Editorial",
       subtitle: "Client",
       description: "Photography",
@@ -56,7 +56,7 @@ const OurWork = () => {
     },
     {
       id: "case7",
-      imageSrc: "/assets/case-studies/case7.jpg",
+      imageSrc: "/assets/case-studies/case7.webp",
       title: "Portrait Series",
       subtitle: "Client",
       description: "Photography",
@@ -64,7 +64,7 @@ const OurWork = () => {
     },
     {
       id: "case8",
-      imageSrc: "/assets/case-studies/case8.png",
+      imageSrc: "/assets/case-studies/case8.webp",
       title: "Creative Portrait",
       subtitle: "Client",
       description: "Photography",
@@ -85,13 +85,20 @@ const OurWork = () => {
       <section className={styles.blackHero} aria-label="Our work hero">
         <div className={styles.heroInner}>
           <div className={styles.heroContext}>Our Work</div>
-          <LineShadowText
-            as="h1"
-            shadowColor="rgba(114, 192, 79, 0.95)"
-            className={styles.heroTitleShadow}
-          >
-            Case Studies
-          </LineShadowText>
+          <h1 className={styles.heroTitleShadow}>
+            <span className={styles.heroTitleCase}>Case </span>
+            <TypingAnimation
+              as="span"
+              className={styles.heroTitleStudies}
+              typeSpeed={85}
+              startOnView
+              showCursor
+              blinkCursor
+              cursorClassName={styles.heroTypingCursor}
+            >
+              Studies
+            </TypingAnimation>
+          </h1>
           <p className={styles.heroPhrase}>
             Proof over promises - scroll through the work that speaks for itself.
           </p>

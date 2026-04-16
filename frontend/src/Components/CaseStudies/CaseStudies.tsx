@@ -21,28 +21,28 @@ const caseStudies: CaseStudy[] = [
     subtitle: "Branding · Design Systems",
     tag: "Branding",
     color: "#72c04f",
-    imageSrc: "/assets/case-studies/case-1.jpg",
+    imageSrc: "/assets/case-studies/case-1.webp",
   },
   {
     title: "Digital Experience Design",
     subtitle: "UX · Product",
     tag: "UX",
     color: "#4f98a3",
-    imageSrc: "/assets/case-studies/case-2.jpg",
+    imageSrc: "/assets/case-studies/case-2.webp",
   },
   {
     title: "Product & Platform UI",
     subtitle: "SaaS · Web",
     tag: "SaaS",
     color: "#a86fdf",
-    imageSrc: "/assets/case-studies/case-3.jpg",
+    imageSrc: "/assets/case-studies/case-3.webp",
   },
   {
     title: "Campaign Visuals",
     subtitle: "Marketing · Creative",
     tag: "Marketing",
     color: "#fdab43",
-    imageSrc: "/assets/case-studies/case-4.jpg",
+    imageSrc: "/assets/case-studies/case-4.webp",
   },
 ];
 

@@ -10,8 +10,8 @@ import {
 import { requireAuth, requireAdmin } from "../middleware/auth";
 const router = express.Router();
 
-router.get("/", getProjects);
-router.get("/:id", getProjectById);
+router.get("/", requireAuth, getProjects);
+router.get("/:id", requireAuth, getProjectById);
 
 router.post("/", requireAuth, requireAdmin, createProject);
 router.post("/increment-status", requireAuth, requireAdmin, incrementProjectStatus);

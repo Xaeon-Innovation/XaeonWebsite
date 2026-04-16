@@ -11,6 +11,11 @@ export type UseResourceApi<T> = {
   refresh: () => void;
 };
 
+type UseResourceApiOptions<T> = {
+  initialData?: T[];
+  skipInitialFetch?: boolean;
+};
+
 /**
  * Generic CRUD hook for admin resource pages.
  *
@@ -22,9 +27,10 @@ export function useResourceApi<T extends { _id?: string; id?: string }>(
   endpoint: string,
   dataKey: string,
   entityKey: string,
+  options: UseResourceApiOptions<T> = {},
 ): UseResourceApi<T> {
-  const [data, setData] = useState<T[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<T[]>(() => options.initialData ?? []);
+  const [loading, setLoading] = useState(!(options.initialData || options.skipInitialFetch));
   const [error, setError] = useState<string | null>(null);
   const revision = useRef(0);
 
@@ -52,8 +58,12 @@ export function useResourceApi<T extends { _id?: string; id?: string }>(
   }, [endpoint, dataKey]);
 
   useEffect(() => {
+    if (options.skipInitialFetch) {
+      setLoading(false);
+      return;
+    }
     fetch();
-  }, [fetch]);
+  }, [fetch, options.skipInitialFetch]);
 
   const create = useCallback(
     async (payload: Record<string, unknown>): Promise<T> => {

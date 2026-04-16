@@ -1,26 +1,14 @@
 import type { Request, Response, NextFunction } from "express";
 import jwt, { type Secret } from "jsonwebtoken";
-import User, { type UserRole } from "../models/user.model";
+import User from "../models/user.model";
+import type { AuthUser } from "../types/authUser";
+import "../types/expressAugment";
+
+export type { AuthUser };
 
 type JwtPayload = {
   userId: string;
 };
-
-export type AuthUser = {
-  id: string;
-  role: UserRole;
-  email: string;
-  name: string;
-};
-
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace Express {
-    interface Request {
-      user?: AuthUser;
-    }
-  }
-}
 
 const getJwtSecret = (): string => {
   const secret = process.env.JWT_SECRET;

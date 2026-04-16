@@ -1,5 +1,8 @@
 Documents
 
+# Cursor IDE — local rules (machine/user specific)
+.cursor/rules/
+
 # Dependencies (npm packages)
 node_modules/
 
@@ -11,19 +14,20 @@ images/
 frontend/public/assets/
 frontend/public/assets/**
 
+# Backgrounds (prefer WebP in repo)
 !frontend/public/assets/backgrounds/
-!frontend/public/assets/backgrounds/hero.jpg
-!frontend/public/assets/backgrounds/laptop.png
-!frontend/public/assets/backgrounds/logo.jpg
-!frontend/public/assets/backgrounds/logo.png
-!frontend/public/assets/backgrounds/xaeon-stack-logo.jpg
-!frontend/public/assets/backgrounds/section.jpg
+!frontend/public/assets/backgrounds/**
 
+# Case study images (prefer WebP in repo)
 !frontend/public/assets/case-studies/
-!frontend/public/assets/case-studies/case-1.jpg
-!frontend/public/assets/case-studies/case-2.jpg
-!frontend/public/assets/case-studies/case-3.jpg
-!frontend/public/assets/case-studies/case-4.jpg
+!frontend/public/assets/case-studies/**
+
+# Hero / intro videos: commit only after compressing (WebM + small MP4; avoid huge masters)
+!frontend/public/assets/videos/
+!frontend/public/assets/videos/**
+
+!frontend/public/assets/intro/
+!frontend/public/assets/intro/**
 
 # Environment files (never commit secrets)
 .env

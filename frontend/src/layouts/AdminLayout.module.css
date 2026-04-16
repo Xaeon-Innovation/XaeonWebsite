@@ -249,6 +249,7 @@
   color: #71717a;
   background: rgba(255, 255, 255, 0.02);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  -webkit-user-select: none;
   user-select: none;
   white-space: nowrap;
 }
@@ -283,6 +284,61 @@
   padding: 32px 14px;
   text-align: center;
   color: #52525b;
+}
+
+:global(.admin-td-contact) {
+  vertical-align: top;
+}
+
+:global(.admin-contact-cell) {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  max-width: 16rem;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+:global(.admin-contact-summary-name) {
+  display: block;
+  min-width: 0;
+}
+
+:global(.admin-contact-details) {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+:global(.admin-contact-line) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  align-items: baseline;
+}
+
+:global(.admin-contact-label) {
+  flex-shrink: 0;
+  color: #71717a;
+  font-weight: 600;
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+:global(.admin-contact-value) {
+  color: #e4e4e7;
+  word-break: break-word;
+}
+
+:global(a.admin-contact-value) {
+  color: #86efac;
+  text-decoration: none;
+}
+
+:global(a.admin-contact-value:hover) {
+  text-decoration: underline;
 }
 
 :global(.admin-tr-clickable) {
@@ -346,6 +402,7 @@
 
 :global(.admin-modal::backdrop) {
   background: rgba(0, 0, 0, 0.65);
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 }
 
@@ -437,13 +494,70 @@
 }
 
 :global(.admin-select) {
+  -webkit-appearance: none;
   appearance: none;
   cursor: pointer;
+  color-scheme: dark;
+}
+
+/* Native <option> list: OS light theme otherwise yields white rows + light text */
+:global(.admin-select option),
+:global(.admin-select optgroup) {
+  background-color: #16161f;
+  color: #e4e4e7;
+}
+
+:global(.admin-select option:checked) {
+  background-color: #2a2a38;
+  color: #fafafa;
+}
+
+/* Table / badge-style status picker: pill + tinted border (matches StatusBadge tones) */
+:global(.admin-select-status) {
+  min-width: 140px;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  padding: 5px 30px 5px 12px;
+  line-height: 1.35;
+  background-color: rgba(255, 255, 255, 0.06);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 14px;
+}
+
+:global(.admin-select-status-pending) {
+  border-color: rgba(245, 158, 11, 0.45);
+  color: #fbbf24;
+}
+
+:global(.admin-select-status-accepted) {
+  border-color: rgba(34, 197, 94, 0.45);
+  color: #4ade80;
+}
+
+:global(.admin-select-status-rejected) {
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #f87171;
 }
 
 :global(.admin-field-error) {
   font-size: 0.75rem;
   color: #ef4444;
+}
+
+:global(.admin-field-hint) {
+  margin: 6px 0 0;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: #71717a;
+}
+
+:global(.admin-row-actions) {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 :global(.admin-form-row) {

@@ -1,8 +1,24 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Check } from "lucide-react";
+import { useNavigate } from "react-router";
+import type { LucideIcon } from "lucide-react";
+import {
+  Check,
+  Code2,
+  Globe,
+  Layers,
+  LayoutDashboard,
+  Megaphone,
+  Palette,
+  Smartphone,
+  Sparkles,
+  Video,
+  Zap,
+} from "lucide-react";
 
 import api from "../lib/api";
+import { useAuth } from "../context/AuthContext";
+import PackageEnquiryModal from "../Components/Packages/PackageEnquiryModal";
 import styles from "./Packages.module.css";
 
 type ProjectType = {
@@ -14,9 +30,32 @@ type ProjectType = {
 type PackageEntry = {
   _id: string;
   title: string;
+  description?: string;
   discount: number;
+  showOnWebsite?: boolean;
+  sortOrder?: number;
   project_type: ProjectType[];
 };
+
+const CARD_ACCENTS = [
+  styles.planCardAccent0,
+  styles.planCardAccent1,
+  styles.planCardAccent2,
+  styles.planCardAccent3,
+] as const;
+
+function serviceIcon(title: string): LucideIcon {
+  const t = title.toLowerCase();
+  if (t.includes("website") && !t.includes("web app")) return Globe;
+  if (t.includes("web app")) return LayoutDashboard;
+  if (t.includes("mobile")) return Smartphone;
+  if (t.includes("design") || t.includes("brand")) return Palette;
+  if (t.includes("video") || t.includes("photograph")) return Video;
+  if (t.includes("market")) return Megaphone;
+  if (t.includes("ai")) return Sparkles;
+  if (t.includes("custom")) return Code2;
+  return Layers;
+}
 
 function useReducedMotion(): boolean {
   const [reduced, setReduced] = useState(() =>
@@ -37,9 +76,12 @@ function useReducedMotion(): boolean {
 
 const Packages = () => {
   const reducedMotion = useReducedMotion();
+  const navigate = useNavigate();
+  const { user, isLoading: authLoading } = useAuth();
   const [packages, setPackages] = useState<PackageEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [enquiryPackage, setEnquiryPackage] = useState<PackageEntry | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -69,23 +111,44 @@ const Packages = () => {
     };
   }, []);
 
-  const topPackages = useMemo(() => packages.slice(0, 4), [packages]);
+  /** Plans shown to visitors — `showOnWebsite: false` stays in admin only. */
+  const visiblePackages = useMemo(() => {
+    const shown = packages.filter((p) => p.showOnWebsite !== false);
+    return [...shown].sort((a, b) => {
+      const oa = a.sortOrder ?? 0;
+      const ob = b.sortOrder ?? 0;
+      if (oa !== ob) return oa - ob;
+      return a.title.localeCompare(b.title);
+    });
+  }, [packages]);
 
   const compareRows = useMemo(() => {
     const byId = new Map<string, ProjectType>();
-    for (const p of topPackages) {
+    for (const p of visiblePackages) {
       for (const pt of p.project_type ?? []) {
         if (pt?._id) byId.set(pt._id, pt);
       }
     }
     return [...byId.values()].sort((a, b) => a.title.localeCompare(b.title));
-  }, [topPackages]);
+  }, [visiblePackages]);
 
   const scrollToPlans = useCallback(() => {
     const el = document.getElementById("plans");
     if (!el) return;
     el.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth" });
   }, [reducedMotion]);
+
+  const handleBookPackage = useCallback(
+    (p: PackageEntry) => {
+      if (authLoading) return;
+      if (user) {
+        navigate(`/dashboard?package=${encodeURIComponent(p._id)}`);
+      } else {
+        setEnquiryPackage(p);
+      }
+    },
+    [authLoading, user, navigate],
+  );
 
   return (
     <>
@@ -103,7 +166,7 @@ const Packages = () => {
         ) : (
           <video
             className={styles.heroVideo}
-            src="/assets/videos/heropackages.mp4"
+            src="/assets/videos/heropackages.webm"
             autoPlay
             muted
             loop
@@ -129,93 +192,206 @@ const Packages = () => {
             <div className={styles.state}>Loading packages…</div>
           ) : error ? (
             <div className={styles.stateError}>{error}</div>
-          ) : topPackages.length === 0 ? (
+          ) : packages.length === 0 ? (
             <div className={styles.state}>No packages available yet.</div>
+          ) : visiblePackages.length === 0 ? (
+            <div className={styles.state}>
+              No packages are enabled for the website. Your team can turn on{" "}
+              <strong>Show on website</strong> in admin for the plans you want to promote.
+            </div>
           ) : (
             <>
-              <div className={styles.cardRow} aria-label="Plan cards">
-                {topPackages.map((p) => (
-                  <article key={p._id} className={styles.card}>
-                    <header className={styles.cardHeader}>
-                      <h2 className={styles.cardTitle}>{p.title}</h2>
-                      <div className={styles.cardSub}>
+              <p className={styles.planIntro}>
+                Pick a bundle — each one is built from our core services with a clear discount. We keep this list focused so choosing a path stays simple.
+              </p>
+
+              <div className={styles.planGrid} aria-label="Plan cards">
+                {visiblePackages.map((p, index) => {
+                  const services = p.project_type ?? [];
+                  const accent = CARD_ACCENTS[index % CARD_ACCENTS.length];
+                  const pitch = (p.description ?? "").trim();
+
+                  return (
+                    <article
+                      key={p._id}
+                      className={`${styles.planCard} ${accent}`}
+                    >
+                      <div className={styles.planCardSheen} aria-hidden />
+
+                      <div className={styles.planCardIconRow} aria-hidden>
+                        {services.slice(0, 5).map((pt) => {
+                          const Icon = serviceIcon(pt.title);
+                          return (
+                            <span
+                              key={pt._id}
+                              className={styles.planIconSlot}
+                              title={pt.title}
+                            >
+                              <Icon className={styles.planIcon} strokeWidth={1.65} />
+                            </span>
+                          );
+                        })}
+                        {services.length > 5 ? (
+                          <span className={styles.planIconMore}>
+                            +{services.length - 5}
+                          </span>
+                        ) : null}
+                      </div>
+
+                      <div className={styles.planCardHead}>
+                        <h2 className={styles.planCardTitle}>{p.title}</h2>
                         {p.discount > 0 ? (
-                          <span className={styles.discount}>
+                          <span className={styles.planSavePill}>
                             Save {p.discount}%
                           </span>
                         ) : (
-                          <span className={styles.discountMuted}>
-                            No discount
-                          </span>
+                          <span className={styles.planSaveMuted}>Custom</span>
                         )}
                       </div>
-                    </header>
 
-                    <ul className={styles.cardList}>
-                      {(p.project_type ?? []).slice(0, 8).map((pt) => (
-                        <li key={pt._id} className={styles.cardListItem}>
-                          <span className={styles.bullet} aria-hidden>
-                            •
-                          </span>
-                          <span className={styles.cardListText}>{pt.title}</span>
-                        </li>
-                      ))}
-                      {(p.project_type ?? []).length > 8 ? (
-                        <li className={styles.cardListItemMuted}>
-                          +{(p.project_type ?? []).length - 8} more
-                        </li>
-                      ) : null}
-                    </ul>
+                      <p className={pitch ? styles.planPitch : styles.planPitchMuted}>
+                        {pitch ||
+                          "Add a short public description for this package in admin — it appears only here, so each bundle can sound unique."}
+                      </p>
 
-                    <button
-                      type="button"
-                      className={styles.cardCta}
-                      onClick={scrollToPlans}
-                    >
-                      Get Started
-                    </button>
-                  </article>
-                ))}
+                      <ul className={styles.planChipList}>
+                        {services.map((pt) => {
+                          const Icon = serviceIcon(pt.title);
+                          return (
+                            <li key={pt._id} className={styles.planChip}>
+                              <span className={styles.planChipIconWrap}>
+                                <Icon
+                                  className={styles.planChipIcon}
+                                  strokeWidth={2}
+                                  aria-hidden
+                                />
+                              </span>
+                              <span className={styles.planChipLabel}>{pt.title}</span>
+                            </li>
+                          );
+                        })}
+                      </ul>
+
+                      <button
+                        type="button"
+                        className={styles.planCta}
+                        onClick={() => handleBookPackage(p)}
+                      >
+                        <span>Get started</span>
+                        <Zap className={styles.planCtaIcon} strokeWidth={2.2} aria-hidden />
+                      </button>
+                    </article>
+                  );
+                })}
               </div>
 
               <div className={styles.compare}>
                 <h2 className={styles.compareTitle}>Compare Plans</h2>
                 <p className={styles.compareSubtitle}>
-                  Choose the plan that fits you best
+                  Savings, coverage, and what&apos;s included — all in one view. On small screens, each plan opens below.
                 </p>
 
-                <div className={styles.tableWrap} role="region" aria-label="Compare plans table" tabIndex={0}>
-                  <table className={styles.table}>
+                {/* Desktop & tablet: fluid table — no horizontal scroll */}
+                <div
+                  className={styles.compareTableWrap}
+                  role="region"
+                  aria-label="Compare packages"
+                >
+                  <table className={styles.compareTable}>
+                    <colgroup>
+                      <col className={styles.compareColFeature} />
+                      {visiblePackages.map((p) => (
+                        <col key={p._id} className={styles.compareColPlan} />
+                      ))}
+                    </colgroup>
                     <thead>
                       <tr>
-                        <th scope="col" className={styles.thLeft}>
-                          Service / Package
+                        <th scope="col" className={styles.compareThCorner}>
+                          Plan
                         </th>
-                        {topPackages.map((p) => (
-                          <th key={p._id} scope="col" className={styles.th}>
-                            {p.title}
+                        {visiblePackages.map((p) => (
+                          <th
+                            key={p._id}
+                            scope="col"
+                            className={styles.compareThPlan}
+                            title={p.title}
+                          >
+                            <span className={styles.compareThPlanName}>{p.title}</span>
+                            <span
+                              className={
+                                p.discount > 0
+                                  ? styles.compareThPlanDiscount
+                                  : styles.compareThPlanDiscountMuted
+                              }
+                            >
+                              {p.discount > 0
+                                ? `Save ${p.discount}%`
+                                : "No bundle off"}
+                            </span>
                           </th>
                         ))}
                       </tr>
                     </thead>
                     <tbody>
+                      <tr className={styles.compareTrMeta}>
+                        <th scope="row" className={styles.compareRowLabel}>
+                          Bundle savings
+                        </th>
+                        {visiblePackages.map((p) => (
+                          <td key={p._id} className={styles.compareTdMeta}>
+                            {p.discount > 0 ? (
+                              <span className={styles.compareMetaHighlight}>
+                                {p.discount}%
+                              </span>
+                            ) : (
+                              <span className={styles.compareMetaDash}>—</span>
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                      <tr className={styles.compareTrMeta}>
+                        <th scope="row" className={styles.compareRowLabel}>
+                          Services in bundle
+                        </th>
+                        {visiblePackages.map((p) => (
+                          <td key={p._id} className={styles.compareTdMeta}>
+                            <span className={styles.compareMetaHighlight}>
+                              {(p.project_type ?? []).length}
+                            </span>
+                          </td>
+                        ))}
+                      </tr>
+                      <tr className={styles.compareTrSection}>
+                        <td
+                          colSpan={visiblePackages.length + 1}
+                          className={styles.compareSectionCell}
+                        >
+                          Service coverage
+                        </td>
+                      </tr>
                       {compareRows.map((row) => (
-                        <tr key={row._id}>
-                          <th scope="row" className={styles.tdLeft}>
+                        <tr key={row._id} className={styles.compareTrService}>
+                          <th scope="row" className={styles.compareServiceName}>
                             {row.title}
                           </th>
-                          {topPackages.map((p) => {
+                          {visiblePackages.map((p) => {
                             const has = (p.project_type ?? []).some(
-                              (pt) => pt._id === row._id
+                              (pt) => String(pt._id) === String(row._id)
                             );
                             return (
-                              <td key={p._id} className={styles.td}>
+                              <td key={p._id} className={styles.compareTdCheck}>
                                 {has ? (
-                                  <span className={styles.check} aria-label="Included">
+                                  <span
+                                    className={styles.check}
+                                    aria-label={`${p.title} includes ${row.title}`}
+                                  >
                                     <Check className={styles.checkIcon} aria-hidden />
                                   </span>
                                 ) : (
-                                  <span className={styles.dash} aria-hidden>
+                                  <span
+                                    className={styles.dash}
+                                    aria-label={`${p.title} does not include ${row.title}`}
+                                  >
                                     —
                                   </span>
                                 )}
@@ -225,13 +401,104 @@ const Packages = () => {
                         </tr>
                       ))}
                     </tbody>
+                    <tfoot>
+                      <tr className={styles.compareTrFoot}>
+                        <th scope="row" className={styles.compareFootLabel}>
+                          Ready to start?
+                        </th>
+                        {visiblePackages.map((p) => (
+                          <td key={p._id} className={styles.compareTdFoot}>
+                            <button
+                              type="button"
+                              className={styles.compareFootLink}
+                              onClick={() => handleBookPackage(p)}
+                            >
+                              Book
+                            </button>
+                          </td>
+                        ))}
+                      </tr>
+                    </tfoot>
                   </table>
+                </div>
+
+                {/* Mobile: one card per package — no horizontal scroll */}
+                <div
+                  className={styles.compareMobile}
+                  aria-label="Compare packages by plan"
+                >
+                  {visiblePackages.map((p) => (
+                    <article key={p._id} className={styles.compareMobileCard}>
+                      <header className={styles.compareMobileHead}>
+                        <h3 className={styles.compareMobileTitle}>{p.title}</h3>
+                        <div className={styles.compareMobileBadges}>
+                          {p.discount > 0 ? (
+                            <span className={styles.compareMobileSave}>
+                              Save {p.discount}%
+                            </span>
+                          ) : null}
+                          <span className={styles.compareMobileCount}>
+                            {(p.project_type ?? []).length} service
+                            {(p.project_type ?? []).length !== 1 ? "s" : ""}
+                          </span>
+                        </div>
+                      </header>
+                      <ul className={styles.compareMobileList}>
+                        {compareRows.map((row) => {
+                          const has = (p.project_type ?? []).some(
+                            (pt) => String(pt._id) === String(row._id)
+                          );
+                          return (
+                            <li
+                              key={row._id}
+                              className={
+                                has
+                                  ? styles.compareMobileRowIn
+                                  : styles.compareMobileRowOut
+                              }
+                            >
+                              {has ? (
+                                <Check
+                                  className={styles.compareMobileCheck}
+                                  strokeWidth={2.5}
+                                  aria-hidden
+                                />
+                              ) : (
+                                <span className={styles.compareMobileNo} aria-hidden>
+                                  —
+                                </span>
+                              )}
+                              <span className={styles.compareMobileSvc}>
+                                {row.title}
+                              </span>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                      <button
+                        type="button"
+                        className={styles.compareMobileCta}
+                        onClick={() => handleBookPackage(p)}
+                      >
+                        Get started
+                      </button>
+                    </article>
+                  ))}
                 </div>
               </div>
             </>
           )}
         </div>
       </section>
+
+      {enquiryPackage ? (
+        <PackageEnquiryModal
+          open
+          onClose={() => setEnquiryPackage(null)}
+          packageId={enquiryPackage._id}
+          packageTitle={enquiryPackage.title}
+        />
+      ) : null}
     </>
   );
 };

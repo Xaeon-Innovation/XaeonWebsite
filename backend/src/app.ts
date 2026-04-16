@@ -3,6 +3,8 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 require("dotenv").config();
 
+import "./types/expressAugment";
+
 import { errorHandler } from "./middleware/errorHandler";
 import { logger } from "./middleware/logger";
 import { corsOptions } from "./config/cors.config";
@@ -41,4 +43,8 @@ app.use("/api/v1/user", userRouter);
 
 app.use(errorHandler);
 
-app.listen(process.env.BACKEND_PORT);
+const port =
+  Number(process.env.PORT) || Number(process.env.BACKEND_PORT) || 5000;
+app.listen(port, () => {
+  console.log(`API listening on port ${port}`);
+});

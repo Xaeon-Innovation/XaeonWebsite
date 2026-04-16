@@ -35,6 +35,7 @@ export const getPackageById = async (req: Request, res: Response) => {
 export const createPackage = async (req: Request, res: Response) => {
   try {
     const newPackage = await Package.create(req.body.package);
+    await newPackage.populate("project_type", "title stages");
     res.status(200).json({
       message: "New Package Created Successfully",
       package: newPackage,
@@ -58,7 +59,7 @@ export const updatePackage = async (req: Request, res: Response) => {
     const updatedPackage = await Package.findByIdAndUpdate(id, update, {
       new: true,
       runValidators: true,
-    });
+    }).populate("project_type", "title stages");
     if (!updatedPackage) {
       res.status(404).json({ error: "Package not found" });
       return;

@@ -13,12 +13,16 @@ export type AuthUser = {
   email: string;
   name: string;
   role: "admin" | "user";
+  first_name?: string;
+  last_name?: string;
+  company?: string;
+  phone_number?: string;
 };
 
 type AuthContextValue = {
   user: AuthUser | null;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<AuthUser>;
+  login: (credentials: { email: string; password: string }) => Promise<AuthUser>;
   logout: () => Promise<void>;
   refresh: () => Promise<void>;
 };
@@ -43,8 +47,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
     refresh().finally(() => setIsLoading(false));
   }, [refresh]);
 
-  const login = useCallback(async (email: string, password: string) => {
-    const res = await api.post("/auth/login", { email, password });
+  const login = useCallback(async (credentials: { email: string; password: string }) => {
+    const res = await api.post("/auth/login", credentials);
     const u = res.data?.user as AuthUser;
     setUser(u);
     return u;
@@ -62,6 +66,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth(): AuthContextValue {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error("useAuth must be used within AuthProvider");

@@ -1,7 +1,9 @@
 import express from "express";
 import {
   createServiceRequest,
+  createServiceRequestEnquiry,
   deleteServiceRequest,
+  getMyServiceRequests,
   getServiceRequestById,
   getServiceRequests,
   updateServiceRequest,
@@ -9,15 +11,18 @@ import {
 import { requireAuth, requireAdmin } from "../middleware/auth";
 const router = express.Router();
 
-router.use(requireAuth, requireAdmin);
+/** Public: contact / service-interest (same controller + model as registered requests). */
+router.post("/enquiry", createServiceRequestEnquiry);
 
-router.get("/", getServiceRequests);
-router.get("/:id", getServiceRequestById);
+router.get("/mine", requireAuth, getMyServiceRequests);
+router.get("/", requireAuth, requireAdmin, getServiceRequests);
+router.get("/:id", requireAuth, requireAdmin, getServiceRequestById);
 
-router.post("/", createServiceRequest);
+/** Authenticated: full service request (user + meeting_date). */
+router.post("/", requireAuth, createServiceRequest);
 
-router.put("/", updateServiceRequest);
+router.put("/", requireAuth, requireAdmin, updateServiceRequest);
 
-router.delete("/:id", deleteServiceRequest);
+router.delete("/:id", requireAuth, requireAdmin, deleteServiceRequest);
 
 export default router;

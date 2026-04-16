@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
+import { useDebounce } from "use-debounce";
 
 export type Column<T> = {
   header: string;
@@ -35,7 +36,8 @@ export default function DataTable<T extends Record<string, unknown>>({
   searchPlaceholder = "Search…",
   searchFields,
 }: Props<T>) {
-  const [search, setSearch] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [search] = useDebounce(searchInput, 300);
   const [sortCol, setSortCol] = useState<number | null>(null);
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const [page, setPage] = useState(0);
@@ -82,9 +84,9 @@ export default function DataTable<T extends Record<string, unknown>>({
             type="search"
             className="admin-search"
             placeholder={searchPlaceholder}
-            value={search}
+            value={searchInput}
             onChange={(e) => {
-              setSearch(e.target.value);
+              setSearchInput(e.target.value);
               setPage(0);
             }}
           />
