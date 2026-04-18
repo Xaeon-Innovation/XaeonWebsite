@@ -10,24 +10,25 @@ node_modules/
 /images/
 images/
 
-# Curated public assets only (avoid committing huge asset dumps)
-frontend/public/assets/
+# Public assets: ignore all under assets/, then whitelist folders Git should track.
+# Without `!frontend/public/assets/`, negated paths under assets/ do not take effect (gitignore(5)).
 frontend/public/assets/**
+!frontend/public/assets/
 
-# Backgrounds (prefer WebP in repo)
 !frontend/public/assets/backgrounds/
 !frontend/public/assets/backgrounds/**
 
-# Case study images (prefer WebP in repo)
 !frontend/public/assets/case-studies/
 !frontend/public/assets/case-studies/**
 
-# Hero / intro videos: commit only after compressing (WebM + small MP4; avoid huge masters)
 !frontend/public/assets/videos/
 !frontend/public/assets/videos/**
 
 !frontend/public/assets/intro/
 !frontend/public/assets/intro/**
+
+!frontend/public/assets/xaeon/
+!frontend/public/assets/xaeon/**
 
 # Environment files (never commit secrets)
 .env
