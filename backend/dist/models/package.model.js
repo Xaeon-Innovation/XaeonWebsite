@@ -36,6 +36,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const PackageSchema = new mongoose_1.Schema({
     title: { type: String, required: true },
+    description: {
+        type: String,
+        default: "",
+        maxlength: 4000,
+    },
     project_type: {
         type: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "ProjectType" }],
         required: true,
@@ -47,6 +52,14 @@ const PackageSchema = new mongoose_1.Schema({
         max: 100,
         default: 0,
         required: true,
+    },
+    showOnWebsite: {
+        type: Boolean,
+        default: true,
+    },
+    sortOrder: {
+        type: Number,
+        default: 0,
     },
 });
 const Package = mongoose_1.default.model("Package", PackageSchema);

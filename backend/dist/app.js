@@ -3,10 +3,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const path_1 = __importDefault(require("path"));
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
-require("dotenv").config();
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config({ path: path_1.default.resolve(__dirname, "..", ".env") });
+require("./types/expressAugment");
 const errorHandler_1 = require("./middleware/errorHandler");
 const logger_1 = require("./middleware/logger");
 const cors_config_1 = require("./config/cors.config");
@@ -38,4 +41,7 @@ app.use("/api/v1/employee", employee_routes_1.default);
 app.use("/api/v1/system-request", serviceRequest_routes_1.default);
 app.use("/api/v1/user", user_routes_1.default);
 app.use(errorHandler_1.errorHandler);
-app.listen(process.env.BACKEND_PORT);
+const port = Number(process.env.PORT) || Number(process.env.BACKEND_PORT) || 5000;
+app.listen(port, () => {
+    console.log(`API listening on port ${port}`);
+});

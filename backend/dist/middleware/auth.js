@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.requireAdmin = exports.requireAuth = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const user_model_1 = __importDefault(require("../models/user.model"));
+require("../types/expressAugment");
 const getJwtSecret = () => {
     const secret = process.env.JWT_SECRET;
     if (!secret)

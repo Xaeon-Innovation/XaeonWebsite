@@ -34,6 +34,11 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
+function isRegisteredSource() {
+    return (this.source !== "contact" &&
+        this.source !== "service" &&
+        this.source !== "package");
+}
 const ServiceRequestSchema = new mongoose_1.Schema({
     title: { type: String, required: true },
     description: { type: String },
@@ -42,9 +47,30 @@ const ServiceRequestSchema = new mongoose_1.Schema({
         enum: ["Pending Review", "Accepted", "Rejected"],
         default: "Pending Review",
     },
-    meeting_date: { type: Date, required: true },
-    user: { type: mongoose_1.Schema.Types.ObjectId, ref: "User", required: true },
+    source: {
+        type: String,
+        enum: ["registered", "contact", "service", "package"],
+        default: "registered",
+    },
+    meeting_date: {
+        type: Date,
+        required() {
+            return isRegisteredSource.call(this);
+        },
+    },
+    user: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: "User",
+        required() {
+            return isRegisteredSource.call(this);
+        },
+    },
     package: { type: mongoose_1.Schema.Types.ObjectId, ref: "Package" },
+    contactName: { type: String },
+    contactEmail: { type: String },
+    contactPhone: { type: String },
+    company: { type: String },
+    interest: { type: String },
 }, { timestamps: true });
 const ServiceRequest = mongoose_1.default.model("ServiceRequest", ServiceRequestSchema);
 exports.default = ServiceRequest;

@@ -42,9 +42,16 @@ const UserSchema = new mongoose_1.Schema({
     name: { type: String, required: true },
     company: { type: String },
     phone_number: { type: String, required: true },
-    service_requests: [
-        { type: mongoose_1.Schema.Types.ObjectId, ref: "ServiceRequest", default: [] },
-    ],
+    service_requests: {
+        type: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "ServiceRequest" }],
+        default: [],
+    },
+    role: {
+        type: String,
+        enum: ["admin", "user"],
+        default: "user",
+        required: true,
+    },
 }, { timestamps: true });
 const User = mongoose_1.default.model("User", UserSchema);
 exports.default = User;

@@ -4,11 +4,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteProject = exports.updateProject = exports.incrementProjectStatus = exports.createProject = exports.getProjectById = exports.getProjects = void 0;
+const mongoose_1 = __importDefault(require("mongoose"));
+require("../types/expressAugment");
 const project_model_1 = __importDefault(require("../models/project.model"));
+const projectListPopulate = [
+    { path: "project_type", select: "title stages" },
+    { path: "project_manager", select: "name" },
+    { path: "user", select: "name email" },
+];
 const getProjects = async (req, res) => {
     try {
-        const projects = await project_model_1.default.find();
-        res.status(200).json({ projects: projects });
+        const u = req.user;
+        if (!u) {
+            res.status(401).json({ error: "Not authenticated" });
+            return;
+        }
+        const query = u.role === "admin"
+            ? {}
+            : { user: new mongoose_1.default.Types.ObjectId(u.id) };
+        const projects = await project_model_1.default.find(query)
+            .populate(projectListPopulate)
+            .sort({ updatedAt: -1 });
+        res.status(200).json({ projects });
     }
     catch (err) {
         console.error(err);
@@ -20,10 +37,28 @@ const getProjects = async (req, res) => {
 exports.getProjects = getProjects;
 const getProjectById = async (req, res) => {
     try {
-        const project = await project_model_1.default.findById(req.params.id);
+        const u = req.user;
+        if (!u) {
+            res.status(401).json({ error: "Not authenticated" });
+            return;
+        }
+        const project = await project_model_1.default.findById(req.params.id).populate(projectListPopulate);
         if (!project) {
             res.status(404).json({ error: "Project not found" });
             return;
+        }
+        if (u.role !== "admin") {
+            const rawUser = project.user;
+            const ownerId = rawUser &&
+                typeof rawUser === "object" &&
+                "_id" in rawUser &&
+                rawUser._id != null
+                ? String(rawUser._id)
+                : String(rawUser ?? "");
+            if (ownerId !== u.id) {
+                res.status(403).json({ error: "Access denied" });
+                return;
+            }
         }
         res.status(200).json({ project });
     }

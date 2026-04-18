@@ -38,6 +38,7 @@ exports.getPackageById = getPackageById;
 const createPackage = async (req, res) => {
     try {
         const newPackage = await package_model_1.default.create(req.body.package);
+        await newPackage.populate("project_type", "title stages");
         res.status(200).json({
             message: "New Package Created Successfully",
             package: newPackage,
@@ -62,7 +63,7 @@ const updatePackage = async (req, res) => {
         const updatedPackage = await package_model_1.default.findByIdAndUpdate(id, update, {
             new: true,
             runValidators: true,
-        });
+        }).populate("project_type", "title stages");
         if (!updatedPackage) {
             res.status(404).json({ error: "Package not found" });
             return;

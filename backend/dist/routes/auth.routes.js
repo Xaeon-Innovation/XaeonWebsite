@@ -11,4 +11,5 @@ router.post("/register", auth_controller_1.register);
 router.post("/login", auth_controller_1.login);
 router.post("/logout", auth_controller_1.logout);
 router.get("/me", auth_1.requireAuth, auth_controller_1.me);
+router.patch("/me", auth_1.requireAuth, auth_controller_1.updateMyProfile);
 exports.default = router;
