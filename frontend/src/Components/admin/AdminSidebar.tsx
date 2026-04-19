@@ -12,6 +12,7 @@ import {
   PanelLeft,
   UsersRound,
   Images,
+  Share2,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -24,6 +25,7 @@ const NAV_ITEMS = [
   { to: "/admin/blog-posts", label: "Blog Posts", icon: FileText },
   { to: "/admin/site-team", label: "Site — Team", icon: UsersRound },
   { to: "/admin/site-case-studies", label: "Site — Case studies", icon: Images },
+  { to: "/admin/site-social", label: "Site — Social links", icon: Share2 },
   { to: "/admin/service-requests", label: "Requests", icon: MessageSquareText },
 ] as const;
 

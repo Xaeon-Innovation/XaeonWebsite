@@ -43,6 +43,7 @@ import siteRouter from "./routes/site.routes";
 import teamMemberRouter from "./routes/teamMember.routes";
 import caseStudyRouter from "./routes/caseStudy.routes";
 import siteUploadRouter from "./routes/siteUpload.routes";
+import siteSettingsRouter from "./routes/siteSettings.routes";
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/blog-post", blogPostRouter);
@@ -56,6 +57,7 @@ app.use("/api/v1/site", siteRouter);
 app.use("/api/v1/team-member", teamMemberRouter);
 app.use("/api/v1/case-study", caseStudyRouter);
 app.use("/api/v1/admin", siteUploadRouter);
+app.use("/api/v1/admin/site-settings", siteSettingsRouter);
 
 app.use(errorHandler);
 

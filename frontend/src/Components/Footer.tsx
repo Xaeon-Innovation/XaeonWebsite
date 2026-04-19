@@ -1,18 +1,70 @@
-import { motion } from 'framer-motion';
-import { Facebook, Instagram, Linkedin, Twitter, Mail } from 'lucide-react';
-import styles from './Footer.module.css';
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router";
+import { motion } from "framer-motion";
+import { Facebook, Instagram, Linkedin, Twitter, Mail, type LucideIcon } from "lucide-react";
+import api from "../lib/api";
+import styles from "./Footer.module.css";
 
-const COPYRIGHT_YEAR = 2025;
+const COPYRIGHT_YEAR = new Date().getFullYear();
+
+type SocialLinksPayload = {
+  facebookUrl: string;
+  instagramUrl: string;
+  linkedinUrl: string;
+  twitterUrl: string;
+  emailUrl: string;
+};
+
+const FALLBACK_SOCIAL: SocialLinksPayload = {
+  facebookUrl: "",
+  instagramUrl: "",
+  linkedinUrl: "",
+  twitterUrl: "",
+  emailUrl: "mailto:info@xaeons.com",
+};
 
 const Footer = () => {
+  const [social, setSocial] = useState<SocialLinksPayload>(FALLBACK_SOCIAL);
 
-  const socialLinks = [
-    { name: 'Facebook', icon: Facebook, href: '#' },
-    { name: 'Instagram', icon: Instagram, href: '#' },
-    { name: 'LinkedIn', icon: Linkedin, href: '#' },
-    { name: 'Twitter', icon: Twitter, href: '#' },
-    { name: 'Email', icon: Mail, href: 'mailto:info@xaeons.com' },
-  ];
+  useEffect(() => {
+    let cancelled = false;
+    api
+      .get<{ socialLinks?: SocialLinksPayload }>("/site/social-links")
+      .then((res) => {
+        const s = res.data?.socialLinks;
+        if (cancelled || !s) return;
+        setSocial({
+          facebookUrl: s.facebookUrl ?? "",
+          instagramUrl: s.instagramUrl ?? "",
+          linkedinUrl: s.linkedinUrl ?? "",
+          twitterUrl: s.twitterUrl ?? "",
+          emailUrl: s.emailUrl?.trim() || FALLBACK_SOCIAL.emailUrl,
+        });
+      })
+      .catch(() => {
+        /* keep fallback */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const socialLinks = useMemo(() => {
+    const defs: { name: string; icon: LucideIcon; key: keyof SocialLinksPayload }[] = [
+      { name: "Facebook", icon: Facebook, key: "facebookUrl" },
+      { name: "Instagram", icon: Instagram, key: "instagramUrl" },
+      { name: "LinkedIn", icon: Linkedin, key: "linkedinUrl" },
+      { name: "Twitter", icon: Twitter, key: "twitterUrl" },
+      { name: "Email", icon: Mail, key: "emailUrl" },
+    ];
+    return defs
+      .map((d) => {
+        const href = social[d.key]?.trim() || "";
+        if (!href) return null;
+        return { name: d.name, icon: d.icon, href };
+      })
+      .filter(Boolean) as { name: string; icon: LucideIcon; href: string }[];
+  }, [social]);
 
   return (
     <footer className={styles.footer}>
@@ -63,9 +115,9 @@ const Footer = () => {
                 13 Roushdy Basha, Mustafa Kamel WA Bolkli, Sidi Gaber, Alexandria, Egypt
               </p>
             </div>
-            
+
             <div className={styles.locationSeparator}></div>
-            
+
             <div className={styles.locationBlock}>
               <h3 className={styles.locationTitle}>UAE</h3>
               <p className={styles.locationStatus}>soon..</p>
@@ -83,30 +135,33 @@ const Footer = () => {
         >
           <div className={styles.contactStripContent}>
             <span className={styles.contactLabel}>Contact us</span>
-            
+
             <div className={styles.separator}></div>
-            
+
             <div className={styles.socialIcons}>
-              {socialLinks.map((social) => (
+              {socialLinks.map((item) => (
                 <a
-                  key={social.name}
-                  href={social.href}
+                  key={item.name}
+                  href={item.href}
                   className={styles.socialIcon}
-                  aria-label={social.name}
+                  aria-label={item.name}
+                  {...(item.href.startsWith("http")
+                    ? { target: "_blank", rel: "noopener noreferrer" as const }
+                    : {})}
                 >
-                  <social.icon size={14} strokeWidth={1.75} />
+                  <item.icon size={14} strokeWidth={1.75} />
                 </a>
               ))}
             </div>
-            
+
             <div className={styles.separator}></div>
-            
+
             <a href="mailto:info@xaeons.com" className={styles.contactInfo}>
               info@xaeons.com
             </a>
-            
+
             <div className={styles.separator}></div>
-            
+
             <a href="tel:+01015971869" className={styles.contactInfo}>
               +010-159-718-69
             </a>
@@ -122,9 +177,13 @@ const Footer = () => {
           className={styles.copyrightSection}
         >
           <div className={styles.legalLinks}>
-            <a href="/terms" className={styles.legalLink}>TERMS & CONDITIONS</a>
+            <Link to="/terms" className={styles.legalLink}>
+              TERMS &amp; CONDITIONS
+            </Link>
             <span className={styles.legalSeparator}>|</span>
-            <a href="/privacy" className={styles.legalLink}>PRIVACY POLICY</a>
+            <Link to="/privacy" className={styles.legalLink}>
+              PRIVACY POLICY
+            </Link>
           </div>
           <p className={styles.copyrightText}>
             © {COPYRIGHT_YEAR} Xaeon. All Right Reserved

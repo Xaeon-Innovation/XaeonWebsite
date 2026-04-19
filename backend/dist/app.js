@@ -39,6 +39,7 @@ const site_routes_1 = __importDefault(require("./routes/site.routes"));
 const teamMember_routes_1 = __importDefault(require("./routes/teamMember.routes"));
 const caseStudy_routes_1 = __importDefault(require("./routes/caseStudy.routes"));
 const siteUpload_routes_1 = __importDefault(require("./routes/siteUpload.routes"));
+const siteSettings_routes_1 = __importDefault(require("./routes/siteSettings.routes"));
 app.use("/api/v1/auth", auth_routes_1.default);
 app.use("/api/v1/blog-post", blogPost_routes_1.default);
 app.use("/api/v1/package", package_routes_1.default);
@@ -51,6 +52,7 @@ app.use("/api/v1/site", site_routes_1.default);
 app.use("/api/v1/team-member", teamMember_routes_1.default);
 app.use("/api/v1/case-study", caseStudy_routes_1.default);
 app.use("/api/v1/admin", siteUpload_routes_1.default);
+app.use("/api/v1/admin/site-settings", siteSettings_routes_1.default);
 app.use(errorHandler_1.errorHandler);
 const port = Number(process.env.PORT) || Number(process.env.BACKEND_PORT) || 5000;
 app.listen(port, () => {

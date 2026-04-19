@@ -14,7 +14,8 @@ import Services from "./Pages/Services.tsx";
 import ServiceDetail from "./Pages/ServiceDetail.tsx";
 import OurWork from "./Pages/OurWork.tsx";
 import Packages from "./Pages/Packages.tsx";
-import Policy from "./Pages/Policy.tsx";
+import Terms from "./Pages/Terms.tsx";
+import Privacy from "./Pages/Privacy.tsx";
 import MainLayout from "./layouts/MainLayout.tsx";
 import ContextProviders from "./context/ContextProviders.tsx";
 import RequireUser from "./context/RequireUser.tsx";
@@ -73,6 +74,14 @@ const router = createBrowserRouter([
         element: <BookNow />,
       },
       {
+        path: "terms",
+        element: <Terms />,
+      },
+      {
+        path: "privacy",
+        element: <Privacy />,
+      },
+      {
         path: "dashboard",
         loader: clientDashboardLoader,
         element: (
@@ -80,10 +89,6 @@ const router = createBrowserRouter([
             <ClientDashboard />
           </RequireUser>
         ),
-      },
-      {
-        path: "policy",
-        element: <Policy />,
       },
     ],
   },
@@ -100,6 +105,7 @@ const router = createBrowserRouter([
       { path: "blog-posts", lazy: () => import("./Pages/admin/BlogPostsPage") },
       { path: "site-team", lazy: () => import("./Pages/admin/TeamMembersPage") },
       { path: "site-case-studies", lazy: () => import("./Pages/admin/CaseStudiesCmsPage") },
+      { path: "site-social", lazy: () => import("./Pages/admin/SiteSocialSettingsPage") },
       { path: "service-requests", lazy: () => import("./Pages/admin/ServiceRequestsPage"), loader: serviceRequestsLoader },
     ],
   },
