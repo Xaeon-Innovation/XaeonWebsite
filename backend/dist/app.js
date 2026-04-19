@@ -13,6 +13,8 @@ require("./types/expressAugment");
 const errorHandler_1 = require("./middleware/errorHandler");
 const logger_1 = require("./middleware/logger");
 const cors_config_1 = require("./config/cors.config");
+const siteUpload_config_1 = require("./config/siteUpload.config");
+(0, siteUpload_config_1.ensureSiteUploadDir)();
 const app = (0, express_1.default)();
 // Middleware
 app.use((0, cors_1.default)(cors_config_1.corsOptions));
@@ -20,6 +22,7 @@ app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(logger_1.logger);
+app.use("/uploads", express_1.default.static((0, siteUpload_config_1.getUploadRoot)()));
 // Connecting to MongoDB
 const database_config_1 = __importDefault(require("./config/database.config"));
 (0, database_config_1.default)();
@@ -32,6 +35,10 @@ const projectType_routes_1 = __importDefault(require("./routes/projectType.route
 const employee_routes_1 = __importDefault(require("./routes/employee.routes"));
 const serviceRequest_routes_1 = __importDefault(require("./routes/serviceRequest.routes"));
 const user_routes_1 = __importDefault(require("./routes/user.routes"));
+const site_routes_1 = __importDefault(require("./routes/site.routes"));
+const teamMember_routes_1 = __importDefault(require("./routes/teamMember.routes"));
+const caseStudy_routes_1 = __importDefault(require("./routes/caseStudy.routes"));
+const siteUpload_routes_1 = __importDefault(require("./routes/siteUpload.routes"));
 app.use("/api/v1/auth", auth_routes_1.default);
 app.use("/api/v1/blog-post", blogPost_routes_1.default);
 app.use("/api/v1/package", package_routes_1.default);
@@ -40,6 +47,10 @@ app.use("/api/v1/project-type", projectType_routes_1.default);
 app.use("/api/v1/employee", employee_routes_1.default);
 app.use("/api/v1/system-request", serviceRequest_routes_1.default);
 app.use("/api/v1/user", user_routes_1.default);
+app.use("/api/v1/site", site_routes_1.default);
+app.use("/api/v1/team-member", teamMember_routes_1.default);
+app.use("/api/v1/case-study", caseStudy_routes_1.default);
+app.use("/api/v1/admin", siteUpload_routes_1.default);
 app.use(errorHandler_1.errorHandler);
 const port = Number(process.env.PORT) || Number(process.env.BACKEND_PORT) || 5000;
 app.listen(port, () => {

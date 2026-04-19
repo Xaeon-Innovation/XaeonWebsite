@@ -10,6 +10,8 @@ import {
   MessageSquareText,
   PanelLeftClose,
   PanelLeft,
+  UsersRound,
+  Images,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -20,6 +22,8 @@ const NAV_ITEMS = [
   { to: "/admin/project-types", label: "Project Types", icon: Layers3 },
   { to: "/admin/packages", label: "Packages", icon: Package },
   { to: "/admin/blog-posts", label: "Blog Posts", icon: FileText },
+  { to: "/admin/site-team", label: "Site — Team", icon: UsersRound },
+  { to: "/admin/site-case-studies", label: "Site — Case studies", icon: Images },
   { to: "/admin/service-requests", label: "Requests", icon: MessageSquareText },
 ] as const;
 

@@ -98,6 +98,8 @@ const router = createBrowserRouter([
       { path: "project-types", lazy: () => import("./Pages/admin/ProjectTypesPage") },
       { path: "packages", lazy: () => import("./Pages/admin/PackagesPage") },
       { path: "blog-posts", lazy: () => import("./Pages/admin/BlogPostsPage") },
+      { path: "site-team", lazy: () => import("./Pages/admin/TeamMembersPage") },
+      { path: "site-case-studies", lazy: () => import("./Pages/admin/CaseStudiesCmsPage") },
       { path: "service-requests", lazy: () => import("./Pages/admin/ServiceRequestsPage"), loader: serviceRequestsLoader },
     ],
   },

@@ -11,6 +11,9 @@ import "./types/expressAugment";
 import { errorHandler } from "./middleware/errorHandler";
 import { logger } from "./middleware/logger";
 import { corsOptions } from "./config/cors.config";
+import { ensureSiteUploadDir, getUploadRoot } from "./config/siteUpload.config";
+
+ensureSiteUploadDir();
 
 const app = express();
 
@@ -20,6 +23,8 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(logger);
+
+app.use("/uploads", express.static(getUploadRoot()));
 
 // Connecting to MongoDB
 import db from "./config/database.config";
@@ -34,6 +39,10 @@ import projectTypeRouter from "./routes/projectType.routes";
 import employeeRouter from "./routes/employee.routes";
 import systemRequestRouter from "./routes/serviceRequest.routes";
 import userRouter from "./routes/user.routes";
+import siteRouter from "./routes/site.routes";
+import teamMemberRouter from "./routes/teamMember.routes";
+import caseStudyRouter from "./routes/caseStudy.routes";
+import siteUploadRouter from "./routes/siteUpload.routes";
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/blog-post", blogPostRouter);
@@ -43,6 +52,10 @@ app.use("/api/v1/project-type", projectTypeRouter);
 app.use("/api/v1/employee", employeeRouter);
 app.use("/api/v1/system-request", systemRequestRouter);
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/site", siteRouter);
+app.use("/api/v1/team-member", teamMemberRouter);
+app.use("/api/v1/case-study", caseStudyRouter);
+app.use("/api/v1/admin", siteUploadRouter);
 
 app.use(errorHandler);
 

@@ -5,8 +5,13 @@
  */
 export const config = { runtime: "edge" };
 
+function readEnv(name: string): string | undefined {
+  const g = globalThis as unknown as { process?: { env?: Record<string, string | undefined> } };
+  return g.process?.env?.[name];
+}
+
 export default async function handler(request: Request): Promise<Response> {
-  const base = process.env.XAEON_API_ORIGIN?.replace(/\/$/, "");
+  const base = readEnv("XAEON_API_ORIGIN")?.replace(/\/$/, "");
   if (!base) {
     return new Response(
       JSON.stringify({
