@@ -15,7 +15,7 @@ const Terms = () => {
       <article className={styles.page}>
         <div className={styles.inner}>
           <h1 className={styles.title}>Terms &amp; conditions</h1>
-          <p className={styles.updated}>Last updated: April 18, 2026</p>
+          <p className={styles.updated}>Last updated: April 18, 2025</p>
           <div className={styles.prose}>
             <p>
               These Terms &amp; Conditions (&quot;Terms&quot;) govern your access to and use of the websites,

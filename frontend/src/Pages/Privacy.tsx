@@ -15,7 +15,7 @@ const Privacy = () => {
       <article className={styles.page}>
         <div className={styles.inner}>
           <h1 className={styles.title}>Privacy policy</h1>
-          <p className={styles.updated}>Last updated: April 18, 2026</p>
+          <p className={styles.updated}>Last updated: April 18, 2025</p>
           <div className={styles.prose}>
             <p>
               Xaeon Software Solutions (&quot;Xaeon,&quot; &quot;we,&quot; &quot;us&quot;) respects your privacy.

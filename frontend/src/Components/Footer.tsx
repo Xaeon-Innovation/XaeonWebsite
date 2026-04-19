@@ -5,7 +5,8 @@ import { Facebook, Instagram, Linkedin, Twitter, Mail, type LucideIcon } from "l
 import api from "../lib/api";
 import styles from "./Footer.module.css";
 
-const COPYRIGHT_YEAR = new Date().getFullYear();
+/** Company founding year (shown in footer copyright). */
+const COPYRIGHT_YEAR = 2025;
 
 type SocialLinksPayload = {
   facebookUrl: string;
@@ -186,7 +187,7 @@ const Footer = () => {
             </Link>
           </div>
           <p className={styles.copyrightText}>
-            © {COPYRIGHT_YEAR} Xaeon. All Right Reserved
+            © {COPYRIGHT_YEAR} Xaeon. All Rights Reserved
           </p>
         </motion.div>
       </div>
