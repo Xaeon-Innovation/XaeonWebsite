@@ -58,7 +58,7 @@ const MeetOurTeamSection = () => {
           transition={{ duration: 0.7, delay: 0.08, ease: "easeOut" }}
           viewport={{ once: true, amount: 0.35 }}
         >
-          At Xaeon Innovation, our team is fueled by creativity, dedication, and a drive to deliver results that matter.
+          At Xaeon, our team is fueled by creativity, dedication, and a drive to deliver results that matter.
         </motion.p>
 
         <div className={styles.cards}>
@@ -93,7 +93,7 @@ const MeetOurTeamSection = () => {
           transition={{ duration: 0.7, delay: 0.15, ease: "easeOut" }}
           viewport={{ once: true, amount: 0.3 }}
         >
-          We are a group of designers, developers, and strategists who believe in building more than just projects; we
+          We are a group of developers, designers, engineers, and strategists who believe in building more than just projects; we
           build partnerships. Every member of our team brings unique skills to the table, from crafting clean,
           user-friendly designs to developing scalable software and creating impactful digital campaigns.
         </motion.p>

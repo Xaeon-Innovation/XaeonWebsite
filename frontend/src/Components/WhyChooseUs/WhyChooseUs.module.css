@@ -261,7 +261,8 @@
   }
 }
 
-/* Single column: paths are vertical; dots top/bottom only */
+/* Single column: paths are vertical; dots on top/bottom center only.
+   Selectors must match or beat desktop `[data-card-col]` rules or those win and dots sit mid-card. */
 @media (max-width: 768px) {
   .reasonRow {
     grid-template-columns: 1fr;
@@ -272,9 +273,11 @@
     display: none;
   }
 
-  .reasonCard:not([data-hide-entry="true"]) .dotEntry {
+  .reasonCard[data-card-col="left"]:not([data-hide-entry="true"]) .dotEntry,
+  .reasonCard[data-card-col="right"]:not([data-hide-entry="true"]) .dotEntry {
     display: block;
     top: -5px;
+    bottom: auto;
     left: 50%;
     right: auto;
     transform: translateX(-50%);
@@ -284,7 +287,8 @@
     display: none;
   }
 
-  .reasonCard:not([data-hide-exit="true"]) .dotExit {
+  .reasonCard[data-card-col="left"]:not([data-hide-exit="true"]) .dotExit,
+  .reasonCard[data-card-col="right"]:not([data-hide-exit="true"]) .dotExit {
     display: block;
     bottom: -5px;
     top: auto;

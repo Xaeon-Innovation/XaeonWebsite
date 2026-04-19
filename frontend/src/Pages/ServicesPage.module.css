@@ -28,7 +28,8 @@
   position: absolute;
   left: clamp(1rem, 5vw, 3rem);
   right: clamp(1rem, 2vw, 2rem);
-  bottom: clamp(22rem, 56vh, 34rem);
+  /* Mobile hero is short — a large bottom offset clips the caption (overflow: hidden on .hero). */
+  bottom: clamp(1.25rem, 16vh, 6rem);
   display: flex;
   justify-content: flex-start;
   padding: 0;
@@ -222,9 +223,23 @@
   }
 }
 
+@media (min-width: 641px) {
+  .heroCaptionWrap {
+    bottom: clamp(22rem, 56vh, 34rem);
+  }
+}
+
 @media (max-width: 640px) {
   .hero {
     min-height: 50vh;
+  }
+
+  .servicesTitleSection {
+    height: clamp(11rem, 36vw, 16rem);
+  }
+
+  .servicesTitleImage {
+    transform: scale(1);
   }
 
   .card {
