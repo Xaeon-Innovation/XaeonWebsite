@@ -1,21 +1,26 @@
-import { Helmet } from "react-helmet-async";
 import { Link } from "react-router";
 import { ArrowUpRight } from "lucide-react";
 import CallToAction from "../Components/CallToAction/CallToAction";
 import { SERVICES } from "../data/servicesCatalog";
+import Seo from "../seo/Seo";
+import { serviceJsonLd } from "../seo/schema";
 import styles from "./ServicesPage.module.css";
 
 /** `/services` index — links match home marquee (`/services/:slug`). */
 const Services = () => {
   return (
     <>
-      <Helmet>
-        <title>Services — Xaeon Software Solutions</title>
-        <meta
-          name="description"
-          content="Explore Xaeon services: custom software, web and mobile apps, design, marketing, AI, and more."
-        />
-      </Helmet>
+      <Seo
+        title="Services — Xaeon Software Solutions"
+        description="Explore Xaeon services: custom software, AI solutions, websites, web apps, mobile apps, design & branding, video production, and digital marketing."
+        pathname="/services"
+        jsonLd={serviceJsonLd({
+          pathname: "/services",
+          name: "Software development, AI solutions, and digital marketing services",
+          description:
+            "Custom software, AI solutions, websites, web apps, mobile apps, design & branding, video production, and digital marketing.",
+        })}
+      />
 
       <div className={styles.hero}>
         <video

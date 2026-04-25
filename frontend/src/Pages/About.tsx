@@ -1,21 +1,19 @@
-import { Helmet } from "react-helmet-async";
 import AboutPageHero from "../Components/AboutPage/AboutPageHero";
 import AboutUsSection from "../Components/AboutPage/AboutUsSection";
 import MeetOurTeamSection from "../Components/AboutPage/MeetOurTeamSection";
 import ValuesSection from "../Components/AboutPage/ValuesSection";
 import CallToAction from "../Components/CallToAction/CallToAction";
+import Seo from "../seo/Seo";
 import styles from "./About.module.css";
 
 const About = () => {
   return (
     <>
-      <Helmet>
-        <title>About us — Xaeon Software Solutions</title>
-        <meta
-          name="description"
-          content="Xaeon is a creative-technology house shaping branding and digital innovation. We build identities, experiences, and systems that scale."
-        />
-      </Helmet>
+      <Seo
+        title="About us — Xaeon Software Solutions"
+        description="Xaeon is a software and creative-technology team building scalable products: custom software, AI solutions, websites, apps, and digital growth."
+        pathname="/about-us"
+      />
       <AboutPageHero />
       <AboutUsSection />
       <section className={`${styles.separatorSection} ${styles.firstSeparator}`} aria-hidden>

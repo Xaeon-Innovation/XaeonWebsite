@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -19,6 +18,7 @@ import {
 import api from "../lib/api";
 import { useAuth } from "../context/AuthContext";
 import PackageEnquiryModal from "../Components/Packages/PackageEnquiryModal";
+import Seo from "../seo/Seo";
 import styles from "./Packages.module.css";
 
 type ProjectType = {
@@ -152,13 +152,11 @@ const Packages = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Packages — Xaeon Software Solutions</title>
-        <meta
-          name="description"
-          content="Compare packages and choose the plan that fits your goals."
-        />
-      </Helmet>
+      <Seo
+        title="Packages — Xaeon Software Solutions"
+        description="Compare packages and choose the plan that fits your goals. Clear deliverables, transparent stages, and a discount built in."
+        pathname="/packages"
+      />
 
       <section className={styles.hero} aria-label="Packages">
         {reducedMotion ? (

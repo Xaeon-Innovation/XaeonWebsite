@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { Helmet } from "react-helmet-async";
 import CaseSlider, { type CaseSlide } from "../Components/CaseSlider/CaseSlider";
 import styles from "./OurWork.module.css";
 import CallToAction from "../Components/CallToAction/CallToAction";
 import { TypingAnimation } from "../Components/ui/TypingAnimation";
 import api from "../lib/api";
+import Seo from "../seo/Seo";
 
 const FALLBACK_SLIDES: CaseSlide[] = [
   {
@@ -95,13 +95,11 @@ const OurWork = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Our Work - Xaeon Case Studies</title>
-        <meta
-          name="description"
-          content="Explore Xaeon’s case studies across software, design, branding, and digital growth."
-        />
-      </Helmet>
+      <Seo
+        title="Our Work — Case Studies — Xaeon Software Solutions"
+        description="Explore Xaeon case studies across custom software, AI, design, branding, and digital growth."
+        pathname="/our-work"
+      />
 
       <section className={styles.blackHero} aria-label="Our work hero">
         <div className={styles.heroInner}>

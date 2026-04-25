@@ -1,12 +1,12 @@
 import { Suspense, useState } from "react";
 import { Outlet } from "react-router";
 import { LogOut } from "lucide-react";
-import { Helmet } from "react-helmet-async";
 import { HelmetProvider } from "react-helmet-async";
 
 import RequireAdmin from "../context/RequireAdmin";
 import { useAuth } from "../context/AuthContext";
 import AdminSidebar from "../Components/admin/AdminSidebar";
+import Seo from "../seo/Seo";
 import styles from "./AdminLayout.module.css";
 
 function AdminShell() {
@@ -15,9 +15,7 @@ function AdminShell() {
 
   return (
     <HelmetProvider>
-      <Helmet>
-        <title>Admin — Xaeon</title>
-      </Helmet>
+      <Seo title="Admin — Xaeon" pathname="/admin" noindex />
 
       <div className={`${styles.layout} ${collapsed ? styles.layoutCollapsed : ""}`}>
         <AdminSidebar collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} />

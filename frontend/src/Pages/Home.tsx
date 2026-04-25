@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { Helmet } from "react-helmet-async";
 import { HeroSequence } from "../Components/HeroSequence";
 import IntroAbout from "../Components/IntroAbout/IntroAbout";
 import CreativeTech from "../Components/CreativeTech/CreativeTech";
@@ -10,6 +9,7 @@ import CaseStudies from "../Components/CaseStudies/CaseStudies";
 import OurStack from "../Components/OurStack/OurStack";
 import CallToAction from "../Components/CallToAction/CallToAction";
 import { initGsapScrollReveals } from "../lib/gsapScroll";
+import Seo from "../seo/Seo";
 
 const Home = () => {
   useEffect(() => {
@@ -19,15 +19,11 @@ const Home = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Xaeon Software Solutions - Leading Software Development Company</title>
-        <meta name="description" content="Xaeon Software Solutions is a leading software development company specializing in web development, mobile apps, UI/UX design, and digital transformation solutions." />
-        <meta name="keywords" content="software development, web development, mobile apps, UI/UX design, digital solutions" />
-        <meta property="og:title" content="Xaeon Software Solutions - Leading Software Development Company" />
-        <meta property="og:description" content="Transform your business with our innovative software solutions. Expert development team delivering cutting-edge digital products." />
-        <meta property="og:type" content="website" />
-        <meta name="twitter:card" content="summary_large_image" />
-      </Helmet>
+      <Seo
+        title="Xaeon Software Solutions — Custom Software, AI, and Digital Marketing"
+        description="Xaeon builds websites, web apps, mobile apps, and custom software. We deliver AI solutions and digital marketing that drive measurable growth."
+        pathname="/"
+      />
 
       <HeroSequence />
       <div data-gsap="reveal">

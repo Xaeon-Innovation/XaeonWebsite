@@ -1,17 +1,15 @@
-import { Helmet } from "react-helmet-async";
 import { Link } from "react-router";
+import Seo from "../seo/Seo";
 import styles from "./Legal.module.css";
 
 const Privacy = () => {
   return (
     <>
-      <Helmet>
-        <title>Privacy Policy — Xaeon</title>
-        <meta
-          name="description"
-          content="How Xaeon Software Solutions collects, uses, and protects personal information."
-        />
-      </Helmet>
+      <Seo
+        title="Privacy Policy — Xaeon Software Solutions"
+        description="How Xaeon Software Solutions collects, uses, and protects personal information."
+        pathname="/privacy"
+      />
       <article className={styles.page}>
         <div className={styles.inner}>
           <h1 className={styles.title}>Privacy policy</h1>

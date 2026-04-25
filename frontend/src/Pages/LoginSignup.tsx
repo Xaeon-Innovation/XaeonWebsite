@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -8,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import api, { getApiErrorMessage } from "../lib/api";
 import styles from "./LoginSignup.module.css";
 import { useAuth } from "../context/AuthContext";
+import Seo from "../seo/Seo";
 
 const loginSchema = z.object({
   email: z.string().trim().email("Please enter a valid email."),
@@ -95,9 +95,11 @@ const LoginSignup = () => {
       className={styles.wrap}
       aria-label={mode === "login" ? "Log in" : "Register"}
     >
-      <Helmet>
-        <title>{mode === "login" ? "Log in" : "Register"} — Xaeon</title>
-      </Helmet>
+      <Seo
+        title={`${mode === "login" ? "Log in" : "Register"} — Xaeon`}
+        pathname={mode === "login" ? "/login" : "/register"}
+        noindex
+      />
 
       <div className={styles.bg} aria-hidden />
 

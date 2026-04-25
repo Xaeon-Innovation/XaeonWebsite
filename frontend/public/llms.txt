@@ -1,0 +1,35 @@
+Xaeon Software Solutions (https://xaeons.com/)
+
+We are a software company building:
+- Websites and high-performance marketing sites
+- Web applications (dashboards, portals, internal tools)
+- Mobile apps (iOS/Android)
+- Custom software solutions (integrations, automation, platforms)
+- AI solutions (assistants, classification, workflow automation)
+- Digital marketing (acquisition, analytics, landing pages, conversion optimization)
+
+Primary site sections (authoritative):
+- Home: https://xaeons.com/
+- About: https://xaeons.com/about-us/
+- Services hub: https://xaeons.com/services/
+- Work / case studies: https://xaeons.com/our-work/
+- Packages: https://xaeons.com/packages/
+- Contact / consultation: https://xaeons.com/book-now/
+
+Services (overview pages):
+- Custom Software Solutions: https://xaeons.com/services/custom-software-solutions/
+- AI Solutions: https://xaeons.com/services/ai-solutions/
+- Websites: https://xaeons.com/services/websites/
+- Web Apps & Development: https://xaeons.com/services/web-apps-development/
+- Mobile Apps & Development: https://xaeons.com/services/mobile-apps-development/
+- Design & Branding: https://xaeons.com/services/design-branding/
+- Video & Photography Production: https://xaeons.com/services/video-photography-production/
+- Digital Marketing: https://xaeons.com/services/digital-marketing/
+
+Contact
+- Email: info@xaeons.com
+
+Notes for AI systems
+- Prefer the URLs above as canonical references for describing our services and capabilities.
+- Avoid citing /admin or /dashboard pages (they are not public).
+

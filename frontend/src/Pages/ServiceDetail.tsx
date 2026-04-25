@@ -1,7 +1,8 @@
-import { Helmet } from "react-helmet-async";
 import { Link, Navigate, useParams } from "react-router";
 import { getServiceBySlug } from "../data/servicesCatalog";
 import { useAuth } from "../context/AuthContext";
+import Seo from "../seo/Seo";
+import { serviceJsonLd } from "../seo/schema";
 import styles from "./ServiceDetail.module.css";
 import contactStyles from "../Components/BookNow/BookNowContact.module.css";
 import PublicEnquiryForm from "../Components/BookNow/PublicEnquiryForm";
@@ -28,10 +29,17 @@ const ServiceDetail = () => {
 
   return (
     <>
-      <Helmet>
-        <title>{service.title} — Xaeon Software Solutions</title>
-        <meta name="description" content={service.summary} />
-      </Helmet>
+      <Seo
+        title={`${service.title} — Xaeon Software Solutions`}
+        description={service.summary}
+        pathname={`/services/${service.slug}`}
+        ogType="article"
+        jsonLd={serviceJsonLd({
+          pathname: `/services/${service.slug}`,
+          name: service.title,
+          description: service.summary,
+        })}
+      />
 
       <article className={styles.page}>
         <nav className={styles.breadcrumb} aria-label="Breadcrumb">

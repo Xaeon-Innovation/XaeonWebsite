@@ -1,17 +1,15 @@
-import { Helmet } from "react-helmet-async";
 import { Link } from "react-router";
+import Seo from "../seo/Seo";
 import styles from "./Legal.module.css";
 
 const Terms = () => {
   return (
     <>
-      <Helmet>
-        <title>Terms &amp; Conditions — Xaeon</title>
-        <meta
-          name="description"
-          content="Terms and conditions for using Xaeon Software Solutions websites and services."
-        />
-      </Helmet>
+      <Seo
+        title="Terms & Conditions — Xaeon Software Solutions"
+        description="Terms and conditions for using Xaeon Software Solutions websites and services."
+        pathname="/terms"
+      />
       <article className={styles.page}>
         <div className={styles.inner}>
           <h1 className={styles.title}>Terms &amp; conditions</h1>
