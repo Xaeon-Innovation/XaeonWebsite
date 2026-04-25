@@ -6,6 +6,9 @@ Documents
 # Dependencies (npm packages)
 node_modules/
 
+# Vercel (created by `vercel pull/build`)
+.vercel/
+
 # Raw design/asset library (keep out of git)
 /images/
 images/

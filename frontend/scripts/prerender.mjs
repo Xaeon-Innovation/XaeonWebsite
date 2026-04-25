@@ -111,6 +111,15 @@ async function prerenderRoute({ page, baseUrl, routePathname }) {
 }
 
 async function main() {
+  // Vercel build environment often cannot (or should not) run headless Chromium
+  // due to large browser downloads and/or missing system deps, causing long builds.
+  // Enable explicitly by setting ENABLE_PRERENDER=true.
+  if (process.env.VERCEL && process.env.ENABLE_PRERENDER !== "true") {
+    // eslint-disable-next-line no-console
+    console.log("[prerender] skipping on Vercel (set ENABLE_PRERENDER=true to enable)");
+    return;
+  }
+
   const routes = buildRoutesToPrerender();
   if (routes.length === 0) return;
 
