@@ -1,0 +1,243 @@
+.page {
+  background: #000;
+  color: #f8fafc;
+  padding: clamp(5rem, 12vw, 7rem) 0 0;
+}
+
+.loading {
+  min-height: 50vh;
+  display: grid;
+  place-items: center;
+  background: #000;
+  color: #72c04f;
+  font-size: 0.95rem;
+}
+
+.breadcrumb {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 2rem) 2rem;
+  font-size: 0.875rem;
+  color: rgba(248, 250, 252, 0.45);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.breadcrumb a {
+  color: rgba(248, 250, 252, 0.65);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.breadcrumb a:hover {
+  color: #72c04f;
+}
+
+.breadcrumbSep {
+  opacity: 0.5;
+  user-select: none;
+}
+
+.breadcrumbCurrent {
+  color: rgba(248, 250, 252, 0.85);
+}
+
+.hero {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 2rem) clamp(3rem, 8vw, 5rem);
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 3rem);
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .hero {
+    grid-template-columns: 1.1fr 0.9fr;
+  }
+}
+
+.heroVisual {
+  position: relative;
+}
+
+.heroImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 28px 48px rgba(0, 0, 0, 0.55));
+}
+
+.heroCopy {
+  text-align: left;
+}
+
+.heroTitle {
+  font-family: var(--font-heading, "Segoe UI", sans-serif);
+  font-size: clamp(2.25rem, 5.5vw, 3.75rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin: 0 0 0.85rem;
+  color: #fff;
+}
+
+.heroSubtitle {
+  margin: 0;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  line-height: 1.55;
+  color: rgba(248, 250, 252, 0.72);
+  font-weight: 400;
+}
+
+.intro {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 2rem) clamp(3rem, 7vw, 4.5rem);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.introText {
+  margin: 0;
+  max-width: 36rem;
+  text-align: right;
+  font-size: clamp(0.95rem, 1.6vw, 1.05rem);
+  line-height: 1.75;
+  color: rgba(248, 250, 252, 0.88);
+}
+
+.showcase {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 2rem) clamp(3rem, 7vw, 5rem);
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 2.5rem);
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .showcase {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.showcaseCollage {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.showcaseThumb {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 0.65rem;
+  display: block;
+  background: #111;
+}
+
+.showcaseThumb:nth-child(3n) {
+  grid-column: span 2;
+}
+
+.dashboardWrap {
+  display: flex;
+  justify-content: center;
+}
+
+.dashboardImage {
+  width: 100%;
+  max-width: 34rem;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.5));
+}
+
+.narrative {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 2rem) clamp(2.5rem, 6vw, 4rem);
+  text-align: center;
+}
+
+.narrative p {
+  margin: 0;
+  font-size: clamp(0.95rem, 1.6vw, 1.05rem);
+  line-height: 1.75;
+  color: rgba(248, 250, 252, 0.88);
+}
+
+.lifestyle {
+  max-width: 80rem;
+  margin: 0 auto clamp(2.5rem, 6vw, 4rem);
+  padding: 0 clamp(1.25rem, 4vw, 2rem);
+}
+
+.lifestyleImage {
+  width: 100%;
+  max-height: min(70vh, 40rem);
+  object-fit: cover;
+  display: block;
+  border-radius: 0.25rem;
+}
+
+.stats {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 0 clamp(1.25rem, 4vw, 2rem) clamp(3rem, 8vw, 5rem);
+}
+
+.statsGrid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(1.75rem, 4vw, 3rem) clamp(2rem, 5vw, 4rem);
+}
+
+.statItem {
+  flex: 0 1 14rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.statValue {
+  font-family: var(--font-heading, "Segoe UI", sans-serif);
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #fff;
+  line-height: 1.1;
+}
+
+.statLabel {
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: rgba(248, 250, 252, 0.65);
+  max-width: 16rem;
+  margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  .intro {
+    justify-content: flex-start;
+  }
+
+  .introText {
+    text-align: left;
+    max-width: none;
+  }
+
+  .statItem {
+    flex-basis: 100%;
+  }
+}

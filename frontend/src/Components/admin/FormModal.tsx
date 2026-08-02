@@ -5,9 +5,11 @@ type Props = PropsWithChildren<{
   open: boolean;
   onClose: () => void;
   title: string;
+  /** Wider dialog for longer CMS forms */
+  wide?: boolean;
 }>;
 
-export default function FormModal({ open, onClose, title, children }: Props) {
+export default function FormModal({ open, onClose, title, wide, children }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -32,7 +34,13 @@ export default function FormModal({ open, onClose, title, children }: Props) {
   }, [onClose]);
 
   return (
-    <dialog ref={ref} className="admin-modal" onClick={(e) => { if (e.target === ref.current) onClose(); }}>
+    <dialog
+      ref={ref}
+      className={wide ? "admin-modal admin-modal-wide" : "admin-modal"}
+      onClick={(e) => {
+        if (e.target === ref.current) onClose();
+      }}
+    >
       <div className="admin-modal-inner">
         <div className="admin-modal-header">
           <h2 className="admin-modal-title">{title}</h2>

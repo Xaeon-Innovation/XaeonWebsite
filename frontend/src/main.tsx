@@ -13,6 +13,7 @@ import BookNow from "./Pages/BookNow.tsx";
 import Services from "./Pages/Services.tsx";
 import ServiceDetail from "./Pages/ServiceDetail.tsx";
 import OurWork from "./Pages/OurWork.tsx";
+import CaseStudyDetail from "./Pages/CaseStudyDetail.tsx";
 import Packages from "./Pages/Packages.tsx";
 import Terms from "./Pages/Terms.tsx";
 import Privacy from "./Pages/Privacy.tsx";
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
       {
         path: "our-work",
         element: <OurWork />,
+      },
+      {
+        path: "case-studies/:slug",
+        element: <CaseStudyDetail />,
       },
       {
         path: "case-studies",

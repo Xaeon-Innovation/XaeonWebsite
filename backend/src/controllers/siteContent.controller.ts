@@ -29,22 +29,54 @@ export const getPublicCaseStudies = async (_req: Request, res: Response): Promis
       .sort({ sortOrder: 1, createdAt: 1 })
       .lean();
 
-    const slides = rows.map((doc) => ({
-      id: String(doc._id),
-      imageSrc: doc.imageUrl,
-      logoSrc: doc.logoUrl || undefined,
-      title: doc.title,
-      subtitle: doc.subtitle,
-      description: doc.description,
-      exploreHref: doc.exploreHref || undefined,
-      exploreLabel: doc.exploreLabel || undefined,
-    }));
+    const slides = rows.map((doc) => {
+      const slug = typeof doc.slug === "string" && doc.slug ? doc.slug : undefined;
+      const exploreHref =
+        (typeof doc.exploreHref === "string" && doc.exploreHref.trim()) ||
+        (slug ? `/case-studies/${slug}` : undefined);
+
+      return {
+        id: String(doc._id),
+        slug,
+        imageSrc: doc.imageUrl,
+        logoSrc: doc.logoUrl || undefined,
+        title: doc.title,
+        subtitle: doc.subtitle,
+        description: doc.description,
+        exploreHref,
+        exploreLabel: doc.exploreLabel || undefined,
+      };
+    });
 
     res.status(200).json({ slides });
   } catch (err) {
     console.error(err);
     res.status(500).json({
       error: err instanceof Error ? err.message : "Failed to fetch case studies",
+    });
+  }
+};
+
+/** Public: single published case study by slug */
+export const getPublicCaseStudyBySlug = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const slug = typeof req.params.slug === "string" ? req.params.slug.trim().toLowerCase() : "";
+    if (!slug) {
+      res.status(400).json({ error: "slug is required" });
+      return;
+    }
+
+    const caseStudy = await CaseStudy.findOne({ slug, published: true }).lean();
+    if (!caseStudy) {
+      res.status(404).json({ error: "Case study not found" });
+      return;
+    }
+
+    res.status(200).json({ caseStudy });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      error: err instanceof Error ? err.message : "Failed to fetch case study",
     });
   }
 };

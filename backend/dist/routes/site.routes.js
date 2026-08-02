@@ -8,6 +8,7 @@ const siteContent_controller_1 = require("../controllers/siteContent.controller"
 const siteSettings_controller_1 = require("../controllers/siteSettings.controller");
 const router = express_1.default.Router();
 router.get("/team-members", siteContent_controller_1.getPublicTeamMembers);
+router.get("/case-studies/:slug", siteContent_controller_1.getPublicCaseStudyBySlug);
 router.get("/case-studies", siteContent_controller_1.getPublicCaseStudies);
 router.get("/social-links", siteSettings_controller_1.getPublicSocialLinks);
 exports.default = router;

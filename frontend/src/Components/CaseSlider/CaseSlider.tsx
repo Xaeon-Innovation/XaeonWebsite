@@ -1,5 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "react-router";
 import styles from "./CaseSlider.module.css";
+
+function isInternalPath(href: string) {
+  return href.startsWith("/") && !href.startsWith("//");
+}
 
 export type CaseSlide = {
   id: string;
@@ -446,13 +451,33 @@ export default function CaseSlider({ slides }: { slides: CaseSlide[] }) {
                             <div className={styles.cardSubtitle}>{s.subtitle}</div>
                             <div className={styles.cardDesc}>{s.description}</div>
 
-                            <a
-                              className={styles.exploreLink}
-                              href={s.exploreHref ?? "#"}
-                              aria-label={`Explore ${s.title}`}
-                            >
-                              {String(s.exploreLabel ?? "Explore").toUpperCase()}
-                            </a>
+                            {(() => {
+                              const href = s.exploreHref?.trim() || "#";
+                              const label = String(s.exploreLabel ?? "Explore").toUpperCase();
+                              if (isInternalPath(href)) {
+                                return (
+                                  <Link
+                                    className={styles.exploreLink}
+                                    to={href}
+                                    aria-label={`Explore ${s.title}`}
+                                  >
+                                    {label}
+                                  </Link>
+                                );
+                              }
+                              return (
+                                <a
+                                  className={styles.exploreLink}
+                                  href={href}
+                                  aria-label={`Explore ${s.title}`}
+                                  {...(href.startsWith("http")
+                                    ? { target: "_blank", rel: "noopener noreferrer" }
+                                    : {})}
+                                >
+                                  {label}
+                                </a>
+                              );
+                            })()}
                           </div>
                         </div>
                       </div>

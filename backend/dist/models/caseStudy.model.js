@@ -34,17 +34,34 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
+const CaseStudyStatSchema = new mongoose_1.Schema({
+    value: { type: String, required: true, trim: true },
+    label: { type: String, required: true, trim: true },
+}, { _id: false });
 const CaseStudySchema = new mongoose_1.Schema({
     title: { type: String, required: true, trim: true },
     subtitle: { type: String, required: true, trim: true },
     description: { type: String, required: true, trim: true },
     imageUrl: { type: String, required: true, trim: true },
     logoUrl: { type: String, trim: true },
+    slug: { type: String, required: true, trim: true, lowercase: true },
+    heroTitle: { type: String, trim: true },
+    heroSubtitle: { type: String, trim: true },
+    heroImageUrl: { type: String, trim: true },
+    introText: { type: String, trim: true },
+    showcaseImageUrls: { type: [String], default: [] },
+    dashboardImageUrl: { type: String, trim: true },
+    narrativeBefore: { type: String, trim: true },
+    lifestyleImageUrl: { type: String, trim: true },
+    narrativeAfter: { type: String, trim: true },
+    stats: { type: [CaseStudyStatSchema], default: [] },
     exploreHref: { type: String, trim: true },
     exploreLabel: { type: String, trim: true },
     sortOrder: { type: Number, default: 0 },
     published: { type: Boolean, default: false },
 }, { timestamps: true });
 CaseStudySchema.index({ published: 1, sortOrder: 1 });
+/* sparse: legacy docs without slug must not collide on unique null */
+CaseStudySchema.index({ slug: 1 }, { unique: true, sparse: true });
 const CaseStudy = mongoose_1.default.model("CaseStudy", CaseStudySchema);
 exports.default = CaseStudy;

@@ -50,3 +50,29 @@ export function serviceJsonLd({
   };
 }
 
+export function caseStudyJsonLd({
+  pathname,
+  name,
+  description,
+  image,
+}: {
+  pathname: string;
+  name: string;
+  description: string;
+  image?: string;
+}): JsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name,
+    description,
+    url: canonicalUrl(pathname),
+    ...(image ? { image } : {}),
+    creator: {
+      "@type": "Organization",
+      name: SITE.name,
+      url: SITE.origin,
+    },
+  };
+}
+
