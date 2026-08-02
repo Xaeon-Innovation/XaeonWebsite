@@ -1,14 +1,14 @@
 {
   "compilerOptions": {
     "target": "es2020", // Modern JS output
-    "module": "commonjs", // Node uses CommonJS
+    "module": "node16", // Matches moduleResolution; emits CJS without "type":"module"
     "outDir": "./dist", // Compiled JS files
     "rootDir": "./src", // Source TS files
     "strict": true, // Enable strict type-checking
     "esModuleInterop": true, // For import compatibility
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node16"
   },
   "include": ["src"],
   "exclude": ["node_modules"]
