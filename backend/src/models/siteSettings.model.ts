@@ -10,6 +10,8 @@ const siteSettingsSchema = new mongoose.Schema(
     twitterUrl: { type: String, default: "" },
     /** Full `mailto:` URL or plain email — normalized on save */
     emailUrl: { type: String, default: "mailto:info@xaeons.com" },
+    /** When false, About page hides the Meet Our Team section entirely */
+    showTeamSection: { type: Boolean, default: true },
   },
   { timestamps: true }
 );

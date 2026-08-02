@@ -1,14 +1,19 @@
 import type { Request, Response } from "express";
 import TeamMember from "../models/teamMember.model";
 import CaseStudy from "../models/caseStudy.model";
+import SiteSettings from "../models/siteSettings.model";
 
 /** Public: published team members for About page */
 export const getPublicTeamMembers = async (_req: Request, res: Response): Promise<void> => {
   try {
-    const members = await TeamMember.find({ published: true })
-      .sort({ sortOrder: 1, createdAt: 1 })
-      .lean();
-    res.status(200).json({ teamMembers: members });
+    const [members, settings] = await Promise.all([
+      TeamMember.find({ published: true }).sort({ sortOrder: 1, createdAt: 1 }).lean(),
+      SiteSettings.findOne({ singletonKey: "default" }).lean(),
+    ]);
+    res.status(200).json({
+      teamMembers: members,
+      showSection: settings?.showTeamSection !== false,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({

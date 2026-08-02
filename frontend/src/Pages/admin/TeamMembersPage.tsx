@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Plus, Pencil, Trash2, Upload } from "lucide-react";
+import { Plus, Pencil, Trash2, Upload, Eye, EyeOff } from "lucide-react";
 import { Controller, useForm, type Resolver } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import api, { getApiErrorMessage } from "../../lib/api";
 import { uploadSiteAsset } from "../../lib/siteUpload";
 import { useResourceApi } from "../../lib/useAdminApi";
 import DataTable, { type Column } from "../../Components/admin/DataTable";
@@ -17,6 +18,15 @@ type TeamMember = {
   photoUrl: string;
   sortOrder: number;
   published: boolean;
+};
+
+type SiteSettingsSnapshot = {
+  facebookUrl: string;
+  instagramUrl: string;
+  linkedinUrl: string;
+  twitterUrl: string;
+  emailUrl: string;
+  showTeamSection: boolean;
 };
 
 const sortOrderSchema = z.preprocess((v) => {
@@ -45,12 +55,77 @@ export function Component() {
   const [editing, setEditing] = useState<TeamMember | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<TeamMember | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [siteSettings, setSiteSettings] = useState<SiteSettingsSnapshot | null>(null);
+  const [sectionBusy, setSectionBusy] = useState(false);
+  const [sectionError, setSectionError] = useState<string | null>(null);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema) as Resolver<FormValues>,
     mode: "onBlur",
     defaultValues: { name: "", role: "", photoUrl: "", sortOrder: 0, published: false },
   });
+
+  const loadSiteSettings = useCallback(async () => {
+    const res = await api.get<{ siteSettings?: Partial<SiteSettingsSnapshot> }>("/admin/site-settings");
+    const s = res.data?.siteSettings;
+    if (!s) return null;
+    const snapshot: SiteSettingsSnapshot = {
+      facebookUrl: s.facebookUrl ?? "",
+      instagramUrl: s.instagramUrl ?? "",
+      linkedinUrl: s.linkedinUrl ?? "",
+      twitterUrl: s.twitterUrl ?? "",
+      emailUrl: s.emailUrl ?? "mailto:info@xaeons.com",
+      showTeamSection: s.showTeamSection !== false,
+    };
+    setSiteSettings(snapshot);
+    return snapshot;
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    loadSiteSettings().catch((e) => {
+      if (!cancelled) setSectionError(getApiErrorMessage(e, "Failed to load section visibility"));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [loadSiteSettings]);
+
+  const toggleSectionVisibility = async () => {
+    setSectionError(null);
+    setSectionBusy(true);
+    try {
+      const current = siteSettings ?? (await loadSiteSettings());
+      if (!current) {
+        setSectionError("Could not load site settings");
+        return;
+      }
+      const nextShow = !current.showTeamSection;
+      const res = await api.put<{ siteSettings?: Partial<SiteSettingsSnapshot> }>("/admin/site-settings", {
+        siteSettings: {
+          facebookUrl: current.facebookUrl,
+          instagramUrl: current.instagramUrl,
+          linkedinUrl: current.linkedinUrl,
+          twitterUrl: current.twitterUrl,
+          emailUrl: current.emailUrl,
+          showTeamSection: nextShow,
+        },
+      });
+      const s = res.data?.siteSettings;
+      setSiteSettings({
+        facebookUrl: s?.facebookUrl ?? current.facebookUrl,
+        instagramUrl: s?.instagramUrl ?? current.instagramUrl,
+        linkedinUrl: s?.linkedinUrl ?? current.linkedinUrl,
+        twitterUrl: s?.twitterUrl ?? current.twitterUrl,
+        emailUrl: s?.emailUrl ?? current.emailUrl,
+        showTeamSection: typeof s?.showTeamSection === "boolean" ? s.showTeamSection : nextShow,
+      });
+    } catch (e) {
+      setSectionError(getApiErrorMessage(e, "Failed to update section visibility"));
+    } finally {
+      setSectionBusy(false);
+    }
+  };
 
   const openCreate = () => {
     setEditing(null);
@@ -165,12 +240,40 @@ export function Component() {
         <title>Team (About) — Xaeon Admin</title>
       </Helmet>
       <div className="admin-page-header">
-        <h2 className="admin-page-title">About — Team members</h2>
-        <button type="button" className="admin-btn admin-btn-primary" onClick={openCreate}>
-          <Plus size={16} /> Add member
-        </button>
+        <div>
+          <h2 className="admin-page-title">About — Team members</h2>
+          {siteSettings && !siteSettings.showTeamSection && (
+            <p style={{ margin: "6px 0 0", color: "#a1a1aa", fontSize: "0.875rem" }}>
+              Section hidden on About page
+            </p>
+          )}
+        </div>
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          <button
+            type="button"
+            className="admin-btn admin-btn-ghost"
+            onClick={toggleSectionVisibility}
+            disabled={sectionBusy || siteSettings === null}
+            title={
+              siteSettings?.showTeamSection
+                ? "Hide the Meet Our Team section on the About page"
+                : "Show the Meet Our Team section on the About page"
+            }
+          >
+            {siteSettings?.showTeamSection !== false ? <EyeOff size={16} /> : <Eye size={16} />}
+            {sectionBusy
+              ? "Saving…"
+              : siteSettings?.showTeamSection !== false
+                ? "Hide section"
+                : "Show section"}
+          </button>
+          <button type="button" className="admin-btn admin-btn-primary" onClick={openCreate}>
+            <Plus size={16} /> Add member
+          </button>
+        </div>
       </div>
 
+      {sectionError && <p style={{ color: "#ef4444", marginBottom: 12 }}>{sectionError}</p>}
       {error && <p style={{ color: "#ef4444", marginBottom: 12 }}>{error}</p>}
       {loading ? (
         <div style={{ color: "#72c04f", padding: 32, textAlign: "center" }}>

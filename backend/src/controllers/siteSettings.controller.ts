@@ -57,6 +57,22 @@ function toPublicShape(doc: {
   };
 }
 
+function toAdminShape(
+  doc: {
+    facebookUrl?: string;
+    instagramUrl?: string;
+    linkedinUrl?: string;
+    twitterUrl?: string;
+    emailUrl?: string;
+    showTeamSection?: boolean;
+  } | null
+) {
+  return {
+    ...toPublicShape(doc),
+    showTeamSection: doc?.showTeamSection !== false,
+  };
+}
+
 /** Public — footer social icons */
 export const getPublicSocialLinks = async (_req: Request, res: Response): Promise<void> => {
   try {
@@ -75,10 +91,10 @@ export const getAdminSiteSettings = async (_req: Request, res: Response): Promis
   try {
     let doc = await SiteSettings.findOne({ singletonKey: SINGLETON }).lean();
     if (!doc) {
-      await SiteSettings.create({ singletonKey: SINGLETON, ...emptySocial });
+      await SiteSettings.create({ singletonKey: SINGLETON, ...emptySocial, showTeamSection: true });
       doc = await SiteSettings.findOne({ singletonKey: SINGLETON }).lean();
     }
-    res.status(200).json({ siteSettings: toPublicShape(doc) });
+    res.status(200).json({ siteSettings: toAdminShape(doc) });
   } catch (err) {
     console.error(err);
     res.status(500).json({
@@ -87,7 +103,7 @@ export const getAdminSiteSettings = async (_req: Request, res: Response): Promis
   }
 };
 
-/** Admin — save social URLs */
+/** Admin — save social URLs (and optional showTeamSection) */
 export const putAdminSiteSettings = async (req: Request, res: Response): Promise<void> => {
   try {
     const body = req.body?.siteSettings as Record<string, unknown> | undefined;
@@ -97,7 +113,7 @@ export const putAdminSiteSettings = async (req: Request, res: Response): Promise
     }
 
     const keys = ["facebookUrl", "instagramUrl", "linkedinUrl", "twitterUrl", "emailUrl"] as const;
-    const next: Record<string, string> = {};
+    const next: Record<string, string | boolean> = {};
 
     for (const k of keys) {
       const v = typeof body[k] === "string" ? (body[k] as string).trim() : "";
@@ -113,13 +129,17 @@ export const putAdminSiteSettings = async (req: Request, res: Response): Promise
       next[k] = normalized;
     }
 
+    if (typeof body.showTeamSection === "boolean") {
+      next.showTeamSection = body.showTeamSection;
+    }
+
     const doc = await SiteSettings.findOneAndUpdate(
       { singletonKey: SINGLETON },
       { $set: next },
       { new: true, upsert: true, runValidators: true, setDefaultsOnInsert: true, lean: true }
     );
 
-    res.status(200).json({ message: "Saved", siteSettings: toPublicShape(doc) });
+    res.status(200).json({ message: "Saved", siteSettings: toAdminShape(doc) });
   } catch (err) {
     console.error(err);
     res.status(500).json({

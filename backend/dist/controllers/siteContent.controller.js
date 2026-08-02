@@ -6,13 +6,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPublicCaseStudies = exports.getPublicTeamMembers = void 0;
 const teamMember_model_1 = __importDefault(require("../models/teamMember.model"));
 const caseStudy_model_1 = __importDefault(require("../models/caseStudy.model"));
+const siteSettings_model_1 = __importDefault(require("../models/siteSettings.model"));
 /** Public: published team members for About page */
 const getPublicTeamMembers = async (_req, res) => {
     try {
-        const members = await teamMember_model_1.default.find({ published: true })
-            .sort({ sortOrder: 1, createdAt: 1 })
-            .lean();
-        res.status(200).json({ teamMembers: members });
+        const [members, settings] = await Promise.all([
+            teamMember_model_1.default.find({ published: true }).sort({ sortOrder: 1, createdAt: 1 }).lean(),
+            siteSettings_model_1.default.findOne({ singletonKey: "default" }).lean(),
+        ]);
+        res.status(200).json({
+            teamMembers: members,
+            showSection: settings?.showTeamSection !== false,
+        });
     }
     catch (err) {
         console.error(err);

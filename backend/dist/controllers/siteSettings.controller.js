@@ -56,6 +56,12 @@ function toPublicShape(doc) {
         emailUrl: (doc.emailUrl ?? "").trim(),
     };
 }
+function toAdminShape(doc) {
+    return {
+        ...toPublicShape(doc),
+        showTeamSection: doc?.showTeamSection !== false,
+    };
+}
 /** Public — footer social icons */
 const getPublicSocialLinks = async (_req, res) => {
     try {
@@ -75,10 +81,10 @@ const getAdminSiteSettings = async (_req, res) => {
     try {
         let doc = await siteSettings_model_1.default.findOne({ singletonKey: SINGLETON }).lean();
         if (!doc) {
-            await siteSettings_model_1.default.create({ singletonKey: SINGLETON, ...emptySocial });
+            await siteSettings_model_1.default.create({ singletonKey: SINGLETON, ...emptySocial, showTeamSection: true });
             doc = await siteSettings_model_1.default.findOne({ singletonKey: SINGLETON }).lean();
         }
-        res.status(200).json({ siteSettings: toPublicShape(doc) });
+        res.status(200).json({ siteSettings: toAdminShape(doc) });
     }
     catch (err) {
         console.error(err);
@@ -88,7 +94,7 @@ const getAdminSiteSettings = async (_req, res) => {
     }
 };
 exports.getAdminSiteSettings = getAdminSiteSettings;
-/** Admin — save social URLs */
+/** Admin — save social URLs (and optional showTeamSection) */
 const putAdminSiteSettings = async (req, res) => {
     try {
         const body = req.body?.siteSettings;
@@ -111,8 +117,11 @@ const putAdminSiteSettings = async (req, res) => {
             }
             next[k] = normalized;
         }
+        if (typeof body.showTeamSection === "boolean") {
+            next.showTeamSection = body.showTeamSection;
+        }
         const doc = await siteSettings_model_1.default.findOneAndUpdate({ singletonKey: SINGLETON }, { $set: next }, { new: true, upsert: true, runValidators: true, setDefaultsOnInsert: true, lean: true });
-        res.status(200).json({ message: "Saved", siteSettings: toPublicShape(doc) });
+        res.status(200).json({ message: "Saved", siteSettings: toAdminShape(doc) });
     }
     catch (err) {
         console.error(err);
