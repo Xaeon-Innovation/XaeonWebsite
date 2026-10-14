@@ -5,6 +5,8 @@ import Package from "../models/package.model";
 import ServiceRequest, {
   type IServiceRequest,
 } from "../models/serviceRequest.model";
+import { getBookingSettings } from "../models/bookingSettings.model";
+import { deleteMeetEvent } from "../services/googleCalendar";
 
 /** Public: contact form, service page interest, or package enquiry — same collection, no login. */
 export const createServiceRequestEnquiry = async (req: Request, res: Response) => {
@@ -347,6 +349,21 @@ export const updateServiceRequest = async (req: Request, res: Response) => {
       res.status(404).json({ error: "Service request not found" });
       return;
     }
+
+    const rejectedBooking =
+      existing.source === "booking" &&
+      existing.status !== "Rejected" &&
+      updatedServiceRequest.status === "Rejected" &&
+      existing.googleEventId;
+    if (rejectedBooking && existing.googleEventId) {
+      try {
+        const settings = await getBookingSettings();
+        await deleteMeetEvent(settings.googleRefreshToken, existing.googleEventId);
+      } catch (cancelErr) {
+        console.error(cancelErr);
+      }
+    }
+
     res.status(200).json({
       message: "Service Request Data Updated Successfully",
       serviceRequest: updatedServiceRequest,
@@ -361,7 +378,20 @@ export const updateServiceRequest = async (req: Request, res: Response) => {
 
 export const deleteServiceRequest = async (req: Request, res: Response) => {
   try {
-    const result = await ServiceRequest.deleteOne({ _id: req.params.id });
+    const existing = await ServiceRequest.findById(req.params.id);
+    if (!existing) {
+      res.status(404).json({ error: "Service request not found" });
+      return;
+    }
+    if (existing.source === "booking" && existing.googleEventId) {
+      try {
+        const settings = await getBookingSettings();
+        await deleteMeetEvent(settings.googleRefreshToken, existing.googleEventId);
+      } catch (cancelErr) {
+        console.error(cancelErr);
+      }
+    }
+    const result = await ServiceRequest.deleteOne({ _id: existing._id });
     if (result.deletedCount === 0) {
       res.status(404).json({ error: "Service request not found" });
       return;

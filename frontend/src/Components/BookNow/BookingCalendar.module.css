@@ -1,0 +1,238 @@
+.wrap {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.intro {
+  margin: 0;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.stepLabel {
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.monthBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.monthLabel {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #f8fafc;
+}
+
+.navBtn {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+  color: #f8fafc;
+  cursor: pointer;
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.navBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.navBtn:not(:disabled):hover {
+  border-color: rgba(114, 192, 79, 0.55);
+}
+
+.dow,
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.3rem;
+}
+
+.dow span {
+  text-align: center;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+  padding-bottom: 0.15rem;
+}
+
+.day,
+.dayBlank {
+  aspect-ratio: 1;
+  border-radius: 999px;
+  min-height: 2.15rem;
+}
+
+.day {
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(248, 250, 252, 0.28);
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  cursor: default;
+}
+
+.dayAvailable {
+  color: #f8fafc;
+  border-color: rgba(114, 192, 79, 0.5);
+  background: rgba(114, 192, 79, 0.12);
+  cursor: pointer;
+}
+
+.dayAvailable:hover {
+  background: rgba(114, 192, 79, 0.22);
+}
+
+.daySelected {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-on-accent);
+  font-weight: 700;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem 1.1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--color-text-subtle);
+  font-size: 0.8rem;
+}
+
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.swatch {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(114, 192, 79, 0.5);
+  background: rgba(114, 192, 79, 0.12);
+}
+
+.swatchSelected {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.swatchOff {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.slotsHead {
+  margin: 0.2rem 0 0;
+  color: #f8fafc;
+  font-size: 0.95rem;
+}
+
+.slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.slot {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(0, 0, 0, 0.28);
+  color: #f8fafc;
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.slot:hover {
+  border-color: rgba(114, 192, 79, 0.55);
+}
+
+.slotSelected {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-on-accent);
+  font-weight: 700;
+}
+
+.summary {
+  margin: 0;
+  padding: 0.75rem 0.85rem;
+  border-radius: 0.45rem;
+  border: 1px solid rgba(114, 192, 79, 0.28);
+  background: rgba(114, 192, 79, 0.08);
+  color: rgba(248, 250, 252, 0.92);
+  line-height: 1.45;
+}
+
+.actions {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.back {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: transparent;
+  color: #f8fafc;
+  border-radius: 0.45rem;
+  padding: 0.85rem 1rem;
+  font-family: var(--font-body);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.confirm {
+  margin-top: 0 !important;
+  width: auto !important;
+  flex: 1;
+}
+
+.closed,
+.notice {
+  margin: 0;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+
+.meetLink {
+  color: var(--color-accent);
+  font-weight: 700;
+  word-break: break-all;
+}
+
+.status {
+  margin: 0;
+  color: color-mix(in srgb, var(--color-accent) 82%, white);
+  line-height: 1.5;
+}
+
+@media (max-width: 520px) {
+  .day {
+    font-size: 0.78rem;
+    min-height: 1.9rem;
+  }
+
+  .monthLabel {
+    font-size: 1.1rem;
+  }
+}

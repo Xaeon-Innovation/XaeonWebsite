@@ -7,8 +7,8 @@ const BookNowHero = () => {
       <div className={styles.overlay} aria-hidden />
 
       <div className={styles.container}>
-        <h1 className={styles.title}>Contact Us</h1>
-        <p className={styles.subtitle}>And Let&apos;s Build Something Timeless</p>
+        <h1 className={styles.title}>Book a meeting</h1>
+        <p className={styles.subtitle}>Choose a time for a Google Meet</p>
       </div>
     </section>
   );

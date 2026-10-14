@@ -111,6 +111,7 @@ const router = createBrowserRouter([
       { path: "site-team", lazy: () => import("./Pages/admin/TeamMembersPage") },
       { path: "site-case-studies", lazy: () => import("./Pages/admin/CaseStudiesCmsPage") },
       { path: "site-social", lazy: () => import("./Pages/admin/SiteSocialSettingsPage") },
+      { path: "bookings", lazy: () => import("./Pages/admin/BookingsPage") },
       { path: "service-requests", lazy: () => import("./Pages/admin/ServiceRequestsPage"), loader: serviceRequestsLoader },
     ],
   },

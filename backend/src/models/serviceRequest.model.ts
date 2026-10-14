@@ -4,7 +4,8 @@ export type ServiceRequestSource =
   | "registered"
   | "contact"
   | "service"
-  | "package";
+  | "package"
+  | "booking";
 
 export interface IServiceRequest extends Document {
   title: string;
@@ -22,6 +23,10 @@ export interface IServiceRequest extends Document {
   company?: string;
   /** Service page: chosen offering; distinguishes from generic contact. */
   interest?: string;
+  /** Google Meet URL for source "booking". */
+  meetLink?: string;
+  /** Google Calendar event id for source "booking". */
+  googleEventId?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -30,8 +35,13 @@ function isRegisteredSource(this: IServiceRequest): boolean {
   return (
     this.source !== "contact" &&
     this.source !== "service" &&
-    this.source !== "package"
+    this.source !== "package" &&
+    this.source !== "booking"
   );
+}
+
+function requiresMeetingDate(this: IServiceRequest): boolean {
+  return isRegisteredSource.call(this) || this.source === "booking";
 }
 
 const ServiceRequestSchema: Schema<IServiceRequest> = new Schema({
@@ -44,13 +54,13 @@ const ServiceRequestSchema: Schema<IServiceRequest> = new Schema({
   },
   source: {
     type: String,
-    enum: ["registered", "contact", "service", "package"],
+    enum: ["registered", "contact", "service", "package", "booking"],
     default: "registered",
   },
   meeting_date: {
     type: Date,
     required(this: IServiceRequest) {
-      return isRegisteredSource.call(this);
+      return requiresMeetingDate.call(this);
     },
   },
   user: {
@@ -66,7 +76,20 @@ const ServiceRequestSchema: Schema<IServiceRequest> = new Schema({
   contactPhone: { type: String },
   company: { type: String },
   interest: { type: String },
+  meetLink: { type: String },
+  googleEventId: { type: String },
 }, { timestamps: true });
+
+ServiceRequestSchema.index(
+  { meeting_date: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      source: "booking",
+      status: { $in: ["Pending Review", "Accepted"] },
+    },
+  },
+);
 
 const ServiceRequest = mongoose.model<IServiceRequest>(
   "ServiceRequest",

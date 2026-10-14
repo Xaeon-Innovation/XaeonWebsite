@@ -40,6 +40,7 @@ type ServiceReq = {
   contactName?: string;
   contactPhone?: string;
   company?: string;
+  meetLink?: string;
 };
 
 function packageTitle(row: ServiceReq): string | null {
@@ -182,6 +183,7 @@ export function Component() {
     if (row.source === "contact") return "Contact";
     if (row.source === "service") return "Service interest";
     if (row.source === "package") return "Package";
+    if (row.source === "booking") return "Google Meet";
     return "Registered";
   };
 
@@ -245,8 +247,18 @@ export function Component() {
       header: "Meeting",
       accessor: "meeting_date",
       sortable: true,
-      render: (v) =>
-        v ? new Date(String(v)).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" }) : "—",
+      render: (v, row) => (
+        <div>
+          <div>
+            {v ? new Date(String(v)).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" }) : "—"}
+          </div>
+          {row.meetLink ? (
+            <a href={row.meetLink} target="_blank" rel="noreferrer">
+              Meet link
+            </a>
+          ) : null}
+        </div>
+      ),
     },
     {
       header: "Created",

@@ -8,6 +8,8 @@ const mongoose_1 = __importDefault(require("mongoose"));
 require("../types/expressAugment");
 const package_model_1 = __importDefault(require("../models/package.model"));
 const serviceRequest_model_1 = __importDefault(require("../models/serviceRequest.model"));
+const bookingSettings_model_1 = require("../models/bookingSettings.model");
+const googleCalendar_1 = require("../services/googleCalendar");
 /** Public: contact form, service page interest, or package enquiry — same collection, no login. */
 const createServiceRequestEnquiry = async (req, res) => {
     try {
@@ -314,6 +316,19 @@ const updateServiceRequest = async (req, res) => {
             res.status(404).json({ error: "Service request not found" });
             return;
         }
+        const rejectedBooking = existing.source === "booking" &&
+            existing.status !== "Rejected" &&
+            updatedServiceRequest.status === "Rejected" &&
+            existing.googleEventId;
+        if (rejectedBooking && existing.googleEventId) {
+            try {
+                const settings = await (0, bookingSettings_model_1.getBookingSettings)();
+                await (0, googleCalendar_1.deleteMeetEvent)(settings.googleRefreshToken, existing.googleEventId);
+            }
+            catch (cancelErr) {
+                console.error(cancelErr);
+            }
+        }
         res.status(200).json({
             message: "Service Request Data Updated Successfully",
             serviceRequest: updatedServiceRequest,
@@ -329,7 +344,21 @@ const updateServiceRequest = async (req, res) => {
 exports.updateServiceRequest = updateServiceRequest;
 const deleteServiceRequest = async (req, res) => {
     try {
-        const result = await serviceRequest_model_1.default.deleteOne({ _id: req.params.id });
+        const existing = await serviceRequest_model_1.default.findById(req.params.id);
+        if (!existing) {
+            res.status(404).json({ error: "Service request not found" });
+            return;
+        }
+        if (existing.source === "booking" && existing.googleEventId) {
+            try {
+                const settings = await (0, bookingSettings_model_1.getBookingSettings)();
+                await (0, googleCalendar_1.deleteMeetEvent)(settings.googleRefreshToken, existing.googleEventId);
+            }
+            catch (cancelErr) {
+                console.error(cancelErr);
+            }
+        }
+        const result = await serviceRequest_model_1.default.deleteOne({ _id: existing._id });
         if (result.deletedCount === 0) {
             res.status(404).json({ error: "Service request not found" });
             return;

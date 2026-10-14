@@ -37,7 +37,11 @@ const mongoose_1 = __importStar(require("mongoose"));
 function isRegisteredSource() {
     return (this.source !== "contact" &&
         this.source !== "service" &&
-        this.source !== "package");
+        this.source !== "package" &&
+        this.source !== "booking");
+}
+function requiresMeetingDate() {
+    return isRegisteredSource.call(this) || this.source === "booking";
 }
 const ServiceRequestSchema = new mongoose_1.Schema({
     title: { type: String, required: true },
@@ -49,13 +53,13 @@ const ServiceRequestSchema = new mongoose_1.Schema({
     },
     source: {
         type: String,
-        enum: ["registered", "contact", "service", "package"],
+        enum: ["registered", "contact", "service", "package", "booking"],
         default: "registered",
     },
     meeting_date: {
         type: Date,
         required() {
-            return isRegisteredSource.call(this);
+            return requiresMeetingDate.call(this);
         },
     },
     user: {
@@ -71,6 +75,15 @@ const ServiceRequestSchema = new mongoose_1.Schema({
     contactPhone: { type: String },
     company: { type: String },
     interest: { type: String },
+    meetLink: { type: String },
+    googleEventId: { type: String },
 }, { timestamps: true });
+ServiceRequestSchema.index({ meeting_date: 1 }, {
+    unique: true,
+    partialFilterExpression: {
+        source: "booking",
+        status: { $in: ["Pending Review", "Accepted"] },
+    },
+});
 const ServiceRequest = mongoose_1.default.model("ServiceRequest", ServiceRequestSchema);
 exports.default = ServiceRequest;

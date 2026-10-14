@@ -5,7 +5,7 @@ import { FaWhatsapp } from "react-icons/fa";
 
 import api from "../../lib/api";
 import styles from "./BookNowContact.module.css";
-import PublicEnquiryForm from "./PublicEnquiryForm";
+import BookingCalendar from "./BookingCalendar";
 
 const OFFICE_ADDRESS =
   "13 Roushdy Basha, Mustafa Kamel WA Bolkli, Sidi Gaber, Alexandria, Egypt";
@@ -66,20 +66,14 @@ const BookNowContact = () => {
         <div className={styles.grid}>
           <div className={styles.formCard}>
             <div className={styles.formHeader}>
-              <span className={styles.kicker}>Contact us</span>
-              <h2 className={styles.formTitle}>Get In Touch</h2>
+              <span className={styles.kicker}>Google Meet</span>
+              <h2 className={styles.formTitle}>Book a meeting</h2>
             </div>
 
-            {resolvedPackageId && packageTitle ? (
-              <PublicEnquiryForm
-                idPrefix="book"
-                source="package"
-                packageId={resolvedPackageId}
-                packageTitle={packageTitle}
-              />
-            ) : (
-              <PublicEnquiryForm idPrefix="book" source="contact" />
-            )}
+            <BookingCalendar
+              packageId={resolvedPackageId}
+              packageTitle={packageTitle}
+            />
           </div>
 
           <aside className={styles.info}>

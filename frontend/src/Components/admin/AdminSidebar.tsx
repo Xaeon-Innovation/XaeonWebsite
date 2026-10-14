@@ -8,6 +8,7 @@ import {
   Package,
   FileText,
   MessageSquareText,
+  CalendarClock,
   PanelLeftClose,
   PanelLeft,
   UsersRound,
@@ -26,6 +27,7 @@ const NAV_ITEMS = [
   { to: "/admin/site-team", label: "Site — Team", icon: UsersRound },
   { to: "/admin/site-case-studies", label: "Site — Case studies", icon: Images },
   { to: "/admin/site-social", label: "Site — Social links", icon: Share2 },
+  { to: "/admin/bookings", label: "Bookings", icon: CalendarClock },
   { to: "/admin/service-requests", label: "Requests", icon: MessageSquareText },
 ] as const;
 
