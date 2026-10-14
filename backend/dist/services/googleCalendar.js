@@ -10,10 +10,8 @@ exports.createMeetEvent = createMeetEvent;
 exports.deleteMeetEvent = deleteMeetEvent;
 const crypto_1 = require("crypto");
 const googleapis_1 = require("googleapis");
-const SCOPES = [
-    "https://www.googleapis.com/auth/calendar.events",
-    "https://www.googleapis.com/auth/calendar.events.freebusy",
-];
+/** Full calendar access: create Meet events, read free/busy, and read the primary calendar. */
+const SCOPES = ["https://www.googleapis.com/auth/calendar"];
 class GoogleAuthError extends Error {
     constructor(message = "Google Calendar needs to be reconnected") {
         super(message);

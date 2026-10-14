@@ -105,6 +105,26 @@ function dayNumber(date: string): number {
   return Number(date.slice(8, 10));
 }
 
+const PERIODS = [
+  { id: "morning", label: "10:00 – 14:00", from: "10:00", to: "14:00" },
+  { id: "afternoon", label: "14:00 – 18:00", from: "14:00", to: "18:00" },
+  { id: "evening", label: "18:00 – 22:00", from: "18:00", to: "22:00" },
+  { id: "night", label: "22:00 – 02:00", from: "22:00", to: "02:00" },
+] as const;
+
+function labelMinutes(label: string): number {
+  const [h, m] = label.split(":").map(Number);
+  return h * 60 + m;
+}
+
+function slotInPeriod(label: string, from: string, to: string): boolean {
+  const value = labelMinutes(label);
+  const start = labelMinutes(from);
+  const end = labelMinutes(to);
+  if (start < end) return value >= start && value < end;
+  return value >= start || value < end;
+}
+
 function formatDateLabel(date: string): string {
   const [y, m, d] = date.split("-").map(Number);
   return new Intl.DateTimeFormat("en-GB", {
@@ -122,6 +142,7 @@ export default function BookingCalendar({ packageId, packageTitle }: Props) {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [selectedPeriod, setSelectedPeriod] = useState<(typeof PERIODS)[number]["id"] | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<SlotOption | null>(null);
   const [step, setStep] = useState<"schedule" | "details" | "done">("schedule");
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -179,6 +200,13 @@ export default function BookingCalendar({ packageId, packageTitle }: Props) {
   }, [month]);
 
   const selectedSlots = selectedDate ? dates[selectedDate] ?? [] : [];
+  const openPeriods = PERIODS.filter((period) =>
+    selectedSlots.some((slot) => slotInPeriod(slot.label, period.from, period.to)),
+  );
+  const period = PERIODS.find((item) => item.id === selectedPeriod) ?? null;
+  const periodSlots = period
+    ? selectedSlots.filter((slot) => slotInPeriod(slot.label, period.from, period.to))
+    : [];
 
   const onSubmit = handleSubmit(async (values) => {
     if (!selectedSlot) return;
@@ -196,6 +224,7 @@ export default function BookingCalendar({ packageId, packageTitle }: Props) {
       const message = getApiErrorMessage(err, "That time could not be booked.");
       setSubmitError(message);
       if (message.toLowerCase().includes("no longer available")) {
+        setSelectedPeriod(null);
         setSelectedSlot(null);
         setStep("schedule");
         setAvailability(null);
@@ -262,6 +291,7 @@ export default function BookingCalendar({ packageId, packageTitle }: Props) {
               disabled={month <= currentMonth(timezone)}
               onClick={() => {
                 setSelectedDate(null);
+                setSelectedPeriod(null);
                 setSelectedSlot(null);
                 setMonth((current) => shiftMonth(current, -1));
               }}
@@ -276,6 +306,7 @@ export default function BookingCalendar({ packageId, packageTitle }: Props) {
               disabled={month >= lastMonth}
               onClick={() => {
                 setSelectedDate(null);
+                setSelectedPeriod(null);
                 setSelectedSlot(null);
                 setMonth((current) => shiftMonth(current, 1));
               }}
@@ -303,6 +334,7 @@ export default function BookingCalendar({ packageId, packageTitle }: Props) {
                   aria-pressed={selectedDate === cell.date}
                   onClick={() => {
                     setSelectedDate(cell.date);
+                    setSelectedPeriod(null);
                     setSelectedSlot(null);
                   }}
                 >
@@ -331,13 +363,37 @@ export default function BookingCalendar({ packageId, packageTitle }: Props) {
 
           {selectedDate ? (
             <div>
-              <p className={styles.slotsHead}>
-                {selectedSlots.length
-                  ? `Open times on ${formatDateLabel(selectedDate)}`
-                  : "No open times on this day."}
-              </p>
+              <p className={styles.stepLabel}>2 · When are you available?</p>
+              <p className={styles.slotsHead}>{formatDateLabel(selectedDate)}</p>
+              {openPeriods.length === 0 ? (
+                <p className={styles.notice}>No open times on this day.</p>
+              ) : (
+                <div className={styles.slots}>
+                  {openPeriods.map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      className={`${styles.slot} ${selectedPeriod === item.id ? styles.slotSelected : ""}`}
+                      aria-pressed={selectedPeriod === item.id}
+                      onClick={() => {
+                        setSelectedPeriod(item.id);
+                        setSelectedSlot(null);
+                      }}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : null}
+
+          {period && periodSlots.length > 0 ? (
+            <div>
+              <p className={styles.stepLabel}>3 · Choose a time</p>
+              <p className={styles.slotsHead}>Open times from {period.label}</p>
               <div className={styles.slots}>
-                {selectedSlots.map((slot) => (
+                {periodSlots.map((slot) => (
                   <button
                     key={slot.start}
                     type="button"
@@ -365,7 +421,7 @@ export default function BookingCalendar({ packageId, packageTitle }: Props) {
 
       {step === "details" && selectedSlot ? (
         <form className={formStyles.form} onSubmit={onSubmit} noValidate>
-          <p className={styles.stepLabel}>2 · Your details</p>
+          <p className={styles.stepLabel}>4 · Your details</p>
           <p className={styles.summary}>
             Google Meet · {formatDateLabel(selectedDate ?? "")} · {selectedSlot.label} Egypt time
           </p>

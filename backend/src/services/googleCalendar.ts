@@ -1,10 +1,8 @@
 import { randomUUID } from "crypto";
 import { google } from "googleapis";
 
-const SCOPES = [
-  "https://www.googleapis.com/auth/calendar.events",
-  "https://www.googleapis.com/auth/calendar.events.freebusy",
-];
+/** Full calendar access: create Meet events, read free/busy, and read the primary calendar. */
+const SCOPES = ["https://www.googleapis.com/auth/calendar"];
 
 export class GoogleAuthError extends Error {
   constructor(message = "Google Calendar needs to be reconnected") {

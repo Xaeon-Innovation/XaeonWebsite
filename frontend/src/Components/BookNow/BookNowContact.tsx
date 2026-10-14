@@ -6,6 +6,7 @@ import { FaWhatsapp } from "react-icons/fa";
 import api from "../../lib/api";
 import styles from "./BookNowContact.module.css";
 import BookingCalendar from "./BookingCalendar";
+import PublicEnquiryForm from "./PublicEnquiryForm";
 
 const OFFICE_ADDRESS =
   "13 Roushdy Basha, Mustafa Kamel WA Bolkli, Sidi Gaber, Alexandria, Egypt";
@@ -19,7 +20,8 @@ const CONTACT = {
 } as const;
 
 const BookNowContact = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const showMeeting = searchParams.get("meeting") === "1";
   const packageIdParam = searchParams.get("package")?.trim() ?? "";
   const [packageTitle, setPackageTitle] = useState<string | null>(null);
   const [resolvedPackageId, setResolvedPackageId] = useState<string | null>(null);
@@ -55,6 +57,13 @@ const BookNowContact = () => {
     };
   }, [packageIdParam]);
 
+  const setMeetingView = (open: boolean) => {
+    const next = new URLSearchParams(searchParams);
+    if (open) next.set("meeting", "1");
+    else next.delete("meeting");
+    setSearchParams(next, { replace: true });
+  };
+
   const mapSrc = useMemo(() => {
     const q = encodeURIComponent(OFFICE_ADDRESS);
     return `https://www.google.com/maps?q=${q}&output=embed`;
@@ -66,14 +75,37 @@ const BookNowContact = () => {
         <div className={styles.grid}>
           <div className={styles.formCard}>
             <div className={styles.formHeader}>
-              <span className={styles.kicker}>Google Meet</span>
-              <h2 className={styles.formTitle}>Book a meeting</h2>
+              <span className={styles.kicker}>{showMeeting ? "Google Meet" : "Contact us"}</span>
+              <h2 className={styles.formTitle}>{showMeeting ? "Book a meeting" : "Get in touch"}</h2>
             </div>
 
-            <BookingCalendar
-              packageId={resolvedPackageId}
-              packageTitle={packageTitle}
-            />
+            {showMeeting ? (
+              <>
+                <BookingCalendar
+                  packageId={resolvedPackageId}
+                  packageTitle={packageTitle}
+                />
+                <button type="button" className={styles.switchBtn} onClick={() => setMeetingView(false)}>
+                  Send a message instead
+                </button>
+              </>
+            ) : (
+              <>
+                {resolvedPackageId && packageTitle ? (
+                  <PublicEnquiryForm
+                    idPrefix="book"
+                    source="package"
+                    packageId={resolvedPackageId}
+                    packageTitle={packageTitle}
+                  />
+                ) : (
+                  <PublicEnquiryForm idPrefix="book" source="contact" />
+                )}
+                <button type="button" className={styles.switchBtn} onClick={() => setMeetingView(true)}>
+                  Or book a meeting
+                </button>
+              </>
+            )}
           </div>
 
           <aside className={styles.info}>

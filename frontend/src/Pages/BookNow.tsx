@@ -7,7 +7,7 @@ const BookNow = () => {
     <>
       <Seo
         title="Book a Consultation — Xaeon Software Solutions"
-        description="Book a Google Meet with Xaeon. Pick an open time and we’ll email you the meeting link."
+        description="Tell Xaeon what you need, or book a Google Meet and pick an open time."
         pathname="/book-now"
       />
 
