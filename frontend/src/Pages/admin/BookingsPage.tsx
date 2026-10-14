@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useSearchParams } from "react-router";
 
-import api, { getApiErrorMessage } from "../../lib/api";
+import api, { API_BASE_URL, getApiErrorMessage } from "../../lib/api";
 
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const SLOT_LENGTHS = [15, 20, 30, 45, 60];
@@ -162,7 +162,11 @@ export function Component() {
             </p>
             <div className="admin-form-actions">
               {settings.google.configured ? (
-                <a className="admin-btn admin-btn-primary" href="/api/v1/bookings/google/start" style={{ textDecoration: "none" }}>
+                <a
+                  className="admin-btn admin-btn-primary"
+                  href={`${API_BASE_URL.replace(/\/$/, "")}/bookings/google/start`}
+                  style={{ textDecoration: "none" }}
+                >
                   {settings.google.connected ? "Reconnect Google Calendar" : "Connect Google Calendar"}
                 </a>
               ) : null}
