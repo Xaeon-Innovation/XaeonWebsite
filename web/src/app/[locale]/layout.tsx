@@ -3,7 +3,7 @@ import { Suspense, type ReactNode } from "react";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
-import { IBM_Plex_Sans_Arabic, Plus_Jakarta_Sans, Readex_Pro, Unbounded } from "next/font/google";
+import { IBM_Plex_Sans_Arabic, Plus_Jakarta_Sans, Unbounded } from "next/font/google";
 import { routing } from "@/i18n/routing";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -17,11 +17,11 @@ import { SITE_ORIGIN } from "@/lib/site";
 
 const unbounded = Unbounded({ subsets: ["latin"], variable: "--font-unbounded", display: "swap" });
 const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-jakarta", display: "swap" });
-// Arabic faces are not preloaded on English pages; the browser fetches them only when used.
-const readex = Readex_Pro({ subsets: ["arabic", "latin"], variable: "--font-readex", display: "swap", preload: false });
+// One Arabic family (body + headings), regular + bold only (each weight is two files); not preloaded on
+// English pages, the browser fetches it only when Arabic text is on screen.
 const plexArabic = IBM_Plex_Sans_Arabic({
   subsets: ["arabic"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "700"],
   variable: "--font-plex-arabic",
   display: "swap",
   preload: false,
@@ -73,7 +73,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
     <html
       lang={locale}
       dir={locale === "ar" ? "rtl" : "ltr"}
-      className={`${unbounded.variable} ${jakarta.variable} ${readex.variable} ${plexArabic.variable}`}
+      className={`${unbounded.variable} ${jakarta.variable} ${plexArabic.variable}`}
     >
       <body className="min-h-dvh">
         <a

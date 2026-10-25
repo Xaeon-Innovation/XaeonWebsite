@@ -6,8 +6,8 @@ import { Link } from "@/i18n/navigation";
 import ButtonLink from "@/components/ButtonLink";
 import CtaBand from "@/components/CtaBand";
 import ElevoraMock from "@/components/ElevoraMock";
+import HeroCinematic from "@/components/hero/HeroCinematic";
 import Faq from "@/components/Faq";
-import Orbit from "@/components/Orbit";
 import ProcessSteps from "@/components/ProcessSteps";
 import SectionHeading from "@/components/SectionHeading";
 import ServiceGrid from "@/components/ServiceGrid";
@@ -36,36 +36,7 @@ export default async function HomePage({ params }: LocaleParams) {
 
   return (
     <>
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="grid-bg absolute inset-0" aria-hidden />
-        <Orbit className="pointer-events-none absolute -end-32 top-6 hidden w-[44rem] md:block rtl:-scale-x-100" />
-        <div className="container-x relative flex flex-col gap-8 pb-20 pt-16 sm:pb-28 sm:pt-24">
-          <Link
-            href="/products/elevora"
-            className="glass inline-flex max-w-full items-center gap-2 self-start rounded-full px-4 py-2 text-sm text-mist hover:text-fog"
-            data-track="hero_elevora_badge"
-          >
-            <span className="h-2 w-2 shrink-0 rounded-full bg-sage" aria-hidden />
-            <span className="truncate">{t("home.hero.badge")}</span>
-            <ArrowRight size={14} aria-hidden className="shrink-0 rtl:rotate-180" />
-          </Link>
-          <p className="eyebrow">{t("home.hero.eyebrow")}</p>
-          <h1 className="max-w-4xl text-[2.6rem] font-semibold leading-[1.05] sm:text-6xl lg:text-7xl">
-            <span className="block">{t("home.hero.titleA")}</span>
-            <span className="block text-sage">{t("home.hero.titleB")}</span>
-          </h1>
-          <p className="max-w-2xl text-lg text-mist sm:text-xl">{t("home.hero.subtitle")}</p>
-          <div className="flex flex-wrap gap-3">
-            <ButtonLink href="/book" data-track="hero_book_call">
-              {t("home.hero.primary")}
-            </ButtonLink>
-            <ButtonLink href="/services" variant="secondary" data-track="hero_services">
-              {t("home.hero.secondary")}
-            </ButtonLink>
-          </div>
-        </div>
-      </section>
+      <HeroCinematic />
 
       {/* Services */}
       <section className="container-x py-20 sm:py-28" aria-labelledby="services-title">

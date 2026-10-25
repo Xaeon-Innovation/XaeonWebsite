@@ -53,7 +53,20 @@
       "subtitle": "Xaeon designs and builds custom software, websites, mobile apps and AI features, and runs our own SaaS products like Elevora HR. One team from first workshop to launch and beyond.",
       "primary": "Book a free call",
       "secondary": "See our services",
-      "badge": "New: Elevora, mobile-first HR for field and office teams"
+      "badge": "New: Elevora, mobile-first HR for field and office teams",
+      "weBuild": "We build",
+      "words": [
+        "HR platforms",
+        "AI assistants",
+        "booking systems",
+        "mobile apps",
+        "brands",
+        "web apps"
+      ],
+      "wordsSr": "We build HR platforms, AI assistants, booking systems, mobile apps, brands and web apps.",
+      "est": "Est. 2025",
+      "place": "Alexandria, Egypt",
+      "scroll": "Scroll to explore"
     },
     "services": {
       "eyebrow": "What we do",

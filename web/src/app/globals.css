@@ -27,7 +27,7 @@
   --color-pistachio: #c6d59c;
   --color-danger: #f08a8d;
 
-  --font-display: var(--font-unbounded), var(--font-readex), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-unbounded), var(--font-plex-arabic), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-jakarta), var(--font-plex-arabic), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 
   --radius-card: 1.25rem;
@@ -36,7 +36,7 @@
 
 /* Arabic: display + body faces switch, everything else stays the same. */
 :root[lang="ar"] {
-  --font-display: var(--font-readex), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-plex-arabic), var(--font-unbounded), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-plex-arabic), var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
 }
 
