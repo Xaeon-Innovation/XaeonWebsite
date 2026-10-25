@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import api from "./api";
+import api, { getApiErrorMessage } from "./api";
 
 export type UseResourceApi<T> = {
   data: T[];
@@ -49,7 +49,7 @@ export function useResourceApi<T extends { _id?: string; id?: string }>(
       })
       .catch((e) => {
         if (thisRevision !== revision.current) return;
-        setError(e instanceof Error ? e.message : "Failed to load data");
+        setError(getApiErrorMessage(e, "Failed to load data"));
       })
       .finally(() => {
         if (thisRevision !== revision.current) return;

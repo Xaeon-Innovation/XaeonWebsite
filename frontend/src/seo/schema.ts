@@ -6,9 +6,27 @@ export function organizationJsonLd(): JsonLd {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": `${SITE.origin}/#organization`,
     name: SITE.name,
+    alternateName: "Xaeon",
     url: SITE.origin,
+    logo: `${SITE.origin}/assets/backgrounds/logo.webp`,
     email: "info@xaeons.com",
+    telephone: "+20 101 597 1869",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "13 Roushdy Basha, Mustafa Kamel WA Bolkli, Sidi Gaber",
+      addressLocality: "Alexandria",
+      addressCountry: "EG",
+    },
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "sales",
+      email: "info@xaeons.com",
+      telephone: "+20 101 597 1869",
+      availableLanguage: ["English", "Arabic"],
+    },
+    // Add LinkedIn / Facebook / Instagram / Clutch profile URLs here once they're live.
     sameAs: [],
   };
 }
@@ -17,13 +35,10 @@ export function websiteJsonLd(): JsonLd {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": `${SITE.origin}/#website`,
     name: SITE.name,
     url: SITE.origin,
-    potentialAction: {
-      "@type": "SearchAction",
-      target: `${SITE.origin}/services/?q={search_term_string}`,
-      "query-input": "required name=search_term_string",
-    },
+    publisher: { "@id": `${SITE.origin}/#organization` },
   };
 }
 

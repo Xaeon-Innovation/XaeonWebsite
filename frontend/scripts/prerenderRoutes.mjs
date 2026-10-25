@@ -31,3 +31,27 @@ export function buildRoutesToPrerender() {
   return [...routes];
 }
 
+
+/**
+ * Static routes plus CMS-driven pages (published case studies) so the sitemap and
+ * prerender include them. Falls back to static routes if the API is unreachable.
+ */
+export async function buildRoutesWithContent() {
+  const routes = new Set(buildRoutesToPrerender());
+  const apiOrigin = (process.env.SEO_API_ORIGIN || process.env.XAEON_API_ORIGIN || "https://api.xaeons.com")
+    .replace(/\/+$/, "");
+  try {
+    const res = await fetch(`${apiOrigin}/api/v1/site/case-studies`, {
+      signal: AbortSignal.timeout(10000),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      for (const slide of data.slides ?? []) {
+        if (typeof slide.slug === "string" && slide.slug) routes.add(`/case-studies/${slide.slug}`);
+      }
+    }
+  } catch (err) {
+    console.warn(`[seo] could not fetch case studies from ${apiOrigin}: ${err.message}`);
+  }
+  return [...routes];
+}

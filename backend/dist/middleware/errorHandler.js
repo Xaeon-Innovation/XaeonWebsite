@@ -8,6 +8,10 @@ const errorHandler = (err, req, res, _next) => {
     (0, logger_1.logEvents)(`${name}: ${message}\t${req.method}\t${req.url}\t${req.headers.origin ?? "unknown"}`, "errLog.log");
     console.error(err instanceof Error ? err.stack : message);
     const status = res.statusCode && res.statusCode >= 400 ? res.statusCode : 500;
-    res.status(status).json({ message });
+    // Don't leak internals (stack/driver messages) to clients in production.
+    const publicMessage = process.env.NODE_ENV === "production" && status >= 500
+        ? "Internal server error"
+        : message;
+    res.status(status).json({ message: publicMessage });
 };
 exports.errorHandler = errorHandler;

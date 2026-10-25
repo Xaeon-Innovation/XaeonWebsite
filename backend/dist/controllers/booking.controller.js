@@ -12,6 +12,7 @@ const bookingSettings_model_1 = require("../models/bookingSettings.model");
 const bookingEmail_1 = require("../services/bookingEmail");
 const googleCalendar_1 = require("../services/googleCalendar");
 const bookingSlots_1 = require("../utils/bookingSlots");
+const serverError_1 = require("../utils/serverError");
 const SLOT_LENGTHS = [15, 20, 30, 45, 60];
 function jwtSecret() {
     const secret = process.env.JWT_SECRET;
@@ -138,7 +139,7 @@ const getAvailability = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to load availability",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to load availability"),
         });
     }
 };
@@ -303,7 +304,7 @@ const createBooking = async (req, res) => {
         }
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to book the meeting",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to book the meeting"),
         });
     }
 };
@@ -359,7 +360,7 @@ const getBookingAdminSettings = async (_req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to load booking settings",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to load booking settings"),
         });
     }
 };
@@ -424,7 +425,7 @@ const putBookingAdminSettings = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to save booking settings",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to save booking settings"),
         });
     }
 };
@@ -442,7 +443,7 @@ const startGoogleConnect = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to start Google connection",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to start Google connection"),
         });
     }
 };
@@ -488,7 +489,7 @@ const disconnectGoogle = async (_req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to disconnect Google Calendar",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to disconnect Google Calendar"),
         });
     }
 };

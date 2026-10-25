@@ -7,6 +7,7 @@ exports.getPublicCaseStudyBySlug = exports.getPublicCaseStudies = exports.getPub
 const teamMember_model_1 = __importDefault(require("../models/teamMember.model"));
 const caseStudy_model_1 = __importDefault(require("../models/caseStudy.model"));
 const siteSettings_model_1 = __importDefault(require("../models/siteSettings.model"));
+const serverError_1 = require("../utils/serverError");
 /** Public: published team members for About page */
 const getPublicTeamMembers = async (_req, res) => {
     try {
@@ -22,7 +23,7 @@ const getPublicTeamMembers = async (_req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to fetch team",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to fetch team"),
         });
     }
 };
@@ -54,7 +55,7 @@ const getPublicCaseStudies = async (_req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to fetch case studies",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to fetch case studies"),
         });
     }
 };
@@ -77,7 +78,7 @@ const getPublicCaseStudyBySlug = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to fetch case study",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to fetch case study"),
         });
     }
 };

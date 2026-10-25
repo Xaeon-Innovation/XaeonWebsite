@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import User from "../models/user.model";
+import { serverErrorMessage } from "../utils/serverError";
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
@@ -9,7 +10,7 @@ export const getUsers = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to fetch users",
+      error: serverErrorMessage(err, "Failed to fetch users"),
     });
   }
 };
@@ -25,7 +26,7 @@ export const getUserById = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to fetch user",
+      error: serverErrorMessage(err, "Failed to fetch user"),
     });
   }
 };
@@ -89,7 +90,7 @@ export const createUser = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to create user",
+      error: serverErrorMessage(err, "Failed to create user"),
     });
   }
 };
@@ -101,7 +102,7 @@ export const updateUser = async (req: Request, res: Response) => {
       res.status(400).json({ error: "User id is required" });
       return;
     }
-    const { id: _id, ...update } = req.body.user;
+    const { id: _id, password: _password, ...update } = req.body.user;
     const updatedUser = await User.findByIdAndUpdate(id, update, {
       new: true,
       runValidators: true,
@@ -117,7 +118,7 @@ export const updateUser = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to update user",
+      error: serverErrorMessage(err, "Failed to update user"),
     });
   }
 };
@@ -133,7 +134,7 @@ export const deleteUser = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to delete user",
+      error: serverErrorMessage(err, "Failed to delete user"),
     });
   }
 };

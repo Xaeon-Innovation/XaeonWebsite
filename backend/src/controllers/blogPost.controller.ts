@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import BlogPost from "../models/blogPost.model";
+import { serverErrorMessage } from "../utils/serverError";
 
 export const getBlogPosts = async (req: Request, res: Response) => {
   try {
@@ -8,7 +9,7 @@ export const getBlogPosts = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to fetch blog posts",
+      error: serverErrorMessage(err, "Failed to fetch blog posts"),
     });
   }
 };
@@ -24,7 +25,7 @@ export const getBlogPostById = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to fetch blog post",
+      error: serverErrorMessage(err, "Failed to fetch blog post"),
     });
   }
 };
@@ -39,7 +40,7 @@ export const createBlogPost = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to create blog post",
+      error: serverErrorMessage(err, "Failed to create blog post"),
     });
   }
 };
@@ -67,7 +68,7 @@ export const updateBlogPost = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to update blog post",
+      error: serverErrorMessage(err, "Failed to update blog post"),
     });
   }
 };
@@ -83,7 +84,7 @@ export const deleteBlogPost = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to delete blog post",
+      error: serverErrorMessage(err, "Failed to delete blog post"),
     });
   }
 };

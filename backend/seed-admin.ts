@@ -9,9 +9,11 @@ async function seedAdmin() {
     await mongoose.connect(process.env.DB_URI);
     console.log("Connected to MongoDB...");
 
-    // Feel free to change these credentials
-    const email = "admin@xaeon.com";
-    const password = "adminpassword123";
+    const email = process.env.SEED_ADMIN_EMAIL?.trim().toLowerCase();
+    const password = process.env.SEED_ADMIN_PASSWORD;
+    if (!email || !password || password.length < 12) {
+      throw new Error("Set SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD (min 12 chars) before seeding");
+    }
     const hashedPassword = await bcrypt.hash(password, 12);
 
     const existingAdmin = await User.findOne({ email });
@@ -31,7 +33,7 @@ async function seedAdmin() {
         phone_number: "0000000000",
         role: "admin",
       });
-      console.log(`Created admin user! Email: ${email} | Password: ${password}`);
+      console.log(`Created admin user ${email}.`);
     }
 
   } catch (err) {

@@ -2,7 +2,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 
-import { buildRoutesToPrerender } from "./prerenderRoutes.mjs";
+import { buildRoutesWithContent } from "./prerenderRoutes.mjs";
 
 const SITE_ORIGIN = (process.env.SITE_ORIGIN || "https://xaeons.com").replace(/\/+$/, "");
 const DIST_DIR = path.resolve(process.cwd(), "dist");
@@ -40,7 +40,29 @@ function buildRobotsTxt() {
     "Disallow: /admin/",
     "Disallow: /dashboard",
     "Disallow: /dashboard/",
+    "Disallow: /login",
+    "Disallow: /register",
     "",
+    // AI search & assistant crawlers: explicitly welcome so Xaeon can be cited in AI answers.
+    ...[
+      "OAI-SearchBot",
+      "ChatGPT-User",
+      "GPTBot",
+      "ClaudeBot",
+      "Claude-SearchBot",
+      "Claude-User",
+      "PerplexityBot",
+      "Perplexity-User",
+      "Google-Extended",
+      "Applebot-Extended",
+      "Bingbot",
+    ].flatMap((agent) => [
+      `User-agent: ${agent}`,
+      "Allow: /",
+      "Disallow: /admin",
+      "Disallow: /dashboard",
+      "",
+    ]),
     `Sitemap: ${SITE_ORIGIN}/sitemap.xml`,
     "",
   ].join("\n");
@@ -49,7 +71,7 @@ function buildRobotsTxt() {
 async function main() {
   await mkdir(DIST_DIR, { recursive: true });
 
-  const publicRoutes = buildRoutesToPrerender()
+  const publicRoutes = (await buildRoutesWithContent())
     // Exclude auth/private routes explicitly (even if someone adds them later)
     .filter((r) => !r.startsWith("/admin"))
     .filter((r) => !r.startsWith("/dashboard"));

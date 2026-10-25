@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.putAdminSiteSettings = exports.getAdminSiteSettings = exports.getPublicSocialLinks = void 0;
 const siteSettings_model_1 = __importDefault(require("../models/siteSettings.model"));
+const serverError_1 = require("../utils/serverError");
 const SINGLETON = "default";
 const emptySocial = {
     facebookUrl: "",
@@ -71,7 +72,7 @@ const getPublicSocialLinks = async (_req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to load site settings",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to load site settings"),
         });
     }
 };
@@ -89,7 +90,7 @@ const getAdminSiteSettings = async (_req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to load site settings",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to load site settings"),
         });
     }
 };
@@ -126,7 +127,7 @@ const putAdminSiteSettings = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to save site settings",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to save site settings"),
         });
     }
 };

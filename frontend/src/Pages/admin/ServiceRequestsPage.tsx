@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { Eye, EyeOff, Pencil, Trash2 } from "lucide-react";
 import { useLoaderData } from "react-router";
 
+import { getApiErrorMessage } from "../../lib/api";
 import { useResourceApi } from "../../lib/useAdminApi";
 import DataTable, { type Column } from "../../Components/admin/DataTable";
 import FormModal from "../../Components/admin/FormModal";
@@ -109,6 +110,7 @@ export function Component() {
     "serviceRequest",
     { initialData: serviceRequests, skipInitialFetch: true },
   );
+  const [actionError, setActionError] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<ServiceReq | null>(null);
   const [editTarget, setEditTarget] = useState<ServiceReq | null>(null);
   const [editInterest, setEditInterest] = useState("");
@@ -131,8 +133,11 @@ export function Component() {
 
   const updateStatus = async (req: ServiceReq, newStatus: string) => {
     try {
+      setActionError(null);
       await update({ id: req._id, status: newStatus });
-    } catch { /* */ }
+    } catch (e) {
+      setActionError(getApiErrorMessage(e, "Couldn't update the status. Please try again."));
+    }
   };
 
   const confirmDelete = async () => {
@@ -173,7 +178,7 @@ export function Component() {
       await update(payload as Record<string, unknown>);
       setEditTarget(null);
     } catch (err) {
-      setEditError(err instanceof Error ? err.message : "Update failed");
+      setEditError(getApiErrorMessage(err, "Update failed"));
     } finally {
       setEditSaving(false);
     }
@@ -331,6 +336,7 @@ export function Component() {
       </div>
 
       {error && <p style={{ color: "#ef4444", marginBottom: 12 }}>{error}</p>}
+      {actionError && <p className="admin-field-error" role="alert">{actionError}</p>}
       {loading ? <div style={{ color: "#72c04f", padding: 32, textAlign: "center" }}>Loading…</div> : (
         <DataTable
           columns={columns}

@@ -25,6 +25,7 @@ import {
   todayInZone,
   type DayWindow,
 } from "../utils/bookingSlots";
+import { serverErrorMessage } from "../utils/serverError";
 
 const SLOT_LENGTHS = [15, 20, 30, 45, 60];
 
@@ -168,7 +169,7 @@ export const getAvailability = async (req: Request, res: Response): Promise<void
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to load availability",
+      error: serverErrorMessage(err, "Failed to load availability"),
     });
   }
 };
@@ -347,7 +348,7 @@ export const createBooking = async (req: Request, res: Response): Promise<void> 
     }
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to book the meeting",
+      error: serverErrorMessage(err, "Failed to book the meeting"),
     });
   }
 };
@@ -400,7 +401,7 @@ export const getBookingAdminSettings = async (_req: Request, res: Response): Pro
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to load booking settings",
+      error: serverErrorMessage(err, "Failed to load booking settings"),
     });
   }
 };
@@ -468,7 +469,7 @@ export const putBookingAdminSettings = async (req: Request, res: Response): Prom
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to save booking settings",
+      error: serverErrorMessage(err, "Failed to save booking settings"),
     });
   }
 };
@@ -485,7 +486,7 @@ export const startGoogleConnect = async (req: Request, res: Response): Promise<v
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to start Google connection",
+      error: serverErrorMessage(err, "Failed to start Google connection"),
     });
   }
 };
@@ -529,7 +530,7 @@ export const disconnectGoogle = async (_req: Request, res: Response): Promise<vo
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to disconnect Google Calendar",
+      error: serverErrorMessage(err, "Failed to disconnect Google Calendar"),
     });
   }
 };

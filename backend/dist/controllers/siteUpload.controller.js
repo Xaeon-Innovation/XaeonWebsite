@@ -50,10 +50,9 @@ const uploadSiteAsset = async (req, res) => {
                 res.status(400).json({ error: "SVG too large (max 200KB)" });
                 return;
             }
-            const txt = req.file.buffer.toString("utf8");
-            (0, processSiteImage_1.assertSvgSafe)(txt);
-            fileName = `${(0, crypto_1.randomUUID)()}.svg`;
-            outBuf = req.file.buffer;
+            // Rasterize instead of serving the SVG: stored SVG can carry script (stored XSS).
+            fileName = `${(0, crypto_1.randomUUID)()}.webp`;
+            outBuf = await (0, processSiteImage_1.rasterToWebp)(req.file.buffer, "logo");
         }
         else {
             fileName = `${(0, crypto_1.randomUUID)()}.webp`;

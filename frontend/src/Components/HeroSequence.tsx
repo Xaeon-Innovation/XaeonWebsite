@@ -226,13 +226,18 @@ export function HeroSequence() {
             sloganFloatOn && !reducedMotion ? styles.sloganLiftFloating : ""
           }`}
         >
+          {/* The animated slogan types in after the video; this h1 is always complete for crawlers and screen readers. */}
+          <h1 className={styles.srOnly}>
+            Xaeon Software Solutions — Beyond Time. Beyond Limits. Custom software, web, mobile
+            and AI development.
+          </h1>
           <div
             ref={sloganRef}
             className={`${styles.slogan} ${
               reducedMotion ? styles.sloganStatic : ""
             }`}
           >
-            <p ref={line1Ref} className={styles.headlineRow}>
+            <p ref={line1Ref} className={styles.headlineRow} aria-hidden="true">
               <span className={styles.wordWhite}>Beyond </span>
               {reducedMotion ? (
                 <span className={styles.wordGreen}>Time.</span>
@@ -252,7 +257,7 @@ export function HeroSequence() {
                 <span className={styles.wordGreen} aria-hidden />
               )}
             </p>
-            <p ref={line2Ref} className={styles.headlineRow}>
+            <p ref={line2Ref} className={styles.headlineRow} aria-hidden="true">
               <span className={styles.wordWhite}>Beyond </span>
               {reducedMotion ? (
                 <span className={styles.wordGreen}>Limits.</span>

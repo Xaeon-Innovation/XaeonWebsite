@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import TeamMember from "../models/teamMember.model";
+import { serverErrorMessage } from "../utils/serverError";
 
 export const getTeamMembers = async (_req: Request, res: Response): Promise<void> => {
   try {
@@ -8,7 +9,7 @@ export const getTeamMembers = async (_req: Request, res: Response): Promise<void
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to fetch team members",
+      error: serverErrorMessage(err, "Failed to fetch team members"),
     });
   }
 };
@@ -35,7 +36,7 @@ export const createTeamMember = async (req: Request, res: Response): Promise<voi
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to create team member",
+      error: serverErrorMessage(err, "Failed to create team member"),
     });
   }
 };
@@ -68,7 +69,7 @@ export const updateTeamMember = async (req: Request, res: Response): Promise<voi
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to update team member",
+      error: serverErrorMessage(err, "Failed to update team member"),
     });
   }
 };
@@ -84,7 +85,7 @@ export const deleteTeamMember = async (req: Request, res: Response): Promise<voi
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to delete team member",
+      error: serverErrorMessage(err, "Failed to delete team member"),
     });
   }
 };

@@ -9,6 +9,7 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const user_model_1 = __importDefault(require("../models/user.model"));
+const serverError_1 = require("../utils/serverError");
 const COOKIE_NAME = "auth_token";
 const getJwtSecret = () => {
     const secret = process.env.JWT_SECRET;
@@ -85,7 +86,7 @@ const register = async (req, res) => {
             return;
         }
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to register",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to register"),
         });
     }
 };
@@ -98,7 +99,7 @@ const login = async (req, res) => {
             return;
         }
         const normalizedEmail = email.trim().toLowerCase();
-        const user = await user_model_1.default.findOne({ email: normalizedEmail });
+        const user = await user_model_1.default.findOne({ email: normalizedEmail }).select("+password");
         if (!user) {
             res.status(401).json({ error: "Invalid email or password" });
             return;
@@ -124,7 +125,7 @@ const login = async (req, res) => {
     catch (err) {
         console.error("Login Error:", err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to login",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to login"),
         });
     }
 };
@@ -181,7 +182,7 @@ const updateMyProfile = async (req, res) => {
             res.status(400).json({ error: "user payload is required" });
             return;
         }
-        const user = await user_model_1.default.findById(auth.id);
+        const user = await user_model_1.default.findById(auth.id).select("+password");
         if (!user) {
             res.status(401).json({ error: "Not authenticated" });
             return;
@@ -270,7 +271,7 @@ const updateMyProfile = async (req, res) => {
             return;
         }
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to update profile",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to update profile"),
         });
     }
 };

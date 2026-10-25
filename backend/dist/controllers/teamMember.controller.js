@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteTeamMember = exports.updateTeamMember = exports.createTeamMember = exports.getTeamMembers = void 0;
 const teamMember_model_1 = __importDefault(require("../models/teamMember.model"));
+const serverError_1 = require("../utils/serverError");
 const getTeamMembers = async (_req, res) => {
     try {
         const teamMembers = await teamMember_model_1.default.find().sort({ sortOrder: 1, createdAt: 1 });
@@ -13,7 +14,7 @@ const getTeamMembers = async (_req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to fetch team members",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to fetch team members"),
         });
     }
 };
@@ -41,7 +42,7 @@ const createTeamMember = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to create team member",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to create team member"),
         });
     }
 };
@@ -71,7 +72,7 @@ const updateTeamMember = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to update team member",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to update team member"),
         });
     }
 };
@@ -88,7 +89,7 @@ const deleteTeamMember = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to delete team member",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to delete team member"),
         });
     }
 };

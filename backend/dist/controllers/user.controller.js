@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUser = exports.updateUser = exports.createUser = exports.getUserById = exports.getUsers = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const user_model_1 = __importDefault(require("../models/user.model"));
+const serverError_1 = require("../utils/serverError");
 const getUsers = async (req, res) => {
     try {
         const users = await user_model_1.default.find();
@@ -14,7 +15,7 @@ const getUsers = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to fetch users",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to fetch users"),
         });
     }
 };
@@ -31,7 +32,7 @@ const getUserById = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to fetch user",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to fetch user"),
         });
     }
 };
@@ -82,7 +83,7 @@ const createUser = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to create user",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to create user"),
         });
     }
 };
@@ -94,7 +95,7 @@ const updateUser = async (req, res) => {
             res.status(400).json({ error: "User id is required" });
             return;
         }
-        const { id: _id, ...update } = req.body.user;
+        const { id: _id, password: _password, ...update } = req.body.user;
         const updatedUser = await user_model_1.default.findByIdAndUpdate(id, update, {
             new: true,
             runValidators: true,
@@ -111,7 +112,7 @@ const updateUser = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to update user",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to update user"),
         });
     }
 };
@@ -128,7 +129,7 @@ const deleteUser = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to delete user",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to delete user"),
         });
     }
 };

@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import ProjectType from "../models/projectType.model";
+import { serverErrorMessage } from "../utils/serverError";
 
 export const getProjectTypes = async (req: Request, res: Response) => {
   try {
@@ -8,7 +9,7 @@ export const getProjectTypes = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to fetch project types",
+      error: serverErrorMessage(err, "Failed to fetch project types"),
     });
   }
 };
@@ -24,7 +25,7 @@ export const getProjectTypeById = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to fetch project type",
+      error: serverErrorMessage(err, "Failed to fetch project type"),
     });
   }
 };
@@ -39,7 +40,7 @@ export const createProjectType = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to create project type",
+      error: serverErrorMessage(err, "Failed to create project type"),
     });
   }
 };
@@ -67,7 +68,7 @@ export const updateProjectType = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to update project type",
+      error: serverErrorMessage(err, "Failed to update project type"),
     });
   }
 };
@@ -83,7 +84,7 @@ export const deleteProjectType = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to delete project type",
+      error: serverErrorMessage(err, "Failed to delete project type"),
     });
   }
 };

@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import TeamMember from "../models/teamMember.model";
 import CaseStudy from "../models/caseStudy.model";
 import SiteSettings from "../models/siteSettings.model";
+import { serverErrorMessage } from "../utils/serverError";
 
 /** Public: published team members for About page */
 export const getPublicTeamMembers = async (_req: Request, res: Response): Promise<void> => {
@@ -17,7 +18,7 @@ export const getPublicTeamMembers = async (_req: Request, res: Response): Promis
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to fetch team",
+      error: serverErrorMessage(err, "Failed to fetch team"),
     });
   }
 };
@@ -52,7 +53,7 @@ export const getPublicCaseStudies = async (_req: Request, res: Response): Promis
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to fetch case studies",
+      error: serverErrorMessage(err, "Failed to fetch case studies"),
     });
   }
 };
@@ -76,7 +77,7 @@ export const getPublicCaseStudyBySlug = async (req: Request, res: Response): Pro
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to fetch case study",
+      error: serverErrorMessage(err, "Failed to fetch case study"),
     });
   }
 };

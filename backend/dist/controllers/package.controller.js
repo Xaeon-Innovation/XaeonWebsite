@@ -5,15 +5,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deletePackage = exports.updatePackage = exports.createPackage = exports.getPackageById = exports.getPackages = void 0;
 const package_model_1 = __importDefault(require("../models/package.model"));
+const serverError_1 = require("../utils/serverError");
 const getPackages = async (req, res) => {
     try {
-        const packages = await package_model_1.default.find().populate("project_type", "title stages");
+        // Hidden packages are only listed for admins (the CMS); the public site gets visible ones.
+        const filter = req.user?.role === "admin" ? {} : { showOnWebsite: true };
+        const packages = await package_model_1.default.find(filter).populate("project_type", "title stages");
         res.status(200).json({ packages });
     }
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to fetch packages",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to fetch packages"),
         });
     }
 };
@@ -21,7 +24,7 @@ exports.getPackages = getPackages;
 const getPackageById = async (req, res) => {
     try {
         const pkg = await package_model_1.default.findById(req.params.id).populate("project_type", "title stages");
-        if (!pkg) {
+        if (!pkg || (!pkg.showOnWebsite && req.user?.role !== "admin")) {
             res.status(404).json({ error: "Package not found" });
             return;
         }
@@ -30,7 +33,7 @@ const getPackageById = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to fetch package",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to fetch package"),
         });
     }
 };
@@ -47,7 +50,7 @@ const createPackage = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to create package",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to create package"),
         });
     }
 };
@@ -76,7 +79,7 @@ const updatePackage = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to update package",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to update package"),
         });
     }
 };
@@ -93,7 +96,7 @@ const deletePackage = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to delete package",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to delete package"),
         });
     }
 };

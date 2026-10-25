@@ -6,7 +6,20 @@ import api from "../lib/api";
 import styles from "./Footer.module.css";
 
 /** Company founding year (shown in footer copyright). */
-const COPYRIGHT_YEAR = 2025;
+const FOUNDING_YEAR = 2025;
+const CURRENT_YEAR = new Date().getFullYear();
+const COPYRIGHT_RANGE =
+  CURRENT_YEAR > FOUNDING_YEAR ? `${FOUNDING_YEAR}–${CURRENT_YEAR}` : String(FOUNDING_YEAR);
+
+/** Crawlable internal links: every page is reachable from the footer. */
+const FOOTER_NAV = [
+  { to: "/services", label: "Services" },
+  { to: "/our-work", label: "Our Work" },
+  { to: "/packages", label: "Packages" },
+  { to: "/about-us", label: "About" },
+  { to: "/blog", label: "Blog" },
+  { to: "/book-now", label: "Book a Call" },
+];
 
 type SocialLinksPayload = {
   facebookUrl: string;
@@ -163,8 +176,8 @@ const Footer = () => {
 
             <div className={styles.separator}></div>
 
-            <a href="tel:+01015971869" className={styles.contactInfo}>
-              +010-159-718-69
+            <a href="tel:+201015971869" className={styles.contactInfo}>
+              +20 101 597 1869
             </a>
           </div>
         </motion.div>
@@ -177,6 +190,13 @@ const Footer = () => {
           viewport={{ once: true }}
           className={styles.copyrightSection}
         >
+          <nav aria-label="Footer" className={styles.footerNav}>
+            {FOOTER_NAV.map((item) => (
+              <Link key={item.to} to={item.to} className={styles.legalLink}>
+                {item.label}
+              </Link>
+            ))}
+          </nav>
           <div className={styles.legalLinks}>
             <Link to="/terms" className={styles.legalLink}>
               TERMS &amp; CONDITIONS
@@ -187,7 +207,7 @@ const Footer = () => {
             </Link>
           </div>
           <p className={styles.copyrightText}>
-            © {COPYRIGHT_YEAR} Xaeon. All Rights Reserved
+            © {COPYRIGHT_RANGE} Xaeon. All Rights Reserved
           </p>
         </motion.div>
       </div>

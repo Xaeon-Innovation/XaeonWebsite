@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import CaseStudy from "../models/caseStudy.model";
 import { isValidSlug, slugify } from "../utils/slugify";
+import { serverErrorMessage } from "../utils/serverError";
 
 function optStr(v: unknown): string | undefined {
   if (typeof v !== "string") return undefined;
@@ -51,7 +52,7 @@ export const getCaseStudies = async (_req: Request, res: Response): Promise<void
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to fetch case studies",
+      error: serverErrorMessage(err, "Failed to fetch case studies"),
     });
   }
 };
@@ -193,7 +194,7 @@ export const deleteCaseStudy = async (req: Request, res: Response): Promise<void
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to delete case study",
+      error: serverErrorMessage(err, "Failed to delete case study"),
     });
   }
 };

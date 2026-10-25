@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MAX_SVG_BYTES = void 0;
 exports.assertRasterSize = assertRasterSize;
 exports.rasterToWebp = rasterToWebp;
-exports.assertSvgSafe = assertSvgSafe;
 const sharp_1 = __importDefault(require("sharp"));
 const MAX_BYTES = 10 * 1024 * 1024;
 function assertRasterSize(buffer) {
@@ -27,14 +26,5 @@ async function rasterToWebp(buffer, kind) {
         withoutEnlargement: true,
     });
     return img.webp({ quality, effort: 4 }).toBuffer();
-}
-function assertSvgSafe(svgText) {
-    const lower = svgText.toLowerCase();
-    if (lower.includes("<script") ||
-        lower.includes("javascript:") ||
-        lower.includes("onload=") ||
-        lower.includes("onerror=")) {
-        throw new Error("SVG contains disallowed content");
-    }
 }
 exports.MAX_SVG_BYTES = 200 * 1024;

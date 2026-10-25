@@ -7,7 +7,6 @@ import multer from "multer";
 import { getSiteUploadSubdir, getUploadPublicBase } from "../config/siteUpload.config";
 import {
   rasterToWebp,
-  assertSvgSafe,
   MAX_SVG_BYTES,
   type RasterKind,
 } from "../utils/processSiteImage";
@@ -59,10 +58,9 @@ export const uploadSiteAsset = async (req: Request, res: Response): Promise<void
         res.status(400).json({ error: "SVG too large (max 200KB)" });
         return;
       }
-      const txt = req.file.buffer.toString("utf8");
-      assertSvgSafe(txt);
-      fileName = `${randomUUID()}.svg`;
-      outBuf = req.file.buffer;
+      // Rasterize instead of serving the SVG: stored SVG can carry script (stored XSS).
+      fileName = `${randomUUID()}.webp`;
+      outBuf = await rasterToWebp(req.file.buffer, "logo");
     } else {
       fileName = `${randomUUID()}.webp`;
       outBuf = await rasterToWebp(req.file.buffer, kind as RasterKind);

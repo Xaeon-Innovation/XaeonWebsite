@@ -1,3 +1,9 @@
+/* Standalone /blog page: clear the fixed navbar. */
+.blogs.blogsPage {
+  padding-top: 9rem;
+  min-height: 70vh;
+}
+
 .blogs {
   --section-header-font-display: var(--font-heading);
   --section-header-font-body: var(--font-body);
@@ -82,6 +88,9 @@
 
 .imageIcon {
   font-size: 2rem;
+  width: 3rem;
+  height: 3rem;
+  color: var(--color-accent);
 }
 
 .categoryBadge {

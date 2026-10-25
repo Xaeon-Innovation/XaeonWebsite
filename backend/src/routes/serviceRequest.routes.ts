@@ -9,10 +9,11 @@ import {
   updateServiceRequest,
 } from "../controllers/serviceRequest.controller";
 import { requireAuth, requireAdmin } from "../middleware/auth";
+import { honeypot, publicFormLimiter } from "../middleware/rateLimiter";
 const router = express.Router();
 
 /** Public: contact / service-interest (same controller + model as registered requests). */
-router.post("/enquiry", createServiceRequestEnquiry);
+router.post("/enquiry", publicFormLimiter, honeypot, createServiceRequestEnquiry);
 
 router.get("/mine", requireAuth, getMyServiceRequests);
 router.get("/", requireAuth, requireAdmin, getServiceRequests);

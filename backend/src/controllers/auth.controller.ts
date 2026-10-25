@@ -5,6 +5,7 @@ import jwt, { type Secret, type SignOptions } from "jsonwebtoken";
 import mongoose from "mongoose";
 
 import User from "../models/user.model";
+import { serverErrorMessage } from "../utils/serverError";
 
 const COOKIE_NAME = "auth_token";
 
@@ -95,7 +96,7 @@ export const register = async (req: Request, res: Response) => {
       return;
     }
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to register",
+      error: serverErrorMessage(err, "Failed to register"),
     });
   }
 };
@@ -110,7 +111,7 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const normalizedEmail = email.trim().toLowerCase();
-    const user = await User.findOne({ email: normalizedEmail });
+    const user = await User.findOne({ email: normalizedEmail }).select("+password");
     if (!user) {
       res.status(401).json({ error: "Invalid email or password" });
       return;
@@ -138,7 +139,7 @@ export const login = async (req: Request, res: Response) => {
   } catch (err) {
     console.error("Login Error:", err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to login",
+      error: serverErrorMessage(err, "Failed to login"),
     });
   }
 };
@@ -197,7 +198,7 @@ export const updateMyProfile = async (req: Request, res: Response) => {
       return;
     }
 
-    const user = await User.findById(auth.id);
+    const user = await User.findById(auth.id).select("+password");
     if (!user) {
       res.status(401).json({ error: "Not authenticated" });
       return;
@@ -300,7 +301,7 @@ export const updateMyProfile = async (req: Request, res: Response) => {
       return;
     }
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to update profile",
+      error: serverErrorMessage(err, "Failed to update profile"),
     });
   }
 };

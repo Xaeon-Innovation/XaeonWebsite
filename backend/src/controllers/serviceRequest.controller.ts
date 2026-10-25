@@ -6,7 +6,25 @@ import ServiceRequest, {
   type IServiceRequest,
 } from "../models/serviceRequest.model";
 import { getBookingSettings } from "../models/bookingSettings.model";
+import { sendEnquiryNotice } from "../services/bookingEmail";
 import { deleteMeetEvent } from "../services/googleCalendar";
+import { serverErrorMessage } from "../utils/serverError";
+
+async function emailEnquiryNotice(details: {
+  source: "contact" | "service" | "package";
+  name: string;
+  email: string;
+  phone: string;
+  company?: string;
+  message: string;
+  interest?: string;
+}): Promise<void> {
+  try {
+    await sendEnquiryNotice(details);
+  } catch (err) {
+    console.error(err);
+  }
+}
 
 /** Public: contact form, service page interest, or package enquiry — same collection, no login. */
 export const createServiceRequestEnquiry = async (req: Request, res: Response) => {
@@ -69,9 +87,18 @@ export const createServiceRequestEnquiry = async (req: Request, res: Response) =
         package: pkg._id,
         status: "Pending Review",
       });
+      await emailEnquiryNotice({
+        source: "package",
+        name,
+        email,
+        phone,
+        company,
+        message,
+        interest: pkgTitle,
+      });
       res.status(201).json({
         message: "Request submitted successfully",
-        serviceRequest: newServiceRequest,
+        id: String(newServiceRequest._id),
       });
       return;
     }
@@ -100,14 +127,24 @@ export const createServiceRequestEnquiry = async (req: Request, res: Response) =
       status: "Pending Review",
     });
 
+    await emailEnquiryNotice({
+      source,
+      name,
+      email,
+      phone,
+      company,
+      message,
+      interest,
+    });
+
     res.status(201).json({
       message: "Request submitted successfully",
-      serviceRequest: newServiceRequest,
+      id: String(newServiceRequest._id),
     });
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to create request",
+      error: serverErrorMessage(err, "Failed to create request"),
     });
   }
 };
@@ -121,7 +158,7 @@ export const getServiceRequests = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to fetch service requests",
+      error: serverErrorMessage(err, "Failed to fetch service requests"),
     });
   }
 };
@@ -143,7 +180,7 @@ export const getMyServiceRequests = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to fetch service requests",
+      error: serverErrorMessage(err, "Failed to fetch service requests"),
     });
   }
 };
@@ -162,7 +199,7 @@ export const getServiceRequestById = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to fetch service request",
+      error: serverErrorMessage(err, "Failed to fetch service request"),
     });
   }
 };
@@ -278,7 +315,7 @@ export const createServiceRequest = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to create service request",
+      error: serverErrorMessage(err, "Failed to create service request"),
     });
   }
 };
@@ -371,7 +408,7 @@ export const updateServiceRequest = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to update service request",
+      error: serverErrorMessage(err, "Failed to update service request"),
     });
   }
 };
@@ -400,7 +437,7 @@ export const deleteServiceRequest = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to delete service request",
+      error: serverErrorMessage(err, "Failed to delete service request"),
     });
   }
 };

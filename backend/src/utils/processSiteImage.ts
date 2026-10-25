@@ -29,16 +29,4 @@ export async function rasterToWebp(buffer: Buffer, kind: RasterKind): Promise<Bu
   return img.webp({ quality, effort: 4 }).toBuffer();
 }
 
-export function assertSvgSafe(svgText: string): void {
-  const lower = svgText.toLowerCase();
-  if (
-    lower.includes("<script") ||
-    lower.includes("javascript:") ||
-    lower.includes("onload=") ||
-    lower.includes("onerror=")
-  ) {
-    throw new Error("SVG contains disallowed content");
-  }
-}
-
 export const MAX_SVG_BYTES = 200 * 1024;

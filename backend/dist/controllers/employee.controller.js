@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteEmployee = exports.updateEmployee = exports.createEmployee = exports.getEmployeeById = exports.getEmployees = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const employee_model_1 = __importDefault(require("../models/employee.model"));
+const serverError_1 = require("../utils/serverError");
 const EMPLOYEE_ROLES = new Set([
     "Backend Developer",
     "Frontend Developer",
@@ -23,7 +24,7 @@ const getEmployees = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to fetch employees",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to fetch employees"),
         });
     }
 };
@@ -40,7 +41,7 @@ const getEmployeeById = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to fetch employee",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to fetch employee"),
         });
     }
 };
@@ -92,7 +93,7 @@ const createEmployee = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to create employee",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to create employee"),
         });
     }
 };
@@ -104,7 +105,7 @@ const updateEmployee = async (req, res) => {
             res.status(400).json({ error: "Employee id is required" });
             return;
         }
-        const { id: _id, ...update } = req.body.employee;
+        const { id: _id, password: _password, ...update } = req.body.employee;
         const updatedEmployee = await employee_model_1.default.findByIdAndUpdate(id, update, {
             new: true,
             runValidators: true,
@@ -121,7 +122,7 @@ const updateEmployee = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to update employee",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to update employee"),
         });
     }
 };
@@ -138,7 +139,7 @@ const deleteEmployee = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to delete employee",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to delete employee"),
         });
     }
 };

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router";
 import { HelmetProvider } from "react-helmet-async";
+import { ChevronUp } from "lucide-react";
 
 import Footer from "../Components/Footer";
 import Navbar from "../Components/Navbar";
@@ -8,10 +9,38 @@ import IntroVideoSplash from "../Components/IntroVideoSplash/IntroVideoSplash";
 
 import "../App.css";
 
+const SPLASH_SEEN_KEY = "xaeon_intro_seen";
+
+/**
+ * The intro video only plays on a visitor's first homepage load per session. It never
+ * runs for crawlers/prerender (navigator.webdriver), reduced-motion users, or deep links,
+ * and the page renders underneath it so content and SEO tags are always in the DOM.
+ */
+function shouldShowSplash(pathname: string): boolean {
+  if (typeof window === "undefined") return false;
+  if (pathname !== "/") return false;
+  if (navigator.webdriver) return false;
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return false;
+  try {
+    return window.sessionStorage.getItem(SPLASH_SEEN_KEY) !== "1";
+  } catch {
+    return true;
+  }
+}
+
+function markSplashSeen(): void {
+  try {
+    window.sessionStorage.setItem(SPLASH_SEEN_KEY, "1");
+  } catch {
+    // Storage blocked (private mode etc.): splash may show again, which is harmless.
+  }
+}
+
 export default function MainLayout() {
-  const [splashComplete, setSplashComplete] = useState(false);
-  const [showScrollTop, setShowScrollTop] = useState(false);
   const location = useLocation();
+  const [showSplash, setShowSplash] = useState(() => shouldShowSplash(location.pathname));
+  const splashComplete = !showSplash;
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
     if (!splashComplete) return;
@@ -35,31 +64,31 @@ export default function MainLayout() {
 
   return (
     <HelmetProvider>
-      {!splashComplete ? (
+      {showSplash && (
         <IntroVideoSplash
           src="/assets/intro/video-project.webm"
-          onComplete={() => setSplashComplete(true)}
+          onComplete={() => {
+            markSplashSeen();
+            setShowSplash(false);
+          }}
         />
-      ) : (
-        <>
-          {/* Keep navbar outside app transform container for fixed positioning */}
-          <Navbar />
-          <div className="app-container min-h-screen relative">
-            <main className="relative">
-              <Outlet />
-            </main>
-            <Footer />
-          </div>
-          <button
-            type="button"
-            className={`scroll-top-btn ${showScrollTop ? "is-visible" : ""}`}
-            aria-label="Scroll to top"
-            onClick={() => window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}
-          >
-            ^
-          </button>
-        </>
       )}
+      {/* Keep navbar outside app transform container for fixed positioning */}
+      <Navbar />
+      <div className="app-container min-h-screen relative">
+        <main className="relative">
+          <Outlet />
+        </main>
+        <Footer />
+      </div>
+      <button
+        type="button"
+        className={`scroll-top-btn ${showScrollTop ? "is-visible" : ""}`}
+        aria-label="Scroll to top"
+        onClick={() => window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}
+      >
+        <ChevronUp size={20} aria-hidden="true" />
+      </button>
     </HelmetProvider>
   );
 }

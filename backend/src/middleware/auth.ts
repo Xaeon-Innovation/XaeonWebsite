@@ -64,3 +64,29 @@ export const requireAdmin = (
   next();
 };
 
+
+/** Sets req.user when a valid session cookie is present; never rejects. */
+export const optionalAuth = async (
+  req: Request,
+  _res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const token = req.cookies?.auth_token as string | undefined;
+    if (token) {
+      const decoded = jwt.verify(token, getJwtSecret() as Secret) as JwtPayload;
+      const user = await User.findById(decoded.userId).select("email name role");
+      if (user) {
+        req.user = {
+          id: String(user._id),
+          role: user.role,
+          email: user.email,
+          name: user.name,
+        };
+      }
+    }
+  } catch {
+    // Invalid/expired token: treat as anonymous.
+  }
+  next();
+};

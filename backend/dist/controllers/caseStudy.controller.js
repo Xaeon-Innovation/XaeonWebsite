@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteCaseStudy = exports.updateCaseStudy = exports.createCaseStudy = exports.getCaseStudies = void 0;
 const caseStudy_model_1 = __importDefault(require("../models/caseStudy.model"));
 const slugify_1 = require("../utils/slugify");
+const serverError_1 = require("../utils/serverError");
 function optStr(v) {
     if (typeof v !== "string")
         return undefined;
@@ -59,7 +60,7 @@ const getCaseStudies = async (_req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to fetch case studies",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to fetch case studies"),
         });
     }
 };
@@ -213,7 +214,7 @@ const deleteCaseStudy = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to delete case study",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to delete case study"),
         });
     }
 };

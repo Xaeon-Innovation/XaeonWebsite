@@ -6,7 +6,7 @@ import path from "node:path";
 import process from "node:process";
 
 import { chromium } from "playwright";
-import { buildRoutesToPrerender } from "./prerenderRoutes.mjs";
+import { buildRoutesWithContent } from "./prerenderRoutes.mjs";
 
 const DIST_DIR = path.resolve(process.cwd(), "dist");
 const DEFAULT_PORT = Number(process.env.PRERENDER_PORT || "4173");
@@ -120,7 +120,7 @@ async function main() {
     return;
   }
 
-  const routes = buildRoutesToPrerender();
+  const routes = (await buildRoutesWithContent());
   if (routes.length === 0) return;
 
   const port = await pickPort();

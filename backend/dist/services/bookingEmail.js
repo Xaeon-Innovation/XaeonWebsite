@@ -3,11 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.resendConfigured = resendConfigured;
 exports.notifyEmails = notifyEmails;
 exports.sendBookingEmails = sendBookingEmails;
+exports.sendEnquiryNotice = sendEnquiryNotice;
 const resend_1 = require("resend");
-const DEFAULT_NOTIFY = [
-    "mariamelmaghrapy029@gmail.com",
-    "realabdelrahmanelasrag@gmail.com",
-];
 function resendConfigured() {
     return Boolean(process.env.RESEND_API_KEY?.trim());
 }
@@ -15,7 +12,9 @@ function notifyEmails() {
     const raw = process.env.BOOKING_NOTIFY_EMAILS?.trim();
     const list = raw
         ? raw.split(",").map((s) => s.trim().toLowerCase()).filter((s) => s.includes("@"))
-        : DEFAULT_NOTIFY;
+        : [];
+    if (list.length === 0)
+        console.warn("BOOKING_NOTIFY_EMAILS is not set; staff will not be notified");
     return [...new Set(list)];
 }
 function fromAddress() {
@@ -96,5 +95,47 @@ async function sendBookingEmails(details) {
     });
     if (staffResult.error) {
         throw new Error(staffResult.error.message);
+    }
+}
+async function sendEnquiryNotice(details) {
+    const apiKey = process.env.RESEND_API_KEY?.trim();
+    if (!apiKey)
+        throw new Error("RESEND_API_KEY is not set");
+    const sourceLabel = details.source === "package"
+        ? "Package enquiry"
+        : details.source === "service"
+            ? "Service enquiry"
+            : "Contact form";
+    const rows = [
+        ["From", details.name],
+        ["Email", details.email],
+        ["Phone", details.phone],
+    ];
+    if (details.company)
+        rows.push(["Company", details.company]);
+    if (details.interest)
+        rows.push(["About", details.interest]);
+    rows.push(["Message", details.message]);
+    const table = rows
+        .map(([label, value]) => `<tr><td style="padding:8px 12px 8px 0;color:#6b7280;vertical-align:top;">${escapeHtml(label)}</td><td style="padding:8px 0;color:#111827;white-space:pre-wrap;">${escapeHtml(value)}</td></tr>`)
+        .join("");
+    const to = notifyEmails();
+    if (to.length === 0)
+        return;
+    const resend = new resend_1.Resend(apiKey);
+    const result = await resend.emails.send({
+        from: fromAddress(),
+        to,
+        replyTo: details.email,
+        subject: `New message from ${details.name.replace(/[\r\n]+/g, " ").slice(0, 80)}`,
+        html: `
+      <div style="font-family:Arial,sans-serif;line-height:1.5;color:#111827;">
+        <p>Someone sent a message through the Xaeon ${escapeHtml(sourceLabel.toLowerCase())}.</p>
+        <table style="border-collapse:collapse;">${table}</table>
+      </div>
+    `,
+    });
+    if (result.error) {
+        throw new Error(result.error.message);
     }
 }

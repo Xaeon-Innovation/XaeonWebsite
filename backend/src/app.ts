@@ -2,6 +2,7 @@ import path from "path";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import helmet from "helmet";
 import dotenv from "dotenv";
 
 dotenv.config({ path: path.resolve(__dirname, "..", ".env") });
@@ -17,14 +18,29 @@ ensureSiteUploadDir();
 
 const app = express();
 
+// Requests arrive via the Vercel /api proxy and then nginx, so trust two hops for req.ip.
+app.set("trust proxy", 2);
+app.disable("x-powered-by");
+
 // Middleware
+// Uploaded images are embedded on xaeons.com, so allow cross-origin reads of resources.
+app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
 app.use(cors(corsOptions));
 app.use(cookieParser());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "100kb" }));
+app.use(express.urlencoded({ extended: true, limit: "100kb" }));
 app.use(logger);
 
-app.use("/uploads", express.static(getUploadRoot()));
+app.use(
+  "/uploads",
+  express.static(getUploadRoot(), {
+    setHeaders: (res) => res.setHeader("X-Content-Type-Options", "nosniff"),
+  })
+);
+
+app.get("/health", (_req, res) => {
+  res.status(200).json({ status: "ok" });
+});
 
 // Connecting to MongoDB
 import db from "./config/database.config";
@@ -60,6 +76,10 @@ app.use("/api/v1/case-study", caseStudyRouter);
 app.use("/api/v1/admin", siteUploadRouter);
 app.use("/api/v1/admin/site-settings", siteSettingsRouter);
 app.use("/api/v1/bookings", bookingRouter);
+
+app.use((_req, res) => {
+  res.status(404).json({ error: "Not found" });
+});
 
 app.use(errorHandler);
 

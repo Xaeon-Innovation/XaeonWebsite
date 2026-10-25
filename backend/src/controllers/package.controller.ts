@@ -1,14 +1,17 @@
 import type { Request, Response } from "express";
 import Package from "../models/package.model";
+import { serverErrorMessage } from "../utils/serverError";
 
 export const getPackages = async (req: Request, res: Response) => {
   try {
-    const packages = await Package.find().populate("project_type", "title stages");
+    // Hidden packages are only listed for admins (the CMS); the public site gets visible ones.
+    const filter = req.user?.role === "admin" ? {} : { showOnWebsite: true };
+    const packages = await Package.find(filter).populate("project_type", "title stages");
     res.status(200).json({ packages });
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to fetch packages",
+      error: serverErrorMessage(err, "Failed to fetch packages"),
     });
   }
 };
@@ -19,7 +22,7 @@ export const getPackageById = async (req: Request, res: Response) => {
       "project_type",
       "title stages"
     );
-    if (!pkg) {
+    if (!pkg || (!pkg.showOnWebsite && req.user?.role !== "admin")) {
       res.status(404).json({ error: "Package not found" });
       return;
     }
@@ -27,7 +30,7 @@ export const getPackageById = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to fetch package",
+      error: serverErrorMessage(err, "Failed to fetch package"),
     });
   }
 };
@@ -43,7 +46,7 @@ export const createPackage = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to create package",
+      error: serverErrorMessage(err, "Failed to create package"),
     });
   }
 };
@@ -71,7 +74,7 @@ export const updatePackage = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to update package",
+      error: serverErrorMessage(err, "Failed to update package"),
     });
   }
 };
@@ -87,7 +90,7 @@ export const deletePackage = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to delete package",
+      error: serverErrorMessage(err, "Failed to delete package"),
     });
   }
 };

@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import Employee from "../models/employee.model";
+import { serverErrorMessage } from "../utils/serverError";
 
 const EMPLOYEE_ROLES = new Set([
   "Backend Developer",
@@ -19,7 +20,7 @@ export const getEmployees = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to fetch employees",
+      error: serverErrorMessage(err, "Failed to fetch employees"),
     });
   }
 };
@@ -35,7 +36,7 @@ export const getEmployeeById = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to fetch employee",
+      error: serverErrorMessage(err, "Failed to fetch employee"),
     });
   }
 };
@@ -100,7 +101,7 @@ export const createEmployee = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to create employee",
+      error: serverErrorMessage(err, "Failed to create employee"),
     });
   }
 };
@@ -112,7 +113,7 @@ export const updateEmployee = async (req: Request, res: Response) => {
       res.status(400).json({ error: "Employee id is required" });
       return;
     }
-    const { id: _id, ...update } = req.body.employee;
+    const { id: _id, password: _password, ...update } = req.body.employee;
     const updatedEmployee = await Employee.findByIdAndUpdate(id, update, {
       new: true,
       runValidators: true,
@@ -128,7 +129,7 @@ export const updateEmployee = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to update employee",
+      error: serverErrorMessage(err, "Failed to update employee"),
     });
   }
 };
@@ -144,7 +145,7 @@ export const deleteEmployee = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to delete employee",
+      error: serverErrorMessage(err, "Failed to delete employee"),
     });
   }
 };

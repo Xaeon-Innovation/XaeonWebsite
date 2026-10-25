@@ -1,3 +1,4 @@
+import Blogs from "../Components/Blogs/Blogs";
 import Seo from "../seo/Seo";
 
 const Blog = () => {
@@ -8,7 +9,7 @@ const Blog = () => {
         description="Updates on software engineering, AI, product delivery, and digital growth from the Xaeon team."
         pathname="/blog"
       />
-      <div />
+      <Blogs limit={Infinity} asPage />
     </>
   );
 };

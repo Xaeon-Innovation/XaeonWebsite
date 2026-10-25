@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import api from "../../lib/api";
+import api, { getApiErrorMessage } from "../../lib/api";
 import styles from "./BookNowContact.module.css";
 
 const schema = z.object({
@@ -52,11 +52,14 @@ export default function PublicEnquiryForm({
     },
   });
 
+  const honeypotRef = useRef<HTMLInputElement>(null);
+
   const onSubmit = handleSubmit(async (values) => {
     setSubmitError(null);
     try {
       const serviceRequest: Record<string, unknown> = {
         ...values,
+        website: honeypotRef.current?.value ?? "",
         source,
         ...(interest ? { interest } : {}),
         ...(source === "package" && packageId ? { packageId } : {}),
@@ -65,12 +68,22 @@ export default function PublicEnquiryForm({
       reset();
       onSuccess?.();
     } catch (e) {
-      setSubmitError(e instanceof Error ? e.message : "Something went wrong.");
+      setSubmitError(getApiErrorMessage(e, "Something went wrong. Please try again."));
     }
   });
 
   return (
     <form className={styles.form} onSubmit={onSubmit} noValidate>
+      {/* Honeypot: hidden from people, bots fill it and get silently dropped by the API. */}
+      <input
+        ref={honeypotRef}
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        style={{ position: "absolute", left: "-10000px", width: 1, height: 1, opacity: 0 }}
+      />
       {source === "package" && packageTitle ? (
         <p className={styles.packageContext} role="status">
           You&apos;re enquiring about <strong>{packageTitle}</strong>.

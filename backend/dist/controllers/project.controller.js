@@ -7,6 +7,7 @@ exports.deleteProject = exports.updateProject = exports.incrementProjectStatus =
 const mongoose_1 = __importDefault(require("mongoose"));
 require("../types/expressAugment");
 const project_model_1 = __importDefault(require("../models/project.model"));
+const serverError_1 = require("../utils/serverError");
 const projectListPopulate = [
     { path: "project_type", select: "title stages" },
     { path: "project_manager", select: "name" },
@@ -30,7 +31,7 @@ const getProjects = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to fetch projects",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to fetch projects"),
         });
     }
 };
@@ -65,7 +66,7 @@ const getProjectById = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to fetch project",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to fetch project"),
         });
     }
 };
@@ -81,7 +82,7 @@ const createProject = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to create project",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to create project"),
         });
     }
 };
@@ -117,7 +118,7 @@ const incrementProjectStatus = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to increment project status",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to increment project status"),
         });
     }
 };
@@ -146,7 +147,7 @@ const updateProject = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to update project",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to update project"),
         });
     }
 };
@@ -163,7 +164,7 @@ const deleteProject = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to delete project",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to delete project"),
         });
     }
 };

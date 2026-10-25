@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteProjectType = exports.updateProjectType = exports.createProjectType = exports.getProjectTypeById = exports.getProjectTypes = void 0;
 const projectType_model_1 = __importDefault(require("../models/projectType.model"));
+const serverError_1 = require("../utils/serverError");
 const getProjectTypes = async (req, res) => {
     try {
         const projectTypes = await projectType_model_1.default.find();
@@ -13,7 +14,7 @@ const getProjectTypes = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to fetch project types",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to fetch project types"),
         });
     }
 };
@@ -30,7 +31,7 @@ const getProjectTypeById = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to fetch project type",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to fetch project type"),
         });
     }
 };
@@ -46,7 +47,7 @@ const createProjectType = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to create project type",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to create project type"),
         });
     }
 };
@@ -75,7 +76,7 @@ const updateProjectType = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to update project type",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to update project type"),
         });
     }
 };
@@ -92,7 +93,7 @@ const deleteProjectType = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to delete project type",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to delete project type"),
         });
     }
 };

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -208,12 +208,15 @@ export default function BookingCalendar({ packageId, packageTitle }: Props) {
     ? selectedSlots.filter((slot) => slotInPeriod(slot.label, period.from, period.to))
     : [];
 
+  const honeypotRef = useRef<HTMLInputElement>(null);
+
   const onSubmit = handleSubmit(async (values) => {
     if (!selectedSlot) return;
     setSubmitError(null);
     try {
       const res = await api.post<{ meeting: Meeting; emailWarning?: string }>("/bookings", {
         ...values,
+        website: honeypotRef.current?.value ?? "",
         slot: selectedSlot.start,
         ...(packageId ? { packageId } : {}),
       });
@@ -421,6 +424,16 @@ export default function BookingCalendar({ packageId, packageTitle }: Props) {
 
       {step === "details" && selectedSlot ? (
         <form className={formStyles.form} onSubmit={onSubmit} noValidate>
+          {/* Honeypot: hidden from people, bots fill it and get silently dropped by the API. */}
+          <input
+            ref={honeypotRef}
+            type="text"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            style={{ position: "absolute", left: "-10000px", width: 1, height: 1, opacity: 0 }}
+          />
           <p className={styles.stepLabel}>4 · Your details</p>
           <p className={styles.summary}>
             Google Meet · {formatDateLabel(selectedDate ?? "")} · {selectedSlot.label} Egypt time

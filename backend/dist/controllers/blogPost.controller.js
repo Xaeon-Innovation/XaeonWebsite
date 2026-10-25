@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteBlogPost = exports.updateBlogPost = exports.createBlogPost = exports.getBlogPostById = exports.getBlogPosts = void 0;
 const blogPost_model_1 = __importDefault(require("../models/blogPost.model"));
+const serverError_1 = require("../utils/serverError");
 const getBlogPosts = async (req, res) => {
     try {
         const blogPosts = await blogPost_model_1.default.find();
@@ -13,7 +14,7 @@ const getBlogPosts = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to fetch blog posts",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to fetch blog posts"),
         });
     }
 };
@@ -30,7 +31,7 @@ const getBlogPostById = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to fetch blog post",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to fetch blog post"),
         });
     }
 };
@@ -46,7 +47,7 @@ const createBlogPost = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to create blog post",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to create blog post"),
         });
     }
 };
@@ -75,7 +76,7 @@ const updateBlogPost = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to update blog post",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to update blog post"),
         });
     }
 };
@@ -92,7 +93,7 @@ const deleteBlogPost = async (req, res) => {
     catch (err) {
         console.error(err);
         res.status(500).json({
-            error: err instanceof Error ? err.message : "Failed to delete blog post",
+            error: (0, serverError_1.serverErrorMessage)(err, "Failed to delete blog post"),
         });
     }
 };

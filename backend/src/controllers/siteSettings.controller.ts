@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import SiteSettings from "../models/siteSettings.model";
+import { serverErrorMessage } from "../utils/serverError";
 
 const SINGLETON = "default";
 
@@ -81,7 +82,7 @@ export const getPublicSocialLinks = async (_req: Request, res: Response): Promis
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to load site settings",
+      error: serverErrorMessage(err, "Failed to load site settings"),
     });
   }
 };
@@ -98,7 +99,7 @@ export const getAdminSiteSettings = async (_req: Request, res: Response): Promis
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to load site settings",
+      error: serverErrorMessage(err, "Failed to load site settings"),
     });
   }
 };
@@ -143,7 +144,7 @@ export const putAdminSiteSettings = async (req: Request, res: Response): Promise
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      error: err instanceof Error ? err.message : "Failed to save site settings",
+      error: serverErrorMessage(err, "Failed to save site settings"),
     });
   }
 };

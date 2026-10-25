@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import api from "../../lib/api";
+import api, { getApiErrorMessage } from "../../lib/api";
 import { useResourceApi } from "../../lib/useAdminApi";
 import DataTable, { type Column } from "../../Components/admin/DataTable";
 import FormModal from "../../Components/admin/FormModal";
@@ -65,7 +65,9 @@ export function Component() {
         await create(values);
       }
       setModalOpen(false);
-    } catch { /* */ }
+    } catch (e) {
+      form.setError("root", { message: getApiErrorMessage(e, "Save failed. Please try again.") });
+    }
   });
 
   const confirmDelete = async () => {
@@ -136,6 +138,7 @@ export function Component() {
               <label className="admin-label">Description</label>
               <textarea className="admin-textarea" rows={5} {...form.register("description")} />
             </div>
+            {form.formState.errors.root && <p className="admin-field-error" role="alert">{form.formState.errors.root.message}</p>}
             <div className="admin-form-actions">
               <button type="button" className="admin-btn admin-btn-ghost" onClick={() => setModalOpen(false)}>Cancel</button>
               <button type="submit" className="admin-btn admin-btn-primary" disabled={form.formState.isSubmitting}>

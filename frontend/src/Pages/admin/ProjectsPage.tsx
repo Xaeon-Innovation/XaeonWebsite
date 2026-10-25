@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import api from "../../lib/api";
+import api, { getApiErrorMessage } from "../../lib/api";
 import { useResourceApi } from "../../lib/useAdminApi";
 import DataTable, { type Column } from "../../Components/admin/DataTable";
 import FormModal from "../../Components/admin/FormModal";
@@ -39,6 +39,7 @@ type FormValues = z.infer<typeof schema>;
 
 export function Component() {
   const { data, loading, error, create, update, remove, refresh } = useResourceApi<Project>("/project", "projects", "project");
+  const [actionError, setActionError] = useState<string | null>(null);
   const [projectTypes, setProjectTypes] = useState<ProjectType[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [users, setUsers] = useState<User[]>([]);
@@ -87,14 +88,19 @@ export function Component() {
         await create(values);
       }
       setModalOpen(false);
-    } catch { /* */ }
+    } catch (e) {
+      form.setError("root", { message: getApiErrorMessage(e, "Save failed. Please try again.") });
+    }
   });
 
   const incrementStatus = async (projectId: string) => {
     try {
+      setActionError(null);
       await api.post("/project/increment-status", { projectId });
       refresh();
-    } catch { /* */ }
+    } catch (e) {
+      setActionError(getApiErrorMessage(e, "Couldn't advance the project stage."));
+    }
   };
 
   const confirmDelete = async () => {
@@ -145,6 +151,7 @@ export function Component() {
       </div>
 
       {error && <p style={{ color: "#ef4444", marginBottom: 12 }}>{error}</p>}
+      {actionError && <p className="admin-field-error" role="alert">{actionError}</p>}
       {loading ? <div style={{ color: "#72c04f", padding: 32, textAlign: "center" }}>Loading…</div> : (
         <DataTable columns={columns} data={data} keyField="_id" searchFields={["title"]} searchPlaceholder="Search projects…" />
       )}
@@ -194,6 +201,7 @@ export function Component() {
                 {form.formState.errors.user && <p className="admin-field-error">{form.formState.errors.user.message}</p>}
               </div>
             </div>
+            {form.formState.errors.root && <p className="admin-field-error" role="alert">{form.formState.errors.root.message}</p>}
             <div className="admin-form-actions">
               <button type="button" className="admin-btn admin-btn-ghost" onClick={() => setModalOpen(false)}>Cancel</button>
               <button type="submit" className="admin-btn admin-btn-primary" disabled={form.formState.isSubmitting}>
