@@ -5,6 +5,7 @@ exports.notifyEmails = notifyEmails;
 exports.sendBookingEmails = sendBookingEmails;
 exports.sendEnquiryNotice = sendEnquiryNotice;
 const resend_1 = require("resend");
+const attribution_1 = require("../utils/attribution");
 function resendConfigured() {
     return Boolean(process.env.RESEND_API_KEY?.trim());
 }
@@ -42,6 +43,7 @@ function detailsRows(details) {
     if (details.packageTitle)
         rows.push(["Package", details.packageTitle]);
     rows.push(["Message", details.message]);
+    rows.push(...(0, attribution_1.attributionRows)(details.attribution));
     return rows
         .map(([label, value]) => `<tr><td style="padding:8px 12px 8px 0;color:#6b7280;vertical-align:top;">${escapeHtml(label)}</td><td style="padding:8px 0;color:#111827;">${escapeHtml(value)}</td></tr>`)
         .join("");
@@ -116,6 +118,7 @@ async function sendEnquiryNotice(details) {
     if (details.interest)
         rows.push(["About", details.interest]);
     rows.push(["Message", details.message]);
+    rows.push(...(0, attribution_1.attributionRows)(details.attribution));
     const table = rows
         .map(([label, value]) => `<tr><td style="padding:8px 12px 8px 0;color:#6b7280;vertical-align:top;">${escapeHtml(label)}</td><td style="padding:8px 0;color:#111827;white-space:pre-wrap;">${escapeHtml(value)}</td></tr>`)
         .join("");

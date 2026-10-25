@@ -13,6 +13,7 @@ const bookingEmail_1 = require("../services/bookingEmail");
 const googleCalendar_1 = require("../services/googleCalendar");
 const bookingSlots_1 = require("../utils/bookingSlots");
 const serverError_1 = require("../utils/serverError");
+const attribution_1 = require("../utils/attribution");
 const SLOT_LENGTHS = [15, 20, 30, 45, 60];
 function jwtSecret() {
     const secret = process.env.JWT_SECRET;
@@ -163,6 +164,7 @@ const createBooking = async (req, res) => {
             ? body.company.trim()
             : undefined;
         const slotRaw = typeof body?.slot === "string" ? body.slot.trim() : "";
+        const attribution = (0, attribution_1.parseAttribution)(body?.attribution);
         if (name.length < 2 || phone.length < 7 || message.length < 10 || message.length > 4000) {
             res.status(400).json({ error: "Name, phone, and a short message are required." });
             return;
@@ -260,6 +262,7 @@ const createBooking = async (req, res) => {
             package: packageId,
             meetLink: event.meetLink,
             googleEventId: event.eventId,
+            attribution,
         });
         let emailWarning;
         try {
@@ -272,6 +275,7 @@ const createBooking = async (req, res) => {
                 whenLabel,
                 meetLink: event.meetLink,
                 packageTitle,
+                attribution,
             });
         }
         catch (err) {

@@ -1,4 +1,5 @@
 import mongoose, { type Document, Schema } from "mongoose";
+import type { Attribution } from "../utils/attribution";
 
 export type ServiceRequestSource =
   | "registered"
@@ -27,6 +28,8 @@ export interface IServiceRequest extends Document {
   meetLink?: string;
   /** Google Calendar event id for source "booking". */
   googleEventId?: string;
+  /** First-touch marketing source (UTM / click ids / referrer) captured by the website. */
+  attribution?: Attribution;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -78,7 +81,27 @@ const ServiceRequestSchema: Schema<IServiceRequest> = new Schema({
   interest: { type: String },
   meetLink: { type: String },
   googleEventId: { type: String },
+  attribution: {
+    type: new Schema(
+      {
+        utmSource: String,
+        utmMedium: String,
+        utmCampaign: String,
+        utmTerm: String,
+        utmContent: String,
+        gclid: String,
+        fbclid: String,
+        referrer: String,
+        landingPage: String,
+        firstSeenAt: Date,
+      },
+      { _id: false },
+    ),
+    default: undefined,
+  },
 }, { timestamps: true });
+
+ServiceRequestSchema.index({ "attribution.utmSource": 1, createdAt: -1 });
 
 ServiceRequestSchema.index(
   { meeting_date: 1 },

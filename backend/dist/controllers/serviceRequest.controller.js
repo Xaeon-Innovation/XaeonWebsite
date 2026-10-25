@@ -10,6 +10,7 @@ const package_model_1 = __importDefault(require("../models/package.model"));
 const serviceRequest_model_1 = __importDefault(require("../models/serviceRequest.model"));
 const bookingSettings_model_1 = require("../models/bookingSettings.model");
 const bookingEmail_1 = require("../services/bookingEmail");
+const attribution_1 = require("../utils/attribution");
 const googleCalendar_1 = require("../services/googleCalendar");
 const serverError_1 = require("../utils/serverError");
 async function emailEnquiryNotice(details) {
@@ -48,6 +49,7 @@ const createServiceRequestEnquiry = async (req, res) => {
         const company = typeof body.company === "string" && body.company.trim() !== ""
             ? body.company.trim()
             : undefined;
+        const attribution = (0, attribution_1.parseAttribution)(body.attribution);
         if (source === "package") {
             const packageIdRaw = typeof body.packageId === "string" ? body.packageId.trim() : "";
             if (!packageIdRaw || !mongoose_1.default.Types.ObjectId.isValid(packageIdRaw)) {
@@ -71,6 +73,7 @@ const createServiceRequestEnquiry = async (req, res) => {
                 interest: pkgTitle,
                 package: pkg._id,
                 status: "Pending Review",
+                attribution,
             });
             await emailEnquiryNotice({
                 source: "package",
@@ -80,6 +83,7 @@ const createServiceRequestEnquiry = async (req, res) => {
                 company,
                 message,
                 interest: pkgTitle,
+                attribution,
             });
             res.status(201).json({
                 message: "Request submitted successfully",
@@ -105,6 +109,7 @@ const createServiceRequestEnquiry = async (req, res) => {
             company,
             interest,
             status: "Pending Review",
+            attribution,
         });
         await emailEnquiryNotice({
             source,
@@ -114,6 +119,7 @@ const createServiceRequestEnquiry = async (req, res) => {
             company,
             message,
             interest,
+            attribution,
         });
         res.status(201).json({
             message: "Request submitted successfully",
@@ -265,6 +271,7 @@ const createServiceRequest = async (req, res) => {
                 contactName: u.name,
                 contactEmail: u.email,
                 contactPhone,
+                attribution: (0, attribution_1.parseAttribution)(payload.attribution),
             });
             res.status(201).json({
                 message: "New Service Request Created Successfully",

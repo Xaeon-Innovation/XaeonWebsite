@@ -283,6 +283,7 @@ export function HeroSequence() {
               type="button"
               className={styles.subline}
               onClick={scrollToCta}
+              data-track="hero_work_together"
               aria-label="Let's work together — scroll to contact section"
             >
               Let&apos;s work together

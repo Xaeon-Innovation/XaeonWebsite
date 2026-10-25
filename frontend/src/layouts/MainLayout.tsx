@@ -6,6 +6,8 @@ import { ChevronUp } from "lucide-react";
 import Footer from "../Components/Footer";
 import Navbar from "../Components/Navbar";
 import IntroVideoSplash from "../Components/IntroVideoSplash/IntroVideoSplash";
+import CookieConsent from "../Components/CookieConsent/CookieConsent";
+import { installClickTracking, trackPageView } from "../lib/analytics";
 
 import "../App.css";
 
@@ -50,6 +52,16 @@ export default function MainLayout() {
     });
   }, [location.pathname, splashComplete]);
 
+  // SPA page views: wait a tick so Helmet has written the new <title>.
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      trackPageView(location.pathname + location.search, document.title);
+    }, 0);
+    return () => window.clearTimeout(id);
+  }, [location.pathname, location.search]);
+
+  useEffect(() => installClickTracking(), []);
+
   useEffect(() => {
     if (!splashComplete) return;
 
@@ -89,6 +101,7 @@ export default function MainLayout() {
       >
         <ChevronUp size={20} aria-hidden="true" />
       </button>
+      <CookieConsent />
     </HelmetProvider>
   );
 }

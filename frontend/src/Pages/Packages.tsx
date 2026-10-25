@@ -178,7 +178,7 @@ const Packages = () => {
         <div className={styles.heroContent}>
           <div className={styles.heroPill}>Simple Plan, No Hidden Costs</div>
           <h1 className={styles.heroHeadline}>Find Your Perfect Plan</h1>
-          <button type="button" className={styles.heroCta} onClick={scrollToPlans}>
+          <button type="button" className={styles.heroCta} onClick={scrollToPlans} data-track="packages_get_started">
             Get Started
           </button>
         </div>

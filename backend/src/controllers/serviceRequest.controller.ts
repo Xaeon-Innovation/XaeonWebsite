@@ -6,19 +6,12 @@ import ServiceRequest, {
   type IServiceRequest,
 } from "../models/serviceRequest.model";
 import { getBookingSettings } from "../models/bookingSettings.model";
-import { sendEnquiryNotice } from "../services/bookingEmail";
+import { sendEnquiryNotice, type EnquiryEmailDetails } from "../services/bookingEmail";
+import { parseAttribution } from "../utils/attribution";
 import { deleteMeetEvent } from "../services/googleCalendar";
 import { serverErrorMessage } from "../utils/serverError";
 
-async function emailEnquiryNotice(details: {
-  source: "contact" | "service" | "package";
-  name: string;
-  email: string;
-  phone: string;
-  company?: string;
-  message: string;
-  interest?: string;
-}): Promise<void> {
+async function emailEnquiryNotice(details: EnquiryEmailDetails): Promise<void> {
   try {
     await sendEnquiryNotice(details);
   } catch (err) {
@@ -61,6 +54,7 @@ export const createServiceRequestEnquiry = async (req: Request, res: Response) =
       typeof body.company === "string" && body.company.trim() !== ""
         ? body.company.trim()
         : undefined;
+    const attribution = parseAttribution(body.attribution);
 
     if (source === "package") {
       const packageIdRaw =
@@ -86,6 +80,7 @@ export const createServiceRequestEnquiry = async (req: Request, res: Response) =
         interest: pkgTitle,
         package: pkg._id,
         status: "Pending Review",
+        attribution,
       });
       await emailEnquiryNotice({
         source: "package",
@@ -95,6 +90,7 @@ export const createServiceRequestEnquiry = async (req: Request, res: Response) =
         company,
         message,
         interest: pkgTitle,
+        attribution,
       });
       res.status(201).json({
         message: "Request submitted successfully",
@@ -125,6 +121,7 @@ export const createServiceRequestEnquiry = async (req: Request, res: Response) =
       company,
       interest,
       status: "Pending Review",
+      attribution,
     });
 
     await emailEnquiryNotice({
@@ -135,6 +132,7 @@ export const createServiceRequestEnquiry = async (req: Request, res: Response) =
       company,
       message,
       interest,
+      attribution,
     });
 
     res.status(201).json({
@@ -297,6 +295,7 @@ export const createServiceRequest = async (req: Request, res: Response) => {
         contactName: u.name,
         contactEmail: u.email,
         contactPhone,
+        attribution: parseAttribution(payload.attribution),
       });
 
       res.status(201).json({

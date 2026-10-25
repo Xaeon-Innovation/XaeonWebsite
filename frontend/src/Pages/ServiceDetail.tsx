@@ -62,6 +62,7 @@ const ServiceDetail = () => {
           <a
             href={bookConsultationHref}
             className={styles.primaryCta}
+            data-track="service_book_consultation"
             {...(bookConsultationOpensNewTab
               ? { target: "_blank", rel: "noopener noreferrer" }
               : {})}

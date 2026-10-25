@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { motion } from "framer-motion";
 import { Facebook, Instagram, Linkedin, Twitter, Mail, type LucideIcon } from "lucide-react";
 import api from "../lib/api";
+import { analyticsEnabled, openConsentSettings } from "../lib/analytics";
 import styles from "./Footer.module.css";
 
 /** Company founding year (shown in footer copyright). */
@@ -205,6 +206,14 @@ const Footer = () => {
             <Link to="/privacy" className={styles.legalLink}>
               PRIVACY POLICY
             </Link>
+            {analyticsEnabled() && (
+              <>
+                <span className={styles.legalSeparator}>|</span>
+                <button type="button" className={`${styles.legalLink} ${styles.linkButton}`} onClick={openConsentSettings}>
+                  COOKIE SETTINGS
+                </button>
+              </>
+            )}
           </div>
           <p className={styles.copyrightText}>
             © {COPYRIGHT_RANGE} Xaeon. All Rights Reserved

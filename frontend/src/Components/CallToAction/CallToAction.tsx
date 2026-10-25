@@ -27,7 +27,7 @@ const CallToAction = () => {
 
           <div className={styles.buttons}>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link to={primaryTo} className={styles.primaryButton}>
+              <Link to={primaryTo} className={styles.primaryButton} data-track="cta_start_project">
                 Start Your Project
                 <ArrowRight size={20} aria-hidden />
               </Link>
@@ -37,6 +37,7 @@ const CallToAction = () => {
               <a
                 href={bookCall.href}
                 className={styles.secondaryButton}
+                data-track="cta_book_call"
                 {...(bookCall.opensInNewTab
                   ? { target: "_blank", rel: "noopener noreferrer" }
                   : {})}

@@ -3,6 +3,8 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router";
 
 import "./index.css";
+import { captureAttribution } from "./lib/attribution";
+import { initAnalytics } from "./lib/analytics";
 
 import ErrorPage from "./Pages/ErrorPage.tsx";
 import Home from "./Pages/Home.tsx";
@@ -116,6 +118,9 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+
+captureAttribution();
+initAnalytics();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

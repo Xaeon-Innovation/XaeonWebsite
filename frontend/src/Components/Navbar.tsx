@@ -75,6 +75,7 @@ const Navbar = () => {
               <Link
                 to={user?.role === 'user' ? '/dashboard' : '/book-now'}
                 className={`${styles.actionLink} ${styles.bookNowLink}`}
+                data-track="nav_book_now"
               >
                 {user?.role === 'user' ? 'Request' : 'Book Now'}
               </Link>
@@ -148,6 +149,7 @@ const Navbar = () => {
                     to={user?.role === 'user' ? '/dashboard' : '/book-now'}
                     onClick={() => setIsOpen(false)}
                     className={`${styles.mobileNavLink} ${styles.mobileBookNowLink}`}
+                    data-track="mobile_nav_book_now"
                   >
                     {user?.role === 'user' ? 'Request' : 'Book Now'}
                   </Link>

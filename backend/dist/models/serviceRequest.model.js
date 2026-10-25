@@ -77,7 +77,23 @@ const ServiceRequestSchema = new mongoose_1.Schema({
     interest: { type: String },
     meetLink: { type: String },
     googleEventId: { type: String },
+    attribution: {
+        type: new mongoose_1.Schema({
+            utmSource: String,
+            utmMedium: String,
+            utmCampaign: String,
+            utmTerm: String,
+            utmContent: String,
+            gclid: String,
+            fbclid: String,
+            referrer: String,
+            landingPage: String,
+            firstSeenAt: Date,
+        }, { _id: false }),
+        default: undefined,
+    },
 }, { timestamps: true });
+ServiceRequestSchema.index({ "attribution.utmSource": 1, createdAt: -1 });
 ServiceRequestSchema.index({ meeting_date: 1 }, {
     unique: true,
     partialFilterExpression: {

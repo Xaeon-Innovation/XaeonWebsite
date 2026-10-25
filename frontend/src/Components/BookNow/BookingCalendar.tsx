@@ -4,6 +4,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import api, { getApiErrorMessage } from "../../lib/api";
+import { trackLead } from "../../lib/analytics";
+import { getAttribution } from "../../lib/attribution";
 import formStyles from "./BookNowContact.module.css";
 import styles from "./BookingCalendar.module.css";
 
@@ -217,10 +219,12 @@ export default function BookingCalendar({ packageId, packageTitle }: Props) {
       const res = await api.post<{ meeting: Meeting; emailWarning?: string }>("/bookings", {
         ...values,
         website: honeypotRef.current?.value ?? "",
+        attribution: getAttribution() ?? undefined,
         slot: selectedSlot.start,
         ...(packageId ? { packageId } : {}),
       });
       setMeeting(res.data.meeting);
+      trackLead("booking", { package_id: packageId ?? undefined });
       setEmailWarning(res.data.emailWarning ?? null);
       setStep("done");
     } catch (err) {

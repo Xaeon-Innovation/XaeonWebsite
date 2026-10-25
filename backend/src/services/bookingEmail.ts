@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { attributionRows, type Attribution } from "../utils/attribution";
 
 export function resendConfigured(): boolean {
   return Boolean(process.env.RESEND_API_KEY?.trim());
@@ -38,6 +39,7 @@ export type BookingEmailDetails = {
   whenLabel: string;
   meetLink: string;
   packageTitle?: string;
+  attribution?: Attribution;
 };
 
 function detailsRows(details: BookingEmailDetails): string {
@@ -50,6 +52,7 @@ function detailsRows(details: BookingEmailDetails): string {
   if (details.company) rows.push(["Company", details.company]);
   if (details.packageTitle) rows.push(["Package", details.packageTitle]);
   rows.push(["Message", details.message]);
+  rows.push(...attributionRows(details.attribution));
   return rows
     .map(
       ([label, value]) =>
@@ -122,6 +125,7 @@ export type EnquiryEmailDetails = {
   company?: string;
   message: string;
   interest?: string;
+  attribution?: Attribution;
 };
 
 export async function sendEnquiryNotice(details: EnquiryEmailDetails): Promise<void> {
@@ -143,6 +147,7 @@ export async function sendEnquiryNotice(details: EnquiryEmailDetails): Promise<v
   if (details.company) rows.push(["Company", details.company]);
   if (details.interest) rows.push(["About", details.interest]);
   rows.push(["Message", details.message]);
+  rows.push(...attributionRows(details.attribution));
 
   const table = rows
     .map(

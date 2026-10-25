@@ -26,6 +26,7 @@ import {
   type DayWindow,
 } from "../utils/bookingSlots";
 import { serverErrorMessage } from "../utils/serverError";
+import { parseAttribution } from "../utils/attribution";
 
 const SLOT_LENGTHS = [15, 20, 30, 45, 60];
 
@@ -195,6 +196,7 @@ export const createBooking = async (req: Request, res: Response): Promise<void> 
         ? body.company.trim()
         : undefined;
     const slotRaw = typeof body?.slot === "string" ? body.slot.trim() : "";
+    const attribution = parseAttribution(body?.attribution);
 
     if (name.length < 2 || phone.length < 7 || message.length < 10 || message.length > 4000) {
       res.status(400).json({ error: "Name, phone, and a short message are required." });
@@ -304,6 +306,7 @@ export const createBooking = async (req: Request, res: Response): Promise<void> 
       package: packageId,
       meetLink: event.meetLink,
       googleEventId: event.eventId,
+      attribution,
     });
 
     let emailWarning: string | undefined;
@@ -317,6 +320,7 @@ export const createBooking = async (req: Request, res: Response): Promise<void> 
         whenLabel,
         meetLink: event.meetLink,
         packageTitle,
+        attribution,
       });
     } catch (err) {
       console.error(err);

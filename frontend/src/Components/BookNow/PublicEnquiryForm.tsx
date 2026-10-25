@@ -4,6 +4,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import api, { getApiErrorMessage } from "../../lib/api";
+import { trackLead } from "../../lib/analytics";
+import { getAttribution } from "../../lib/attribution";
 import styles from "./BookNowContact.module.css";
 
 const schema = z.object({
@@ -60,11 +62,13 @@ export default function PublicEnquiryForm({
       const serviceRequest: Record<string, unknown> = {
         ...values,
         website: honeypotRef.current?.value ?? "",
+        attribution: getAttribution() ?? undefined,
         source,
         ...(interest ? { interest } : {}),
         ...(source === "package" && packageId ? { packageId } : {}),
       };
       await api.post("/system-request/enquiry", { serviceRequest });
+      trackLead(source, { interest: interest ?? undefined });
       reset();
       onSuccess?.();
     } catch (e) {

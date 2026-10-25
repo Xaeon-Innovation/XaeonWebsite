@@ -5,9 +5,9 @@ import { useLoaderData } from "react-router";
 
 import { getApiErrorMessage } from "../../lib/api";
 import { useResourceApi } from "../../lib/useAdminApi";
+import { channelLabel, type Attribution } from "../../lib/attribution";
 import DataTable, { type Column } from "../../Components/admin/DataTable";
 import FormModal from "../../Components/admin/FormModal";
-import StatusBadge from "../../Components/admin/StatusBadge";
 import { type ServiceRequestsLoaderData } from "../../lib/adminLoaders";
 
 const STATUSES = ["Pending Review", "Accepted", "Rejected"] as const;
@@ -42,6 +42,7 @@ type ServiceReq = {
   contactPhone?: string;
   company?: string;
   meetLink?: string;
+  attribution?: Attribution;
 };
 
 function packageTitle(row: ServiceReq): string | null {
@@ -244,9 +245,21 @@ export function Component() {
       ),
     },
     {
-      header: "Badge",
-      accessor: "status",
-      render: (v) => <StatusBadge status={String(v)} />,
+      header: "Channel",
+      // Leads created before tracking existed have no attribution at all.
+      accessor: (row) => (row.attribution ? channelLabel(row.attribution) : "Not tracked"),
+      sortable: true,
+      render: (v, row) => {
+        const a = row.attribution;
+        const detail = [a?.utmCampaign && `Campaign: ${a.utmCampaign}`, a?.landingPage && `Landed on: ${a.landingPage}`]
+          .filter(Boolean)
+          .join("\n");
+        return (
+          <span className="admin-badge admin-badge-gray" title={detail || undefined}>
+            {String(v)}
+          </span>
+        );
+      },
     },
     {
       header: "Meeting",

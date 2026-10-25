@@ -189,6 +189,14 @@
   margin-bottom: 0.4rem;
 }
 
+.linkButton {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
 .footerNav {
   display: flex;
   flex-wrap: wrap;

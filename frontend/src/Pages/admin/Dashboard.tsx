@@ -7,7 +7,7 @@ import StatusBadge from "../../Components/admin/StatusBadge";
 import { type DashboardLoaderData } from "../../lib/adminLoaders";
 
 export function Component() {
-  const { kpis, recentRequests, recentProjects } = useLoaderData<DashboardLoaderData>();
+  const { kpis, recentRequests, recentProjects, channels, leadsLast30Days } = useLoaderData<DashboardLoaderData>();
   const loading = false;
 
   return (
@@ -82,6 +82,38 @@ export function Component() {
               </tbody>
             </table>
           </div>
+        </div>
+      </div>
+
+      <div className="admin-section" style={{ marginTop: "24px" }}>
+        <h3 className="admin-section-title">Leads by channel · last 30 days ({leadsLast30Days})</h3>
+        <div className="admin-table-scroll">
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th className="admin-th">Channel</th>
+                <th className="admin-th">Leads</th>
+                <th className="admin-th">Accepted</th>
+                <th className="admin-th">Accept rate</th>
+              </tr>
+            </thead>
+            <tbody>
+              {channels.length === 0 ? (
+                <tr><td className="admin-td-empty" colSpan={4}>No leads in the last 30 days</td></tr>
+              ) : (
+                channels.map((c) => (
+                  <tr key={c.channel}>
+                    <td className="admin-td">{c.channel}</td>
+                    <td className="admin-td" style={{ fontVariantNumeric: "tabular-nums" }}>{c.leads}</td>
+                    <td className="admin-td" style={{ fontVariantNumeric: "tabular-nums" }}>{c.accepted}</td>
+                    <td className="admin-td" style={{ fontVariantNumeric: "tabular-nums" }}>
+                      {Math.round((c.accepted / c.leads) * 100)}%
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </>

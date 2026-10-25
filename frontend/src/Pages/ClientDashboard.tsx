@@ -15,6 +15,8 @@ import {
 } from "react-router";
 
 import api, { getApiErrorMessage } from "../lib/api";
+import { trackLead } from "../lib/analytics";
+import { getAttribution } from "../lib/attribution";
 import { useAuth } from "../context/AuthContext";
 import { getServiceBySlug } from "../data/servicesCatalog";
 import type { ClientDashboardLoaderData } from "../lib/clientPortalLoaders";
@@ -351,7 +353,10 @@ export default function ClientDashboard() {
 
     setSubmitting(true);
     try {
-      await api.post("/system-request", { serviceRequest });
+      await api.post("/system-request", {
+        serviceRequest: { ...serviceRequest, attribution: getAttribution() ?? undefined },
+      });
+      trackLead("registered", { package_id: formPackageId || undefined });
       setDescription("");
       setMeetingDate("");
       setContactPhone("");

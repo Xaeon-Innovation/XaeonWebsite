@@ -13,7 +13,7 @@ const Privacy = () => {
       <article className={styles.page}>
         <div className={styles.inner}>
           <h1 className={styles.title}>Privacy policy</h1>
-          <p className={styles.updated}>Last updated: April 18, 2025</p>
+          <p className={styles.updated}>Last updated: October 25, 2026</p>
           <div className={styles.prose}>
             <p>
               Xaeon Software Solutions (&quot;Xaeon,&quot; &quot;we,&quot; &quot;us&quot;) respects your privacy.
@@ -38,8 +38,19 @@ const Privacy = () => {
 
             <h2>Cookies &amp; analytics</h2>
             <p>
-              We may use cookies or similar technologies where necessary for site functionality or, if enabled,
-              for analytics. You can control cookies through your browser settings.
+              We use cookies and similar technologies that are needed for the site to work, such as keeping you
+              signed in to your client dashboard.
+            </p>
+            <p>
+              With your consent, we also use Google Analytics to understand how visitors find and use the site,
+              and the Meta Pixel to measure our advertising. Until you accept, Google Analytics runs without
+              cookies and the Meta Pixel does not load. You can change your choice at any time with the
+              &ldquo;Cookie settings&rdquo; link in the footer.
+            </p>
+            <p>
+              When you send us an enquiry or book a call, we record how you arrived at our site (for example the
+              campaign link, referring website and the first page you visited) with your request, so we know which
+              of our channels are working. You can also control cookies through your browser settings.
             </p>
 
             <h2>Sharing</h2>
