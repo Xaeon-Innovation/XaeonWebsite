@@ -8,11 +8,13 @@ on:
     paths: ["web/**", ".github/workflows/web-ci.yml"]
 
 jobs:
-  build:
+  build-test:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: web
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -23,6 +25,32 @@ jobs:
       - run: npm ci
       - run: npm audit --audit-level=high --omit=dev
       - run: npm run typecheck
-      - run: npm run build
+
+      # Build against the mock API so tests are hermetic (never touch production).
+      - name: Start mock API
+        run: node e2e/mock-api.mjs &
+      - run: npm run build:e2e
+
+      - name: Install browsers
+        run: npx playwright install --with-deps chromium firefox webkit
+      - name: End-to-end tests (Chromium, Firefox, WebKit, mobile)
+        run: npm run e2e
+
+      - name: Lighthouse budgets (performance, accessibility, SEO)
+        run: |
+          npx next start -p 3100 &
+          npx --yes wait-on@8.0.1 http://127.0.0.1:3100/robots.txt
+          npx --yes @lhci/cli@0.15.1 autorun
         env:
-          NEXT_TELEMETRY_DISABLED: "1"
+          API_ORIGIN: http://127.0.0.1:4010
+
+      - name: Upload reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-reports
+          path: |
+            web/playwright-report
+            web/test-results
+            web/.lighthouseci
+          retention-days: 7

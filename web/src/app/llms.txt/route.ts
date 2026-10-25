@@ -31,7 +31,7 @@ export async function GET() {
       ? ["## Case studies", ...caseStudies.map((c) => `- [${c.title}](${localeUrl("en", `/work/${c.slug}`)}): ${c.description}`), ""]
       : []),
     ...(posts.length
-      ? ["## Articles", ...posts.slice(0, 30).map((p) => `- [${p.title}](${localeUrl("en", `/blog/${blogSlug(p)}`)})`), ""]
+      ? ["## Articles", ...posts.slice(0, 30).map((p) => `- [${p.title}](${localeUrl("en", `/blog/${blogSlug(p)}`)})${p.excerpt ? `: ${p.excerpt}` : ""}`), ""]
       : []),
     "## Company",
     `- [About](${localeUrl("en", "/about")})`,

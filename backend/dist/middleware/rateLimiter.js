@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.honeypot = exports.publicFormLimiter = exports.authLimiter = void 0;
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const tooMany = { error: "Too many requests, please try again later." };
+/** The test suite logs in many times; limits apply there only when a test opts in. */
+const skipInTests = () => process.env.NODE_ENV === "test" && process.env.TEST_RATE_LIMIT !== "1";
 /** Login / register brute-force protection. */
 exports.authLimiter = (0, express_rate_limit_1.default)({
     windowMs: 15 * 60 * 1000,
@@ -13,6 +15,7 @@ exports.authLimiter = (0, express_rate_limit_1.default)({
     standardHeaders: "draft-7",
     legacyHeaders: false,
     message: tooMany,
+    skip: skipInTests,
 });
 /** Public lead forms (enquiry + booking) — stops spam bursts. */
 exports.publicFormLimiter = (0, express_rate_limit_1.default)({
@@ -21,6 +24,7 @@ exports.publicFormLimiter = (0, express_rate_limit_1.default)({
     standardHeaders: "draft-7",
     legacyHeaders: false,
     message: tooMany,
+    skip: skipInTests,
 });
 /**
  * Honeypot: public forms render a hidden `website` field that humans never fill.

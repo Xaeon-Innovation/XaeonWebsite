@@ -1,0 +1,42 @@
+name: API checks
+
+on:
+  pull_request:
+    paths: ["backend/**", ".github/workflows/api-ci.yml"]
+  push:
+    branches: [main]
+    paths: ["backend/**", ".github/workflows/api-ci.yml"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    services:
+      mongo:
+        image: mongo:7.0.14
+        ports: ["27017:27017"]
+      s3:
+        image: adobe/s3mock:5.2.3
+        env:
+          COM_ADOBE_TESTING_S3MOCK_STORE_INITIAL_BUCKETS: xaeon-test
+        ports: ["9090:9090"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci
+      - run: npm audit --audit-level=high --omit=dev
+      - run: npm run typecheck
+      - run: npm test
+        env:
+          TEST_DB_URI: mongodb://127.0.0.1:27017/xaeon_test
+          TEST_S3_ENDPOINT: http://127.0.0.1:9090
+      - name: Built output is up to date
+        run: |
+          npm run build
+          git diff --exit-code -- dist || (echo "::error::backend/dist is stale. Run npm run build and commit." && exit 1)

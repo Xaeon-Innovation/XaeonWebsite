@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { getFormatter, getTranslations } from "next-intl/server";
+import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import CtaBand from "@/components/CtaBand";
 import SectionHeading from "@/components/SectionHeading";
 import { getBlogPosts } from "@/lib/api";
 import { authorName, blogSlug, readingMinutes } from "@/lib/blog";
+import { cmsImage } from "@/lib/images";
 import { resolveLocale, type LocaleParams } from "@/lib/page";
 import { localeUrl, pageMetadata } from "@/lib/seo";
 
@@ -38,20 +40,34 @@ export default async function BlogPage({ params }: LocaleParams) {
           <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {posts.map((post) => {
               const author = authorName(post.author);
+              const cover = cmsImage(post.coverImageUrl);
+              const date = post.publishedAt ?? post.createdAt;
               return (
                 <li key={post._id} data-reveal>
-                  <Link href={`/blog/${blogSlug(post)}`} className="group flex h-full flex-col gap-4 rounded-[var(--radius-card)] border border-line bg-ink-2 p-7 transition-colors hover:border-sage/50">
+                  <Link href={`/blog/${blogSlug(post)}`} className="group flex h-full flex-col gap-4 overflow-hidden rounded-[var(--radius-card)] border border-line bg-ink-2 transition-colors hover:border-sage/50">
+                    {cover ? (
+                      <span className="relative block aspect-[16/9] bg-ink-3">
+                        <Image src={cover.src} unoptimized={cover.unoptimized} alt="" fill sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw" className="object-cover" />
+                      </span>
+                    ) : null}
+                    <span className={`flex flex-1 flex-col gap-4 ${cover ? "px-7 pb-7" : "p-7"}`}>
                     <p className="flex flex-wrap gap-x-3 text-sm text-haze">
-                      {post.createdAt ? (
-                        <time dateTime={post.createdAt}>{format.dateTime(new Date(post.createdAt), { dateStyle: "medium" })}</time>
+                      {date ? (
+                        <time dateTime={date}>{format.dateTime(new Date(date), { dateStyle: "medium" })}</time>
                       ) : null}
-                      <span>{t("common.minRead", { minutes: readingMinutes(post.description) })}</span>
+                      <span>{t("common.minRead", { minutes: readingMinutes(post.content) })}</span>
                     </p>
                     <h2 className="font-display text-xl font-semibold text-fog group-hover:underline underline-offset-4" lang="en">{post.title}</h2>
-                    <p className="line-clamp-3 text-mist" lang="en">{post.description}</p>
+                    <p className="line-clamp-3 text-mist" lang="en">{post.excerpt}</p>
+                    {post.tags?.length ? (
+                      <span className="flex flex-wrap gap-1.5">
+                        {post.tags.slice(0, 3).map((tag) => <span key={tag} className="rounded-full bg-white/5 px-2.5 py-0.5 text-xs text-mist">#{tag}</span>)}
+                      </span>
+                    ) : null}
                     <p className="mt-auto text-sm text-mist">
                       {author ? t("blog.by", { author }) : null} <span className="font-semibold text-sage">{t("common.readArticle")}</span>
                     </p>
+                    </span>
                   </Link>
                 </li>
               );

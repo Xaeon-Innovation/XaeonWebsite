@@ -17,7 +17,6 @@
     "@hookform/resolvers": "^5.2.2",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/postcss": "^4.1.14",
-    "@tailwindcss/typography": "^0.5.19",
     "autoprefixer": "^10.4.21",
     "axios": "^1.12.2",
     "framer-motion": "^12.23.24",
@@ -31,7 +30,9 @@
     "react-hook-form": "^7.65.0",
     "react-i18next": "^16.1.0",
     "react-icons": "^5.6.0",
+    "react-markdown": "^10.1.0",
     "react-router": "^7.9.2",
+    "remark-gfm": "^4.0.1",
     "tailwindcss": "^4.1.14",
     "use-debounce": "^10.1.1",
     "zod": "^4.1.12"

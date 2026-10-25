@@ -6,8 +6,10 @@ import {
   updateCaseStudy,
 } from "../controllers/caseStudy.controller";
 import { requireAuth, requireAdmin } from "../middleware/auth";
+import { revalidateOnWrite } from "../middleware/revalidateOnWrite";
 
 const router = express.Router();
+router.use(revalidateOnWrite);
 
 router.get("/", requireAuth, requireAdmin, getCaseStudies);
 router.post("/", requireAuth, requireAdmin, createCaseStudy);

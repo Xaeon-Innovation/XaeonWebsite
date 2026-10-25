@@ -1,6 +1,6 @@
 import api from "./api";
 
-export type SiteUploadKind = "team" | "case" | "logo";
+export type SiteUploadKind = "team" | "case" | "logo" | "blog";
 
 /** Uploads raster (→ WebP) or SVG logo to the API; returns public URL. */
 export async function uploadSiteAsset(file: File, kind: SiteUploadKind): Promise<string> {

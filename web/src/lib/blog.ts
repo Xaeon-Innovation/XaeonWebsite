@@ -13,7 +13,9 @@ export function slugify(text: string): string {
     .slice(0, 80);
 }
 
-export function blogSlug(post: { _id: string; title: string }): string {
+/** URL segment for a post: its CMS slug, or "<title>--<id>" for older posts without one. */
+export function blogSlug(post: { _id: string; title: string; slug?: string }): string {
+  if (post.slug) return post.slug;
   const base = slugify(post.title);
   return base ? `${base}--${post._id}` : post._id;
 }

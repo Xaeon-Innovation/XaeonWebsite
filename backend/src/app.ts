@@ -42,9 +42,9 @@ app.get("/health", (_req, res) => {
   res.status(200).json({ status: "ok" });
 });
 
-// Connecting to MongoDB
+// Connecting to MongoDB (tests connect their own database instead).
 import db from "./config/database.config";
-db();
+if (process.env.NODE_ENV !== "test") db();
 
 // Routes Setup
 import authRouter from "./routes/auth.routes";
@@ -88,9 +88,14 @@ app.use((_req, res) => {
 
 app.use(errorHandler);
 
-const port =
-  Number(process.env.PORT) || Number(process.env.BACKEND_PORT) || 5000;
-app.listen(port, () => {
-  console.log(`API listening on port ${port}`);
-  startFollowUpDigest();
-});
+export default app;
+
+// Only start the server and jobs when run directly (node dist/app.js), not when imported by tests.
+if (require.main === module) {
+  const port =
+    Number(process.env.PORT) || Number(process.env.BACKEND_PORT) || 5000;
+  app.listen(port, () => {
+    console.log(`API listening on port ${port}`);
+    startFollowUpDigest();
+  });
+}

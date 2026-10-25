@@ -34,9 +34,10 @@ app.use("/uploads", express_1.default.static((0, siteUpload_config_1.getUploadRo
 app.get("/health", (_req, res) => {
     res.status(200).json({ status: "ok" });
 });
-// Connecting to MongoDB
+// Connecting to MongoDB (tests connect their own database instead).
 const database_config_1 = __importDefault(require("./config/database.config"));
-(0, database_config_1.default)();
+if (process.env.NODE_ENV !== "test")
+    (0, database_config_1.default)();
 // Routes Setup
 const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
 const blogPost_routes_1 = __importDefault(require("./routes/blogPost.routes"));
@@ -75,8 +76,12 @@ app.use((_req, res) => {
     res.status(404).json({ error: "Not found" });
 });
 app.use(errorHandler_1.errorHandler);
-const port = Number(process.env.PORT) || Number(process.env.BACKEND_PORT) || 5000;
-app.listen(port, () => {
-    console.log(`API listening on port ${port}`);
-    (0, followUpDigest_1.startFollowUpDigest)();
-});
+exports.default = app;
+// Only start the server and jobs when run directly (node dist/app.js), not when imported by tests.
+if (require.main === module) {
+    const port = Number(process.env.PORT) || Number(process.env.BACKEND_PORT) || 5000;
+    app.listen(port, () => {
+        console.log(`API listening on port ${port}`);
+        (0, followUpDigest_1.startFollowUpDigest)();
+    });
+}

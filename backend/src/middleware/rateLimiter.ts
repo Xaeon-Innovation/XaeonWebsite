@@ -3,6 +3,9 @@ import type { NextFunction, Request, Response } from "express";
 
 const tooMany = { error: "Too many requests, please try again later." };
 
+/** The test suite logs in many times; limits apply there only when a test opts in. */
+const skipInTests = () => process.env.NODE_ENV === "test" && process.env.TEST_RATE_LIMIT !== "1";
+
 /** Login / register brute-force protection. */
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -10,6 +13,7 @@ export const authLimiter = rateLimit({
   standardHeaders: "draft-7",
   legacyHeaders: false,
   message: tooMany,
+  skip: skipInTests,
 });
 
 /** Public lead forms (enquiry + booking) — stops spam bursts. */
@@ -19,6 +23,7 @@ export const publicFormLimiter = rateLimit({
   standardHeaders: "draft-7",
   legacyHeaders: false,
   message: tooMany,
+  skip: skipInTests,
 });
 
 /**

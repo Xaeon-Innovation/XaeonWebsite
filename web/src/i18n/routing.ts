@@ -8,6 +8,8 @@ export const routing = defineRouting({
   // Always serve English at "/" — never redirect based on the browser language, so crawlers
   // and shared links land where they point. The language switcher handles /ar.
   localeDetection: false,
+  // hreflang alternates are already in each page's <head>; don't duplicate them as headers.
+  alternateLinks: false,
 });
 
 export type Locale = (typeof routing.locales)[number];

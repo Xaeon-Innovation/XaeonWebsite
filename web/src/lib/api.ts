@@ -97,7 +97,16 @@ export async function getCaseStudy(slug: string): Promise<CaseStudy | null> {
 export type BlogPost = {
   _id: string;
   title: string;
-  description?: string;
+  slug?: string;
+  excerpt?: string;
+  /** Markdown body. */
+  content?: string;
+  coverImageUrl?: string;
+  coverAlt?: string;
+  tags?: string[];
+  seoTitle?: string;
+  seoDescription?: string;
+  publishedAt?: string;
   author?: string | { _id: string; name: string };
   createdAt?: string;
   updatedAt?: string;
@@ -105,9 +114,14 @@ export type BlogPost = {
 
 export async function getBlogPosts(): Promise<BlogPost[]> {
   const data = await getJson<{ blogPosts?: BlogPost[] }>("/blog-post", {});
-  return [...(data.blogPosts ?? [])].sort(
-    (a, b) => new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime(),
-  );
+  const date = (p: BlogPost) => new Date(p.publishedAt ?? p.createdAt ?? 0).getTime();
+  return [...(data.blogPosts ?? [])].sort((a, b) => date(b) - date(a));
+}
+
+export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
+  if (!slug || slug.length > 120) return null;
+  const data = await getJson<{ blogPost?: BlogPost }>(`/blog-post/slug/${encodeURIComponent(slug)}`, {});
+  return data.blogPost ?? null;
 }
 
 export async function getBlogPost(id: string): Promise<BlogPost | null> {

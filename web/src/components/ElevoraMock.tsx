@@ -46,7 +46,7 @@ export default function ElevoraMock({ locale }: { locale: string }) {
       <div className="col-span-2 rounded-2xl bg-paper p-4 text-graphite shadow-xl shadow-black/30">
         <div className="flex items-center justify-between">
           <span className="text-slate">{c.clockIn}</span>
-          <span className="rounded-full bg-sage-wash px-2 py-0.5 text-[11px] font-semibold text-sage-deep">{c.clocked}</span>
+          <span className="rounded-full bg-sage-wash px-2 py-0.5 text-[11px] font-semibold text-[#2c641a]">{c.clocked}</span>
         </div>
         <p className="mt-1 font-display text-3xl font-semibold tabular-nums" dir="ltr">08:02</p>
         <p className="mt-1 inline-flex items-center gap-1 text-slate">

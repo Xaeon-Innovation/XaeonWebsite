@@ -5,12 +5,15 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/app.js",
-    "dev": "ts-node-dev --respawn src/app.ts"
+    "dev": "ts-node-dev --respawn src/app.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1149.0",
     "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
@@ -23,7 +26,7 @@
     "mongoose": "^8.17.1",
     "multer": "^2.1.1",
     "resend": "^6.33.0",
-    "sharp": "^0.34.5"
+    "sharp": "^0.35.5"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
@@ -34,8 +37,11 @@
     "@types/mongoose": "^5.11.97",
     "@types/multer": "^2.1.0",
     "@types/node": "^24.2.1",
+    "@types/supertest": "^7.2.1",
+    "supertest": "^7.3.1",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "vitest": "^5.0.3"
   }
 }

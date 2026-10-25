@@ -33,15 +33,31 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PUBLISHED_FILTER = exports.BLOG_STATUSES = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
+exports.BLOG_STATUSES = ["draft", "published"];
 const BlogPostSchema = new mongoose_1.Schema({
-    title: { type: String, required: true },
+    title: { type: String, required: true, trim: true, maxlength: 200 },
+    slug: { type: String, trim: true, lowercase: true, maxlength: 120 },
+    excerpt: { type: String, trim: true, maxlength: 400 },
+    content: { type: String, maxlength: 100000 },
     description: { type: String },
+    coverImageUrl: { type: String, trim: true },
+    coverAlt: { type: String, trim: true, maxlength: 200 },
+    tags: { type: [{ type: String, trim: true, lowercase: true, maxlength: 40 }], default: [] },
+    status: { type: String, enum: exports.BLOG_STATUSES, default: "draft" },
+    publishedAt: { type: Date },
+    seoTitle: { type: String, trim: true, maxlength: 70 },
+    seoDescription: { type: String, trim: true, maxlength: 170 },
     author: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: "Employee",
         required: true,
     },
 }, { timestamps: true });
+BlogPostSchema.index({ slug: 1 }, { unique: true, sparse: true });
+BlogPostSchema.index({ status: 1, publishedAt: -1 });
+/** Mongo filter for posts visitors may see (legacy posts have no status and are public). */
+exports.PUBLISHED_FILTER = { $or: [{ status: "published" }, { status: { $exists: false } }] };
 const BlogPost = mongoose_1.default.model("BlogPost", BlogPostSchema);
 exports.default = BlogPost;

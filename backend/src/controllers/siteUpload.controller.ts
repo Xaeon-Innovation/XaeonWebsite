@@ -1,10 +1,9 @@
 import { randomUUID } from "crypto";
-import fs from "fs";
-import path from "path";
 import type { Request, Response } from "express";
 import multer from "multer";
 
-import { getSiteUploadSubdir, getUploadPublicBase } from "../config/siteUpload.config";
+import { getUploadPublicBase } from "../config/siteUpload.config";
+import { putObject } from "../services/storage";
 import {
   rasterToWebp,
   MAX_SVG_BYTES,
@@ -25,8 +24,8 @@ export const uploadSiteAssetMiddleware = upload.single("file");
 export const uploadSiteAsset = async (req: Request, res: Response): Promise<void> => {
   try {
     const kind = String(req.body?.kind ?? "case");
-    if (!["team", "case", "logo"].includes(kind)) {
-      res.status(400).json({ error: "Invalid kind; use team, case, or logo" });
+    if (!["team", "case", "logo", "blog"].includes(kind)) {
+      res.status(400).json({ error: "Invalid kind; use team, case, logo, or blog" });
       return;
     }
     if (!req.file) {
@@ -43,10 +42,6 @@ export const uploadSiteAsset = async (req: Request, res: Response): Promise<void
       return;
     }
 
-    const subdir = getSiteUploadSubdir();
-    fs.mkdirSync(subdir, { recursive: true });
-
-    let fileName: string;
     let outBuf: Buffer;
 
     if (req.file.mimetype === "image/svg+xml") {
@@ -59,17 +54,12 @@ export const uploadSiteAsset = async (req: Request, res: Response): Promise<void
         return;
       }
       // Rasterize instead of serving the SVG: stored SVG can carry script (stored XSS).
-      fileName = `${randomUUID()}.webp`;
       outBuf = await rasterToWebp(req.file.buffer, "logo");
     } else {
-      fileName = `${randomUUID()}.webp`;
       outBuf = await rasterToWebp(req.file.buffer, kind as RasterKind);
     }
 
-    const diskPath = path.join(subdir, fileName);
-    fs.writeFileSync(diskPath, outBuf);
-
-    const url = `${base}/uploads/site/${fileName}`;
+    const url = await putObject(`site/${randomUUID()}.webp`, outBuf, "image/webp", base);
     res.status(200).json({ url });
   } catch (err) {
     console.error(err);

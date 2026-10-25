@@ -6,8 +6,10 @@ import {
   updateTestimonial,
 } from "../controllers/testimonial.controller";
 import { requireAuth, requireAdmin } from "../middleware/auth";
+import { revalidateOnWrite } from "../middleware/revalidateOnWrite";
 
 const router = express.Router();
+router.use(revalidateOnWrite);
 
 router.get("/", requireAuth, requireAdmin, getTestimonials);
 router.post("/", requireAuth, requireAdmin, createTestimonial);

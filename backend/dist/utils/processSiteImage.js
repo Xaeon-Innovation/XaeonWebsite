@@ -17,8 +17,8 @@ function assertRasterSize(buffer) {
 async function rasterToWebp(buffer, kind) {
     assertRasterSize(buffer);
     let img = (0, sharp_1.default)(buffer).rotate();
-    const maxEdge = kind === "case" ? 2560 : kind === "team" ? 1200 : 512;
-    const quality = kind === "case" ? 78 : kind === "team" ? 80 : 85;
+    const maxEdge = kind === "case" ? 2560 : kind === "blog" ? 1600 : kind === "team" ? 1200 : 512;
+    const quality = kind === "case" ? 78 : kind === "blog" ? 80 : kind === "team" ? 80 : 85;
     img = img.resize({
         width: maxEdge,
         height: maxEdge,

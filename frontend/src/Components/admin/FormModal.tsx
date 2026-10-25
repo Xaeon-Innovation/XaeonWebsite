@@ -5,8 +5,8 @@ type Props = PropsWithChildren<{
   open: boolean;
   onClose: () => void;
   title: string;
-  /** Wider dialog for longer CMS forms */
-  wide?: boolean;
+  /** Wider dialog for longer CMS forms; "xl" for full editors (blog). */
+  wide?: boolean | "xl";
 }>;
 
 export default function FormModal({ open, onClose, title, wide, children }: Props) {
@@ -36,7 +36,7 @@ export default function FormModal({ open, onClose, title, wide, children }: Prop
   return (
     <dialog
       ref={ref}
-      className={wide ? "admin-modal admin-modal-wide" : "admin-modal"}
+      className={wide === "xl" ? "admin-modal admin-modal-wide admin-modal-xl" : wide ? "admin-modal admin-modal-wide" : "admin-modal"}
       onClick={(e) => {
         if (e.target === ref.current) onClose();
       }}

@@ -400,6 +400,11 @@
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
 }
 
+:global(.admin-modal-xl) {
+  width: min(1240px, 96vw) !important;
+  max-width: 96vw !important;
+}
+
 :global(.admin-modal-wide) {
   max-width: 720px;
 }

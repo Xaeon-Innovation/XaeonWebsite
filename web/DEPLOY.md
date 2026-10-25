@@ -51,3 +51,41 @@ admin panel and client portal and moves to `app.xaeons.com`. The Express API is 
 3. `pm2 restart xaeon-api`. The daily follow-up digest is emailed to `BOOKING_NOTIFY_EMAILS` after
    08:00 Cairo time (set `DISABLE_JOBS=true` to turn it off).
 4. Redeploy the admin (frontend) and the public site (web) so forms send the visitor's language.
+
+## Phase 4 — blog CMS, cloud uploads, tests
+### Instant publishing (recommended)
+- Web (Vercel): set `REVALIDATE_SECRET` (any random string, 32+ characters).
+- API (`backend/.env`): `WEB_REVALIDATE_URL=https://xaeons.com/api/revalidate` and
+  `WEB_REVALIDATE_SECRET=<same value>`. Published articles, case studies, packages, team and
+  testimonials then show on the site on the next visit instead of within 5 minutes.
+- IndexNow (Bing, Yandex, Seznam; also feeds ChatGPT search via Bing): generate a key
+  (`openssl rand -hex 16`), set `INDEXNOW_KEY` in **both** Vercel and `backend/.env`, plus
+  `SITE_ORIGIN=https://xaeons.com` in `backend/.env`. New/updated articles are pinged automatically.
+
+### Uploads to cloud storage (Cloudflare R2 recommended)
+1. Create an R2 bucket with a public custom domain (e.g. `media.xaeons.com`) and an API token.
+2. In `backend/.env`:
+   ```
+   S3_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com
+   S3_BUCKET=xaeon-media
+   S3_ACCESS_KEY_ID=…
+   S3_SECRET_ACCESS_KEY=…
+   S3_PUBLIC_URL=https://media.xaeons.com
+   ```
+3. Move existing files and rewrite stored URLs (dry run first; local files are kept as backup):
+   ```
+   cd backend
+   npx ts-node --transpile-only scripts/migrate-uploads-to-s3.ts
+   npx ts-node --transpile-only scripts/migrate-uploads-to-s3.ts --apply
+   ```
+4. `pm2 restart xaeon-api`, then add the media host to `web/next.config.ts` → `images.remotePatterns`
+   so Next.js optimizes those images.
+
+### Running the tests locally
+```
+docker run -d --rm -p 27017:27017 mongo:7.0.14
+cd backend && TEST_DB_URI=mongodb://127.0.0.1:27017/xaeon_test npm test
+
+cd web && (node e2e/mock-api.mjs &) && npm run build:e2e && npx playwright install --with-deps && npm run e2e
+```
+CI runs all of this on every pull request (`.github/workflows/*-ci.yml`), plus Lighthouse budgets.
