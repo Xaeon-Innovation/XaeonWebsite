@@ -11,6 +11,7 @@ const rateLimiter_1 = require("../middleware/rateLimiter");
 router.post("/register", rateLimiter_1.authLimiter, auth_controller_1.register);
 router.post("/login", rateLimiter_1.authLimiter, auth_controller_1.login);
 router.post("/logout", auth_controller_1.logout);
+router.post("/set-password", rateLimiter_1.authLimiter, auth_controller_1.setPasswordFromInvite);
 router.get("/me", auth_1.requireAuth, auth_controller_1.me);
 router.patch("/me", auth_1.requireAuth, auth_controller_1.updateMyProfile);
 exports.default = router;

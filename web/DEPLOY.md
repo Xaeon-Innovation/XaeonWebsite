@@ -36,3 +36,18 @@ admin panel and client portal and moves to `app.xaeons.com`. The Express API is 
 - UI text lives in `web/messages/en.json` and `web/messages/ar.json` (keep the keys in sync).
 - Case studies, blog posts, packages, team and testimonials come from the admin CMS and refresh
   on the site within 5 minutes. CMS content is English-only for now.
+
+## Phase 3 (CRM) — one-time steps on the API server
+1. Deploy the backend (`npm run build` is already committed in `dist/`), then add to `backend/.env`:
+   - `APP_URL=https://app.xaeons.com` (where invite links point; use `https://xaeons.com` until the
+     app subdomain is live)
+   - optional `RESEND_REPLY_TO=info@xaeons.com` (where client replies to admin emails land)
+2. Migrate existing requests into the pipeline (safe to run twice; dry run first):
+   ```
+   cd backend
+   npx ts-node --transpile-only scripts/migrate-leads.ts          # shows what will change
+   npx ts-node --transpile-only scripts/migrate-leads.ts --apply
+   ```
+3. `pm2 restart xaeon-api`. The daily follow-up digest is emailed to `BOOKING_NOTIFY_EMAILS` after
+   08:00 Cairo time (set `DISABLE_JOBS=true` to turn it off).
+4. Redeploy the admin (frontend) and the public site (web) so forms send the visitor's language.

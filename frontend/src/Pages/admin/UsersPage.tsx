@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Send } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import api, { getApiErrorMessage } from "../../lib/api";
 import { useResourceApi } from "../../lib/useAdminApi";
 import DataTable, { type Column } from "../../Components/admin/DataTable";
 import FormModal from "../../Components/admin/FormModal";
@@ -34,6 +35,16 @@ type FormValues = z.infer<typeof schema>;
 
 export function Component() {
   const { data, loading, error, create, update, remove } = useResourceApi<User>("/user", "users", "user");
+  const [notice, setNotice] = useState<string | null>(null);
+
+  const resendInvite = async (u: User) => {
+    try {
+      await api.post(`/user/${u._id}/invite`);
+      setNotice(`Invite sent to ${u.email}.`);
+    } catch (e) {
+      setNotice(getApiErrorMessage(e, "Couldn't send the invite."));
+    }
+  };
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<User | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<User | null>(null);
@@ -65,10 +76,11 @@ export function Component() {
         await update({ id: editing._id, ...values });
       } else {
         await create(values);
+        setNotice(`Account created. We emailed ${values.email} a link to set their password.`);
       }
       setModalOpen(false);
-    } catch {
-      /* error displayed by hook */
+    } catch (e) {
+      form.setError("root", { message: getApiErrorMessage(e, "Save failed. Please try again.") });
     }
   });
 
@@ -101,6 +113,16 @@ export function Component() {
           <button type="button" className="admin-btn admin-btn-ghost" style={{ padding: "4px 8px" }} onClick={(e) => { e.stopPropagation(); openEdit(row); }}>
             <Pencil size={14} />
           </button>
+          <button
+            type="button"
+            className="admin-btn admin-btn-ghost"
+            style={{ padding: "4px 8px" }}
+            title="Email a new set-password link"
+            aria-label={`Resend invite to ${row.email}`}
+            onClick={(e) => { e.stopPropagation(); void resendInvite(row); }}
+          >
+            <Send size={14} />
+          </button>
           <button type="button" className="admin-btn admin-btn-danger" style={{ padding: "4px 8px" }} onClick={(e) => { e.stopPropagation(); setDeleteTarget(row); }}>
             <Trash2 size={14} />
           </button>
@@ -121,6 +143,7 @@ export function Component() {
       </div>
 
       {error && <p style={{ color: "#ef4444", marginBottom: 12 }}>{error}</p>}
+      {notice && <p role="status" style={{ color: "#a7e08b", marginBottom: 12 }}>{notice}</p>}
       {loading ? (
         <div style={{ color: "#72c04f", padding: 32, textAlign: "center" }}>Loading…</div>
       ) : (
@@ -171,6 +194,8 @@ export function Component() {
               <label className="admin-label">Company (optional)</label>
               <input className="admin-input" {...form.register("company")} />
             </div>
+            {!editing && <p className="admin-field-hint">We'll email them a link to set their own password (valid for 7 days).</p>}
+            {form.formState.errors.root && <p className="admin-field-error" role="alert">{form.formState.errors.root.message}</p>}
             <div className="admin-form-actions">
               <button type="button" className="admin-btn admin-btn-ghost" onClick={() => setModalOpen(false)}>Cancel</button>
               <button type="submit" className="admin-btn admin-btn-primary" disabled={form.formState.isSubmitting}>

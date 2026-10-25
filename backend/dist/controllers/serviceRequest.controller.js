@@ -44,15 +44,18 @@ const serviceRequest_model_1 = __importStar(require("../models/serviceRequest.mo
 const bookingSettings_model_1 = require("../models/bookingSettings.model");
 const bookingEmail_1 = require("../services/bookingEmail");
 const attribution_1 = require("../utils/attribution");
+const leadEmails_1 = require("../services/leadEmails");
 const googleCalendar_1 = require("../services/googleCalendar");
 const serverError_1 = require("../utils/serverError");
 async function emailEnquiryNotice(details) {
-    try {
-        await (0, bookingEmail_1.sendEnquiryNotice)(details);
-    }
-    catch (err) {
-        console.error(err);
-    }
+    // Staff notice and the visitor's auto-reply are independent: one failing never blocks the other.
+    const results = await Promise.allSettled([
+        (0, bookingEmail_1.sendEnquiryNotice)(details),
+        (0, leadEmails_1.sendEnquiryAutoReply)({ name: details.name, email: details.email, locale: details.locale, topic: details.interest }),
+    ]);
+    for (const r of results)
+        if (r.status === "rejected")
+            console.error(r.reason);
 }
 /** Public: contact form, service page interest, or package enquiry — same collection, no login. */
 const createServiceRequestEnquiry = async (req, res) => {
@@ -81,6 +84,7 @@ const createServiceRequestEnquiry = async (req, res) => {
             ? body.company.trim()
             : undefined;
         const attribution = (0, attribution_1.parseAttribution)(body.attribution);
+        const locale = body.locale === "ar" ? "ar" : "en";
         if (source === "package") {
             const packageIdRaw = typeof body.packageId === "string" ? body.packageId.trim() : "";
             if (!packageIdRaw || !mongoose_1.default.Types.ObjectId.isValid(packageIdRaw)) {
@@ -105,6 +109,7 @@ const createServiceRequestEnquiry = async (req, res) => {
                 package: pkg._id,
                 status: "Pending Review",
                 attribution,
+                locale,
             });
             await emailEnquiryNotice({
                 source: "package",
@@ -115,6 +120,7 @@ const createServiceRequestEnquiry = async (req, res) => {
                 message,
                 interest: pkgTitle,
                 attribution,
+                locale,
             });
             res.status(201).json({
                 message: "Request submitted successfully",
@@ -143,6 +149,7 @@ const createServiceRequestEnquiry = async (req, res) => {
             interest,
             status: "Pending Review",
             attribution,
+            locale,
         });
         await emailEnquiryNotice({
             source,
@@ -153,6 +160,7 @@ const createServiceRequestEnquiry = async (req, res) => {
             message,
             interest,
             attribution,
+            locale,
         });
         res.status(201).json({
             message: "Request submitted successfully",
@@ -342,12 +350,18 @@ const updateServiceRequest = async (req, res) => {
             res.status(404).json({ error: "Service request not found" });
             return;
         }
-        const { id: _rid, meeting_date, interest, ...rest } = body;
-        const $set = { ...rest };
-        delete $set.id;
+        const { meeting_date, interest, status } = body;
+        // Whitelist: CRM fields (stage, owner, notes…) change only through /lead so they're logged.
+        const $set = {};
         const $unset = {};
+        if (status !== undefined) {
+            if (status !== "Pending Review" && status !== "Accepted" && status !== "Rejected") {
+                res.status(400).json({ error: "Invalid status" });
+                return;
+            }
+            $set.status = status;
+        }
         if (Object.prototype.hasOwnProperty.call(body, "interest")) {
-            delete $set.interest;
             if (interest === null || interest === "") {
                 $unset.interest = 1;
             }
@@ -356,7 +370,6 @@ const updateServiceRequest = async (req, res) => {
             }
         }
         if (Object.prototype.hasOwnProperty.call(body, "meeting_date")) {
-            delete $set.meeting_date;
             if (meeting_date === null || meeting_date === "") {
                 if ((0, serviceRequest_model_1.isEnquirySource)(existing.source)) {
                     $unset.meeting_date = 1;
@@ -371,6 +384,17 @@ const updateServiceRequest = async (req, res) => {
             mongoUpdate.$set = $set;
         if (Object.keys($unset).length)
             mongoUpdate.$unset = $unset;
+        if ($set.status && $set.status !== existing.status) {
+            mongoUpdate.$push = {
+                activity: {
+                    type: "status",
+                    message: `Request status: ${existing.status} → ${String($set.status)}`,
+                    by: req.user ? new mongoose_1.default.Types.ObjectId(req.user.id) : undefined,
+                    byName: req.user?.name || req.user?.email || "Admin",
+                    at: new Date(),
+                },
+            };
+        }
         if (!mongoUpdate.$set && !mongoUpdate.$unset) {
             res.status(400).json({ error: "No updatable fields provided" });
             return;

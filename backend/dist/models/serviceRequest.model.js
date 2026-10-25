@@ -33,14 +33,22 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ENQUIRY_SOURCES = void 0;
+exports.LEAD_CURRENCIES = exports.OPEN_STAGES = exports.LEAD_STAGES = exports.ENQUIRY_SOURCES = void 0;
 exports.isEnquirySource = isEnquirySource;
+exports.isLeadStage = isLeadStage;
 const mongoose_1 = __importStar(require("mongoose"));
 /** Public, no-login enquiry sources (website forms). */
 exports.ENQUIRY_SOURCES = ["contact", "service", "package", "product"];
 function isEnquirySource(source) {
     return exports.ENQUIRY_SOURCES.includes(source);
 }
+/** Sales pipeline, in order. `won` and `lost` are closed stages. */
+exports.LEAD_STAGES = ["new", "contacted", "qualified", "proposal", "won", "lost"];
+exports.OPEN_STAGES = ["new", "contacted", "qualified", "proposal"];
+function isLeadStage(value) {
+    return exports.LEAD_STAGES.includes(value);
+}
+exports.LEAD_CURRENCIES = ["EGP", "USD", "AED", "SAR", "EUR"];
 function isRegisteredSource() {
     return !isEnquirySource(this.source) && this.source !== "booking";
 }
@@ -81,6 +89,39 @@ const ServiceRequestSchema = new mongoose_1.Schema({
     interest: { type: String },
     meetLink: { type: String },
     googleEventId: { type: String },
+    locale: { type: String, enum: ["en", "ar"] },
+    stage: { type: String, enum: exports.LEAD_STAGES, default: "new", index: true },
+    owner: { type: mongoose_1.Schema.Types.ObjectId, ref: "Employee" },
+    followUpAt: { type: Date, default: null },
+    value: { type: Number, min: 0, default: null },
+    currency: { type: String, enum: exports.LEAD_CURRENCIES, default: "EGP" },
+    lostReason: { type: String, trim: true, maxlength: 300 },
+    firstResponseAt: { type: Date },
+    contactKey: { type: String, index: true },
+    project: { type: mongoose_1.Schema.Types.ObjectId, ref: "Project" },
+    notes: {
+        type: [
+            new mongoose_1.Schema({
+                text: { type: String, required: true, trim: true, maxlength: 5000 },
+                byName: { type: String, required: true },
+                by: { type: mongoose_1.Schema.Types.ObjectId, ref: "User" },
+                at: { type: Date, default: Date.now },
+            }),
+        ],
+        default: [],
+    },
+    activity: {
+        type: [
+            new mongoose_1.Schema({
+                type: { type: String, required: true },
+                message: { type: String, required: true, maxlength: 2000 },
+                byName: String,
+                by: { type: mongoose_1.Schema.Types.ObjectId, ref: "User" },
+                at: { type: Date, default: Date.now },
+            }),
+        ],
+        default: [],
+    },
     attribution: {
         type: new mongoose_1.Schema({
             utmSource: String,
@@ -98,6 +139,17 @@ const ServiceRequestSchema = new mongoose_1.Schema({
     },
 }, { timestamps: true });
 ServiceRequestSchema.index({ "attribution.utmSource": 1, createdAt: -1 });
+ServiceRequestSchema.index({ stage: 1, createdAt: -1 });
+ServiceRequestSchema.index({ followUpAt: 1, stage: 1 });
+// Every new lead gets a lookup key and a "created" entry in its history.
+ServiceRequestSchema.pre("save", function setLeadDefaults(next) {
+    if (this.contactEmail)
+        this.contactKey = this.contactEmail.trim().toLowerCase();
+    if (this.isNew && this.activity.length === 0) {
+        this.activity.push({ type: "created", message: `Lead created from ${this.source}`, at: new Date() });
+    }
+    next();
+});
 ServiceRequestSchema.index({ meeting_date: 1 }, {
     unique: true,
     partialFilterExpression: {

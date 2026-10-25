@@ -169,6 +169,7 @@ export default function BookingCalendar({ packageId }: { packageId?: string }) {
           website: get("website"),
           slot: slot.start,
           attribution: getAttribution() ?? undefined,
+          locale,
           ...(packageId ? { packageId } : {}),
         }),
       });

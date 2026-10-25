@@ -3,13 +3,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateMyProfile = exports.me = exports.logout = exports.login = exports.register = void 0;
+exports.setPasswordFromInvite = exports.updateMyProfile = exports.me = exports.logout = exports.login = exports.register = void 0;
 require("../types/expressAugment");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const user_model_1 = __importDefault(require("../models/user.model"));
 const serverError_1 = require("../utils/serverError");
+const invite_1 = require("../services/invite");
 const COOKIE_NAME = "auth_token";
 const getJwtSecret = () => {
     const secret = process.env.JWT_SECRET;
@@ -276,3 +277,44 @@ const updateMyProfile = async (req, res) => {
     }
 };
 exports.updateMyProfile = updateMyProfile;
+/**
+ * Public: accept an invite. Sets the account's first password from a one-time token, then
+ * signs the person in.
+ */
+const setPasswordFromInvite = async (req, res) => {
+    try {
+        const { token, password } = (req.body ?? {});
+        if (typeof token !== "string" || token.length < 20 || typeof password !== "string") {
+            res.status(400).json({ error: "Invalid request" });
+            return;
+        }
+        if (password.length < 8) {
+            res.status(400).json({ error: "Password must be at least 8 characters" });
+            return;
+        }
+        const user = await user_model_1.default.findOne({
+            inviteTokenHash: (0, invite_1.hashToken)(token),
+            inviteExpiresAt: { $gt: new Date() },
+        }).select("+inviteTokenHash +inviteExpiresAt");
+        if (!user) {
+            res.status(400).json({ error: "This link is invalid or has expired. Ask us for a new one." });
+            return;
+        }
+        user.password = await bcryptjs_1.default.hash(password, 12);
+        user.inviteTokenHash = undefined;
+        user.inviteExpiresAt = undefined;
+        await user.save();
+        const jwtToken = jsonwebtoken_1.default.sign({ userId: String(user._id) }, getJwtSecret(), {
+            expiresIn: getJwtExpiresIn(),
+        });
+        setAuthCookie(res, jwtToken);
+        res.status(200).json({
+            user: { id: String(user._id), email: user.email, name: user.name, role: user.role },
+        });
+    }
+    catch (err) {
+        console.error("Set password error:", err);
+        res.status(500).json({ error: (0, serverError_1.serverErrorMessage)(err, "Failed to set password") });
+    }
+};
+exports.setPasswordFromInvite = setPasswordFromInvite;

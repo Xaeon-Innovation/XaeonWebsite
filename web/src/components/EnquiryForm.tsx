@@ -2,7 +2,7 @@
 
 import { useRef, useState, type FormEvent } from "react";
 import { CheckCircle2 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { getAttribution } from "@/lib/attribution";
 import { trackLead } from "@/lib/analytics";
@@ -26,6 +26,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function EnquiryForm({ source, interest, packageId, askTeamSize = false, idPrefix = "enq" }: Props) {
   const t = useTranslations("form");
+  const locale = useLocale();
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const formRef = useRef<HTMLFormElement>(null);
@@ -72,6 +73,7 @@ export default function EnquiryForm({ source, interest, packageId, askTeamSize =
             ...(interest ? { interest } : {}),
             ...(source === "package" && packageId ? { packageId } : {}),
             attribution: getAttribution() ?? undefined,
+            locale,
           },
         }),
       });

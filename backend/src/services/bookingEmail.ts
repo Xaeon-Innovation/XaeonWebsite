@@ -1,10 +1,9 @@
 import { Resend } from "resend";
+import { escapeHtml, fromAddress, resendConfigured } from "./email";
+
+export { resendConfigured };
 import { attributionRows, type Attribution } from "../utils/attribution";
 import type { EnquirySource } from "../models/serviceRequest.model";
-
-export function resendConfigured(): boolean {
-  return Boolean(process.env.RESEND_API_KEY?.trim());
-}
 
 export function notifyEmails(): string[] {
   const raw = process.env.BOOKING_NOTIFY_EMAILS?.trim();
@@ -13,18 +12,6 @@ export function notifyEmails(): string[] {
     : [];
   if (list.length === 0) console.warn("BOOKING_NOTIFY_EMAILS is not set; staff will not be notified");
   return [...new Set(list)];
-}
-
-function fromAddress(): string {
-  return process.env.RESEND_FROM?.trim() || "Xaeon <info@xaeons.com>";
-}
-
-function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
 }
 
 function safeLink(url: string): string {

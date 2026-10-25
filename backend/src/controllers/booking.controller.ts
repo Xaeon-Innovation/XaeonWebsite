@@ -197,6 +197,7 @@ export const createBooking = async (req: Request, res: Response): Promise<void> 
         : undefined;
     const slotRaw = typeof body?.slot === "string" ? body.slot.trim() : "";
     const attribution = parseAttribution(body?.attribution);
+    const locale = body?.locale === "ar" ? "ar" : "en";
 
     if (name.length < 2 || phone.length < 7 || message.length < 10 || message.length > 4000) {
       res.status(400).json({ error: "Name, phone, and a short message are required." });
@@ -307,6 +308,7 @@ export const createBooking = async (req: Request, res: Response): Promise<void> 
       meetLink: event.meetLink,
       googleEventId: event.eventId,
       attribution,
+      locale,
     });
 
     let emailWarning: string | undefined;

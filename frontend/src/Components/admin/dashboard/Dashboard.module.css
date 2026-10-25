@@ -1,0 +1,48 @@
+.toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.range { display: inline-flex; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; overflow: hidden; }
+.range button { padding: 6px 12px; border: 0; background: transparent; color: #a1a1aa; font: inherit; font-size: 0.8125rem; cursor: pointer; }
+.range button[aria-pressed="true"] { background: rgba(114,192,79,0.15); color: #f4f4f5; }
+
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.tile { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border-radius: 12px; background: #0c0c14; border: 1px solid rgba(255,255,255,0.06); color: inherit; text-decoration: none; min-width: 0; }
+a.tile:hover { border-color: rgba(114,192,79,0.45); }
+.tileLabel { font-size: 0.75rem; color: #a1a1aa; }
+.tileValue { font-size: 1.5rem; font-weight: 700; color: #f4f4f5; font-variant-numeric: tabular-nums; line-height: 1.2; }
+.tileHint { font-size: 0.6875rem; color: #71717a; }
+.tileWarn .tileValue { color: #fcd34d; }
+.tileWarnLabel { display: inline-flex; align-items: center; gap: 5px; }
+
+.grid { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 16px; margin-bottom: 16px; }
+@media (max-width: 1100px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+
+.panel { padding: 16px; border-radius: 12px; background: #0c0c14; border: 1px solid rgba(255,255,255,0.06); min-width: 0; }
+.panelTitle { margin: 0 0 4px; font-size: 0.875rem; font-weight: 600; color: #f4f4f5; }
+.panelSub { margin: 0 0 14px; font-size: 0.75rem; color: #71717a; }
+
+/* Weekly column chart (single series, sage). */
+.chart { position: relative; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 8px; height: 200px; }
+.yAxis { position: relative; font-size: 0.6875rem; color: #71717a; font-variant-numeric: tabular-nums; }
+.yAxis span { position: absolute; right: 0; transform: translateY(50%); }
+.plot { position: relative; display: flex; align-items: flex-end; gap: 2px; border-bottom: 1px solid rgba(255,255,255,0.18); }
+.gridLine { position: absolute; left: 0; right: 0; border-top: 1px dashed rgba(255,255,255,0.07); pointer-events: none; }
+.col { position: relative; flex: 1 1 0; height: 100%; display: flex; align-items: flex-end; justify-content: center; cursor: default; outline: none; }
+.col:hover .bar, .col:focus-visible .bar { background: #8fd06b; }
+.col:focus-visible { box-shadow: inset 0 0 0 1px #72c04f; border-radius: 4px; }
+.bar { width: 100%; max-width: 22px; min-height: 0; background: #72c04f; border-radius: 4px 4px 0 0; }
+.barWon { position: absolute; bottom: 0; width: 100%; max-width: 22px; background: #3d7a26; border-radius: 0; }
+.xAxis { display: flex; justify-content: space-between; margin: 6px 0 0 36px; font-size: 0.6875rem; color: #71717a; }
+.tooltip { position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); z-index: 3; white-space: nowrap; padding: 6px 9px; border-radius: 8px; background: #1c1c2a; border: 1px solid rgba(255,255,255,0.12); font-size: 0.75rem; color: #e4e4e7; pointer-events: none; box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
+.tooltip strong { color: #f4f4f5; }
+.legend { display: flex; gap: 14px; margin-top: 10px; font-size: 0.75rem; color: #a1a1aa; }
+.swatch { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+
+/* Stage bars (horizontal, single hue, direct-labelled). */
+.stageList { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.stageRow { display: grid; grid-template-columns: 82px minmax(0, 1fr) 36px; align-items: center; gap: 10px; font-size: 0.8125rem; }
+.stageName { color: #d4d4d8; }
+.stageTrack { height: 10px; border-radius: 4px; background: rgba(255,255,255,0.05); overflow: hidden; }
+.stageFill { height: 100%; background: #72c04f; border-radius: 0 4px 4px 0; }
+.stageCount { text-align: right; color: #f4f4f5; font-variant-numeric: tabular-nums; }
+
+.num { font-variant-numeric: tabular-nums; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

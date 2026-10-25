@@ -30,7 +30,7 @@ const NAV_ITEMS = [
   { to: "/admin/site-testimonials", label: "Site — Testimonials", icon: Quote },
   { to: "/admin/site-social", label: "Site — Social links", icon: Share2 },
   { to: "/admin/bookings", label: "Bookings", icon: CalendarClock },
-  { to: "/admin/service-requests", label: "Requests", icon: MessageSquareText },
+  { to: "/admin/leads", label: "Leads", icon: MessageSquareText },
 ] as const;
 
 type Props = {

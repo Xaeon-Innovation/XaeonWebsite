@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  resendInvite,
   createUser,
   deleteUser,
   getUserById,
@@ -15,6 +16,7 @@ router.get("/", getUsers);
 router.get("/:id", getUserById);
 
 router.post("/", createUser);
+router.post("/:id/invite", resendInvite);
 
 router.put("/", updateUser);
 

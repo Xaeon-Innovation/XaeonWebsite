@@ -23,7 +23,8 @@ import MainLayout from "./layouts/MainLayout.tsx";
 import ContextProviders from "./context/ContextProviders.tsx";
 import RequireUser from "./context/RequireUser.tsx";
 import ClientDashboard from "./Pages/ClientDashboard.tsx";
-import { dashboardLoader, serviceRequestsLoader } from "./lib/adminLoaders.ts";
+import SetPassword from "./Pages/SetPassword.tsx";
+import { dashboardLoader } from "./lib/adminLoaders.ts";
 import { clientDashboardLoader } from "./lib/clientPortalLoaders.ts";
 
 const router = createBrowserRouter([
@@ -68,6 +69,7 @@ const router = createBrowserRouter([
         path: "blog",
         element: <Blog />,
       },
+      { path: "set-password", element: <SetPassword /> },
       {
         path: "login",
         element: <LoginSignup />,
@@ -115,7 +117,9 @@ const router = createBrowserRouter([
       { path: "site-testimonials", lazy: () => import("./Pages/admin/TestimonialsPage") },
       { path: "site-social", lazy: () => import("./Pages/admin/SiteSocialSettingsPage") },
       { path: "bookings", lazy: () => import("./Pages/admin/BookingsPage") },
-      { path: "service-requests", lazy: () => import("./Pages/admin/ServiceRequestsPage"), loader: serviceRequestsLoader },
+      { path: "leads", lazy: () => import("./Pages/admin/LeadsPage") },
+      // Old "Requests" page now lives in Leads.
+      { path: "service-requests", element: <Navigate to="/admin/leads" replace /> },
     ],
   },
 ]);
@@ -126,7 +130,7 @@ const router = createBrowserRouter([
  * is sent to the real site, and nothing on this host is indexed.
  */
 const PUBLIC_SITE_ORIGIN = (import.meta.env.VITE_PUBLIC_SITE_ORIGIN ?? "").replace(/\/+$/, "");
-const APP_ONLY_PATH = /^\/(admin|dashboard|login|register)(\/|$)/;
+const APP_ONLY_PATH = /^\/(admin|dashboard|login|register|set-password)(\/|$)/;
 if (PUBLIC_SITE_ORIGIN) {
   const robots = document.createElement("meta");
   robots.name = "robots";

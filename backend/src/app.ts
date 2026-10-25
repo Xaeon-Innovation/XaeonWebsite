@@ -59,6 +59,8 @@ import siteRouter from "./routes/site.routes";
 import teamMemberRouter from "./routes/teamMember.routes";
 import caseStudyRouter from "./routes/caseStudy.routes";
 import testimonialRouter from "./routes/testimonial.routes";
+import leadRouter from "./routes/lead.routes";
+import { startFollowUpDigest } from "./jobs/followUpDigest";
 import siteUploadRouter from "./routes/siteUpload.routes";
 import siteSettingsRouter from "./routes/siteSettings.routes";
 import bookingRouter from "./routes/booking.routes";
@@ -75,6 +77,7 @@ app.use("/api/v1/site", siteRouter);
 app.use("/api/v1/team-member", teamMemberRouter);
 app.use("/api/v1/case-study", caseStudyRouter);
 app.use("/api/v1/testimonial", testimonialRouter);
+app.use("/api/v1/lead", leadRouter);
 app.use("/api/v1/admin", siteUploadRouter);
 app.use("/api/v1/admin/site-settings", siteSettingsRouter);
 app.use("/api/v1/bookings", bookingRouter);
@@ -89,4 +92,5 @@ const port =
   Number(process.env.PORT) || Number(process.env.BACKEND_PORT) || 5000;
 app.listen(port, () => {
   console.log(`API listening on port ${port}`);
+  startFollowUpDigest();
 });

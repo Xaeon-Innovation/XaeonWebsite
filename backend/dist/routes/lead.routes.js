@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const lead_controller_1 = require("../controllers/lead.controller");
+const auth_1 = require("../middleware/auth");
+const router = express_1.default.Router();
+router.use(auth_1.requireAuth, auth_1.requireAdmin);
+router.get("/", lead_controller_1.listLeads);
+router.get("/stats", lead_controller_1.getLeadStats);
+router.get("/export.csv", lead_controller_1.exportLeadsCsv);
+router.post("/bulk", lead_controller_1.bulkUpdateLeads);
+router.get("/:id", lead_controller_1.getLead);
+router.patch("/:id", lead_controller_1.updateLead);
+router.post("/:id/notes", lead_controller_1.addLeadNote);
+router.post("/:id/email", lead_controller_1.emailLead);
+router.post("/:id/convert", lead_controller_1.convertLead);
+exports.default = router;

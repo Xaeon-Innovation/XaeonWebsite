@@ -12,6 +12,9 @@ export interface IUser extends Document {
   phone_number: string;
   service_requests: mongoose.Types.ObjectId[];
   role: UserRole;
+  /** sha256 of a one-time "set your password" token (invites); never the token itself. */
+  inviteTokenHash?: string;
+  inviteExpiresAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -34,6 +37,8 @@ const UserSchema: Schema<IUser> = new Schema({
     default: "user",
     required: true,
   },
+  inviteTokenHash: { type: String, select: false, index: true, sparse: true },
+  inviteExpiresAt: { type: Date, select: false },
 }, { timestamps: true });
 
 const User = mongoose.model<IUser>("User", UserSchema);

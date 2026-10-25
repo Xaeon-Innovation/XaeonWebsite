@@ -9,15 +9,17 @@ import ServiceRequest, {
 import { getBookingSettings } from "../models/bookingSettings.model";
 import { sendEnquiryNotice, type EnquiryEmailDetails } from "../services/bookingEmail";
 import { parseAttribution } from "../utils/attribution";
+import { sendEnquiryAutoReply } from "../services/leadEmails";
 import { deleteMeetEvent } from "../services/googleCalendar";
 import { serverErrorMessage } from "../utils/serverError";
 
-async function emailEnquiryNotice(details: EnquiryEmailDetails): Promise<void> {
-  try {
-    await sendEnquiryNotice(details);
-  } catch (err) {
-    console.error(err);
-  }
+async function emailEnquiryNotice(details: EnquiryEmailDetails & { locale?: "en" | "ar" }): Promise<void> {
+  // Staff notice and the visitor's auto-reply are independent: one failing never blocks the other.
+  const results = await Promise.allSettled([
+    sendEnquiryNotice(details),
+    sendEnquiryAutoReply({ name: details.name, email: details.email, locale: details.locale, topic: details.interest }),
+  ]);
+  for (const r of results) if (r.status === "rejected") console.error(r.reason);
 }
 
 /** Public: contact form, service page interest, or package enquiry — same collection, no login. */
@@ -52,6 +54,7 @@ export const createServiceRequestEnquiry = async (req: Request, res: Response) =
         ? body.company.trim()
         : undefined;
     const attribution = parseAttribution(body.attribution);
+    const locale = body.locale === "ar" ? "ar" : "en";
 
     if (source === "package") {
       const packageIdRaw =
@@ -78,6 +81,7 @@ export const createServiceRequestEnquiry = async (req: Request, res: Response) =
         package: pkg._id,
         status: "Pending Review",
         attribution,
+        locale,
       });
       await emailEnquiryNotice({
         source: "package",
@@ -88,6 +92,7 @@ export const createServiceRequestEnquiry = async (req: Request, res: Response) =
         message,
         interest: pkgTitle,
         attribution,
+        locale,
       });
       res.status(201).json({
         message: "Request submitted successfully",
@@ -121,6 +126,7 @@ export const createServiceRequestEnquiry = async (req: Request, res: Response) =
       interest,
       status: "Pending Review",
       attribution,
+      locale,
     });
 
     await emailEnquiryNotice({
@@ -132,6 +138,7 @@ export const createServiceRequestEnquiry = async (req: Request, res: Response) =
       message,
       interest,
       attribution,
+      locale,
     });
 
     res.status(201).json({
@@ -333,13 +340,19 @@ export const updateServiceRequest = async (req: Request, res: Response) => {
       return;
     }
 
-    const { id: _rid, meeting_date, interest, ...rest } = body;
-    const $set: Record<string, unknown> = { ...rest };
-    delete $set.id;
+    const { meeting_date, interest, status } = body;
+    // Whitelist: CRM fields (stage, owner, notes…) change only through /lead so they're logged.
+    const $set: Record<string, unknown> = {};
     const $unset: Record<string, 1> = {};
+    if (status !== undefined) {
+      if (status !== "Pending Review" && status !== "Accepted" && status !== "Rejected") {
+        res.status(400).json({ error: "Invalid status" });
+        return;
+      }
+      $set.status = status;
+    }
 
     if (Object.prototype.hasOwnProperty.call(body, "interest")) {
-      delete $set.interest;
       if (interest === null || interest === "") {
         $unset.interest = 1;
       } else if (interest !== undefined) {
@@ -348,8 +361,7 @@ export const updateServiceRequest = async (req: Request, res: Response) => {
     }
 
     if (Object.prototype.hasOwnProperty.call(body, "meeting_date")) {
-      delete $set.meeting_date;
-        if (meeting_date === null || meeting_date === "") {
+      if (meeting_date === null || meeting_date === "") {
         if (isEnquirySource(existing.source)) {
           $unset.meeting_date = 1;
         }
@@ -361,6 +373,17 @@ export const updateServiceRequest = async (req: Request, res: Response) => {
     const mongoUpdate: mongoose.UpdateQuery<IServiceRequest> = {};
     if (Object.keys($set).length) mongoUpdate.$set = $set;
     if (Object.keys($unset).length) mongoUpdate.$unset = $unset;
+    if ($set.status && $set.status !== existing.status) {
+      mongoUpdate.$push = {
+        activity: {
+          type: "status",
+          message: `Request status: ${existing.status} → ${String($set.status)}`,
+          by: req.user ? new mongoose.Types.ObjectId(req.user.id) : undefined,
+          byName: req.user?.name || req.user?.email || "Admin",
+          at: new Date(),
+        },
+      };
+    }
 
     if (!mongoUpdate.$set && !mongoUpdate.$unset) {
       res.status(400).json({ error: "No updatable fields provided" });

@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 
 import User from "../models/user.model";
 import { serverErrorMessage } from "../utils/serverError";
+import { hashToken } from "../services/invite";
 
 const COOKIE_NAME = "auth_token";
 
@@ -306,3 +307,46 @@ export const updateMyProfile = async (req: Request, res: Response) => {
   }
 };
 
+
+/**
+ * Public: accept an invite. Sets the account's first password from a one-time token, then
+ * signs the person in.
+ */
+export const setPasswordFromInvite = async (req: Request, res: Response) => {
+  try {
+    const { token, password } = (req.body ?? {}) as Record<string, unknown>;
+    if (typeof token !== "string" || token.length < 20 || typeof password !== "string") {
+      res.status(400).json({ error: "Invalid request" });
+      return;
+    }
+    if (password.length < 8) {
+      res.status(400).json({ error: "Password must be at least 8 characters" });
+      return;
+    }
+
+    const user = await User.findOne({
+      inviteTokenHash: hashToken(token),
+      inviteExpiresAt: { $gt: new Date() },
+    }).select("+inviteTokenHash +inviteExpiresAt");
+    if (!user) {
+      res.status(400).json({ error: "This link is invalid or has expired. Ask us for a new one." });
+      return;
+    }
+
+    user.password = await bcrypt.hash(password, 12);
+    user.inviteTokenHash = undefined;
+    user.inviteExpiresAt = undefined;
+    await user.save();
+
+    const jwtToken = jwt.sign({ userId: String(user._id) }, getJwtSecret() as Secret, {
+      expiresIn: getJwtExpiresIn(),
+    });
+    setAuthCookie(res, jwtToken);
+    res.status(200).json({
+      user: { id: String(user._id), email: user.email, name: user.name, role: user.role },
+    });
+  } catch (err) {
+    console.error("Set password error:", err);
+    res.status(500).json({ error: serverErrorMessage(err, "Failed to set password") });
+  }
+};

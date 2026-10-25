@@ -37,6 +37,7 @@ const nextConfig: NextConfig = {
       // Accounts, client portal and admin stay on the app.
       { source: "/login", destination: `${APP_ORIGIN}/login`, permanent: false },
       { source: "/register", destination: `${APP_ORIGIN}/register`, permanent: false },
+      { source: "/set-password", destination: `${APP_ORIGIN}/set-password`, permanent: false },
       { source: "/dashboard/:path*", destination: `${APP_ORIGIN}/dashboard/:path*`, permanent: false },
       { source: "/admin/:path*", destination: `${APP_ORIGIN}/admin/:path*`, permanent: false },
     ];

@@ -3,9 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.updateUser = exports.createUser = exports.getUserById = exports.getUsers = void 0;
-const bcryptjs_1 = __importDefault(require("bcryptjs"));
+exports.resendInvite = exports.deleteUser = exports.updateUser = exports.createUser = exports.getUserById = exports.getUsers = void 0;
 const user_model_1 = __importDefault(require("../models/user.model"));
+const invite_1 = require("../services/invite");
 const serverError_1 = require("../utils/serverError");
 const getUsers = async (req, res) => {
     try {
@@ -53,8 +53,9 @@ const createUser = async (req, res) => {
             res.status(409).json({ error: "Email already registered" });
             return;
         }
-        const phonePassword = phone_number.trim();
-        const hashedPassword = await bcryptjs_1.default.hash(phonePassword, 12);
+        const phone = phone_number.trim();
+        // No guessable default password: the person sets their own from an emailed invite link.
+        const hashedPassword = await (0, invite_1.placeholderPasswordHash)();
         const safeRole = role === "admin" ? "admin" : "user";
         const user = await user_model_1.default.create({
             email: normalizedEmail,
@@ -63,11 +64,23 @@ const createUser = async (req, res) => {
             last_name: last_name.trim(),
             name: `${first_name.trim()} ${last_name.trim()}`.trim(),
             company: typeof company === "string" ? company.trim() : "",
-            phone_number: phonePassword,
+            phone_number: phone,
             role: safeRole,
         });
+        let inviteSent = false;
+        try {
+            const link = await (0, invite_1.issueInvite)(String(user._id));
+            await (0, invite_1.sendInviteEmail)(user, link);
+            inviteSent = true;
+        }
+        catch (inviteErr) {
+            console.error("Invite email failed:", inviteErr);
+        }
         res.status(201).json({
-            message: "User Created Successfully",
+            message: inviteSent
+                ? "User created. We emailed them a link to set their password."
+                : "User created, but the invite email could not be sent. Use \"Resend invite\" to try again.",
+            inviteSent,
             user: {
                 id: String(user._id),
                 email: user.email,
@@ -134,3 +147,21 @@ const deleteUser = async (req, res) => {
     }
 };
 exports.deleteUser = deleteUser;
+/** Admin: email a fresh set-password link (expires in 7 days). */
+const resendInvite = async (req, res) => {
+    try {
+        const user = await user_model_1.default.findById(req.params.id);
+        if (!user) {
+            res.status(404).json({ error: "User not found" });
+            return;
+        }
+        const link = await (0, invite_1.issueInvite)(String(user._id));
+        await (0, invite_1.sendInviteEmail)(user, link);
+        res.status(200).json({ message: `Invite sent to ${user.email}` });
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ error: (0, serverError_1.serverErrorMessage)(err, "Failed to send invite") });
+    }
+};
+exports.resendInvite = resendInvite;

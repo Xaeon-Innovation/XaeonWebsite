@@ -52,6 +52,8 @@ const UserSchema = new mongoose_1.Schema({
         default: "user",
         required: true,
     },
+    inviteTokenHash: { type: String, select: false, index: true, sparse: true },
+    inviteExpiresAt: { type: Date, select: false },
 }, { timestamps: true });
 const User = mongoose_1.default.model("User", UserSchema);
 exports.default = User;

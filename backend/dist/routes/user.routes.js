@@ -11,6 +11,7 @@ router.use(auth_1.requireAuth, auth_1.requireAdmin);
 router.get("/", user_controller_1.getUsers);
 router.get("/:id", user_controller_1.getUserById);
 router.post("/", user_controller_1.createUser);
+router.post("/:id/invite", user_controller_1.resendInvite);
 router.put("/", user_controller_1.updateUser);
 router.delete("/:id", user_controller_1.deleteUser);
 exports.default = router;

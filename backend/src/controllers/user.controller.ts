@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import bcrypt from "bcryptjs";
 import User from "../models/user.model";
+import { issueInvite, placeholderPasswordHash, sendInviteEmail } from "../services/invite";
 import { serverErrorMessage } from "../utils/serverError";
 
 export const getUsers = async (req: Request, res: Response) => {
@@ -59,8 +59,9 @@ export const createUser = async (req: Request, res: Response) => {
       return;
     }
 
-    const phonePassword = phone_number.trim();
-    const hashedPassword = await bcrypt.hash(phonePassword, 12);
+    const phone = phone_number.trim();
+    // No guessable default password: the person sets their own from an emailed invite link.
+    const hashedPassword = await placeholderPasswordHash();
     const safeRole = role === "admin" ? "admin" : "user";
 
     const user = await User.create({
@@ -70,12 +71,24 @@ export const createUser = async (req: Request, res: Response) => {
       last_name: last_name.trim(),
       name: `${first_name.trim()} ${last_name.trim()}`.trim(),
       company: typeof company === "string" ? company.trim() : "",
-      phone_number: phonePassword,
+      phone_number: phone,
       role: safeRole,
     });
 
+    let inviteSent = false;
+    try {
+      const link = await issueInvite(String(user._id));
+      await sendInviteEmail(user, link);
+      inviteSent = true;
+    } catch (inviteErr) {
+      console.error("Invite email failed:", inviteErr);
+    }
+
     res.status(201).json({
-      message: "User Created Successfully",
+      message: inviteSent
+        ? "User created. We emailed them a link to set their password."
+        : "User created, but the invite email could not be sent. Use \"Resend invite\" to try again.",
+      inviteSent,
       user: {
         id: String(user._id),
         email: user.email,
@@ -136,5 +149,22 @@ export const deleteUser = async (req: Request, res: Response) => {
     res.status(500).json({
       error: serverErrorMessage(err, "Failed to delete user"),
     });
+  }
+};
+
+/** Admin: email a fresh set-password link (expires in 7 days). */
+export const resendInvite = async (req: Request, res: Response) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+    const link = await issueInvite(String(user._id));
+    await sendInviteEmail(user, link);
+    res.status(200).json({ message: `Invite sent to ${user.email}` });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: serverErrorMessage(err, "Failed to send invite") });
   }
 };
