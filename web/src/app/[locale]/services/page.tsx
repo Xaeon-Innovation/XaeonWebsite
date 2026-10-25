@@ -4,7 +4,8 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import CtaBand from "@/components/CtaBand";
 import JsonLd from "@/components/JsonLd";
 import SectionHeading from "@/components/SectionHeading";
-import ServiceGrid from "@/components/ServiceGrid";
+import ServiceList from "@/components/ServiceList";
+import ServiceReels from "@/components/ServiceReels";
 import { resolveLocale, type LocaleParams } from "@/lib/page";
 import { localeUrl, pageMetadata, serviceJsonLd } from "@/lib/seo";
 import { SERVICE_SLUGS } from "@/lib/site";
@@ -21,17 +22,22 @@ export default async function ServicesPage({ params }: LocaleParams) {
 
   return (
     <>
-      <section className="container-x flex flex-col gap-8 pb-12 pt-12 sm:pt-16">
+      <div className="container-x pt-10 sm:pt-14">
         <Breadcrumbs
           items={[
             { name: t("common.breadcrumbHome"), href: "/", url: localeUrl(locale, "/") },
             { name: t("nav.services"), href: "/services", url: localeUrl(locale, "/services") },
           ]}
         />
-        <SectionHeading as="h1" eyebrow={t("services.eyebrow")} title={t("services.title")} intro={t("services.intro")} />
-      </section>
-      <section className="container-x pb-8" aria-label={t("nav.services")}>
-        <ServiceGrid headingLevel="h2" />
+      </div>
+      <div className="overflow-hidden border-b border-white/10 pb-6 pt-8 sm:pb-12 sm:pt-12">
+        <div className="container-x">
+          <ServiceReels />
+        </div>
+      </div>
+      <section className="container-x flex flex-col gap-10 pb-8 pt-12 sm:pt-16" aria-labelledby="services-title">
+        <SectionHeading as="h1" id="services-title" eyebrow={t("services.eyebrow")} title={t("services.title")} intro={t("services.intro")} />
+        <ServiceList />
       </section>
       <JsonLd
         data={{

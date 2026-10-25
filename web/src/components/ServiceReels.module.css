@@ -1,0 +1,92 @@
+/*
+ * "SERVICES" slot-machine lettering. Each letter is a reel: a vertical strip of identical
+ * copies seen through a window, so a neighbouring copy peeks in above or below.
+ *
+ *   .reel   window (overflow hidden), height = --window cells
+ *   .spin   one-time spin-in on load (decelerates into place)
+ *   .tick   endless "tick" by one cell every few seconds (seamless: copies are identical)
+ *   .strip  the copies, parked at the letter's resting offset (--rest, in cells)
+ */
+.reels {
+  --cell: 0.86em;
+  --window: 1.3;
+  display: flex;
+  justify-content: center;
+  gap: 0.02em;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.5rem, 11.5vw, 11rem);
+  line-height: 1;
+  color: var(--color-fog);
+  text-transform: uppercase;
+  user-select: none;
+  /* Soft fade at the window edges, like light falling off a drum. */
+  mask-image: linear-gradient(to bottom, transparent 0, #000 9%, #000 91%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 9%, #000 91%, transparent 100%);
+}
+
+.reel {
+  position: relative;
+  height: calc(var(--window) * var(--cell));
+  overflow: hidden;
+}
+
+.spin,
+.tick {
+  will-change: transform;
+}
+
+.strip {
+  display: flex;
+  flex-direction: column;
+  /* Copy #3 sits --rest cells below the window top; copies 2 and 4 peek in. */
+  transform: translateY(calc((var(--rest) - 3) * var(--cell)));
+}
+
+.glyph {
+  display: block;
+  height: var(--cell);
+  line-height: var(--cell);
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .spin {
+    animation: reel-spin var(--spin-duration, 1.6s) cubic-bezier(0.12, 0.85, 0.24, 1.02) var(--spin-delay, 0s) both;
+  }
+
+  .tick {
+    animation: reel-tick var(--tick-period, 8s) cubic-bezier(0.6, 0, 0.2, 1) var(--tick-delay, 3s) infinite;
+  }
+
+  /* Hovering the word speeds the ticking up a little. */
+  .reels:hover .tick {
+    animation-duration: calc(var(--tick-period, 8s) * 0.45);
+  }
+}
+
+/* Start --spins cells away (direction --dir) and decelerate into the resting position. */
+@keyframes reel-spin {
+  from {
+    transform: translateY(calc(var(--dir) * var(--spins) * var(--cell)));
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Hold, then roll one cell with a tiny overshoot; the loop restart is invisible. */
+@keyframes reel-tick {
+  0%,
+  84% {
+    transform: translateY(0);
+  }
+  93% {
+    transform: translateY(calc(var(--dir) * -1.06 * var(--cell)));
+  }
+  97%,
+  100% {
+    transform: translateY(calc(var(--dir) * -1 * var(--cell)));
+  }
+}
