@@ -8,7 +8,7 @@ const blogPost_model_1 = __importDefault(require("../models/blogPost.model"));
 const serverError_1 = require("../utils/serverError");
 const getBlogPosts = async (req, res) => {
     try {
-        const blogPosts = await blogPost_model_1.default.find();
+        const blogPosts = await blogPost_model_1.default.find().populate("author", "name").sort({ createdAt: -1 });
         res.status(200).json({ blogPosts });
     }
     catch (err) {
@@ -21,7 +21,7 @@ const getBlogPosts = async (req, res) => {
 exports.getBlogPosts = getBlogPosts;
 const getBlogPostById = async (req, res) => {
     try {
-        const blogPost = await blogPost_model_1.default.findById(req.params.id);
+        const blogPost = await blogPost_model_1.default.findById(req.params.id).populate("author", "name");
         if (!blogPost) {
             res.status(404).json({ error: "Blog post not found" });
             return;

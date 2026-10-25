@@ -112,12 +112,32 @@ const router = createBrowserRouter([
       { path: "blog-posts", lazy: () => import("./Pages/admin/BlogPostsPage") },
       { path: "site-team", lazy: () => import("./Pages/admin/TeamMembersPage") },
       { path: "site-case-studies", lazy: () => import("./Pages/admin/CaseStudiesCmsPage") },
+      { path: "site-testimonials", lazy: () => import("./Pages/admin/TestimonialsPage") },
       { path: "site-social", lazy: () => import("./Pages/admin/SiteSocialSettingsPage") },
       { path: "bookings", lazy: () => import("./Pages/admin/BookingsPage") },
       { path: "service-requests", lazy: () => import("./Pages/admin/ServiceRequestsPage"), loader: serviceRequestsLoader },
     ],
   },
 ]);
+
+/**
+ * Once the public site runs on Next.js (xaeons.com), this app is served from app.xaeons.com for
+ * the admin panel and client portal only. Set VITE_PUBLIC_SITE_ORIGIN there: any public page
+ * is sent to the real site, and nothing on this host is indexed.
+ */
+const PUBLIC_SITE_ORIGIN = (import.meta.env.VITE_PUBLIC_SITE_ORIGIN ?? "").replace(/\/+$/, "");
+const APP_ONLY_PATH = /^\/(admin|dashboard|login|register)(\/|$)/;
+if (PUBLIC_SITE_ORIGIN) {
+  const robots = document.createElement("meta");
+  robots.name = "robots";
+  robots.content = "noindex, nofollow";
+  document.head.appendChild(robots);
+  if (!APP_ONLY_PATH.test(window.location.pathname)) {
+    const target = window.location.pathname === "/" ? "/login" : window.location.pathname;
+    if (target === "/login") window.history.replaceState(null, "", "/login");
+    else window.location.replace(`${PUBLIC_SITE_ORIGIN}${window.location.pathname}${window.location.search}`);
+  }
+}
 
 captureAttribution();
 initAnalytics();

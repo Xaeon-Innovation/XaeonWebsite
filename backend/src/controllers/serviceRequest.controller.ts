@@ -4,6 +4,7 @@ import "../types/expressAugment";
 import Package from "../models/package.model";
 import ServiceRequest, {
   type IServiceRequest,
+  isEnquirySource,
 } from "../models/serviceRequest.model";
 import { getBookingSettings } from "../models/bookingSettings.model";
 import { sendEnquiryNotice, type EnquiryEmailDetails } from "../services/bookingEmail";
@@ -29,13 +30,9 @@ export const createServiceRequestEnquiry = async (req: Request, res: Response) =
     }
 
     const source = body.source;
-    if (
-      source !== "contact" &&
-      source !== "service" &&
-      source !== "package"
-    ) {
+    if (!isEnquirySource(source)) {
       res.status(400).json({
-        error: "source must be contact, service, or package",
+        error: "source must be contact, service, package, or product",
       });
       return;
     }
@@ -105,11 +102,13 @@ export const createServiceRequestEnquiry = async (req: Request, res: Response) =
         : undefined;
 
     const title =
-      source === "service" && interest
-        ? `Service interest: ${interest}`
-        : source === "service"
-          ? "Service interest"
-          : "Contact enquiry";
+      source === "product"
+        ? `Product demo: ${interest ?? "Product"}`
+        : source === "service" && interest
+          ? `Service interest: ${interest}`
+          : source === "service"
+            ? "Service interest"
+            : "Contact enquiry";
 
     const newServiceRequest = await ServiceRequest.create({
       source,
@@ -216,11 +215,7 @@ export const createServiceRequest = async (req: Request, res: Response) => {
       return;
     }
 
-    if (
-      payload.source === "contact" ||
-      payload.source === "service" ||
-      payload.source === "package"
-    ) {
+    if (isEnquirySource(payload.source)) {
       res.status(400).json({ error: "Use POST /system-request/enquiry for public enquiries" });
       return;
     }
@@ -355,11 +350,7 @@ export const updateServiceRequest = async (req: Request, res: Response) => {
     if (Object.prototype.hasOwnProperty.call(body, "meeting_date")) {
       delete $set.meeting_date;
         if (meeting_date === null || meeting_date === "") {
-        if (
-          existing.source === "contact" ||
-          existing.source === "service" ||
-          existing.source === "package"
-        ) {
+        if (isEnquirySource(existing.source)) {
           $unset.meeting_date = 1;
         }
       } else if (meeting_date !== undefined) {

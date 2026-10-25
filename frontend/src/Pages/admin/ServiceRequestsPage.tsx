@@ -153,7 +153,8 @@ export function Component() {
     const isEnquiry =
       editTarget.source === "contact" ||
       editTarget.source === "service" ||
-      editTarget.source === "package";
+      editTarget.source === "package" ||
+      editTarget.source === "product";
 
     if (!isEnquiry && !editMeeting.trim() && !editTarget.meeting_date) {
       setEditError("Registered requests require a meeting date and time.");
@@ -190,6 +191,7 @@ export function Component() {
     if (row.source === "service") return "Service interest";
     if (row.source === "package") return "Package";
     if (row.source === "booking") return "Google Meet";
+    if (row.source === "product") return "Product demo";
     return "Registered";
   };
 
@@ -406,7 +408,8 @@ export function Component() {
               <p className="admin-field-hint">
                 {(editTarget.source === "contact" ||
                   editTarget.source === "service" ||
-                  editTarget.source === "package")
+                  editTarget.source === "package" ||
+                  editTarget.source === "product")
                   ? "Leave empty to clear the scheduled meeting."
                   : "Required for registered requests. Clear is not allowed — set a new time to change."}
               </p>

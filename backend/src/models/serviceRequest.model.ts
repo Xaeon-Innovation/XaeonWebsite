@@ -1,12 +1,15 @@
 import mongoose, { type Document, Schema } from "mongoose";
 import type { Attribution } from "../utils/attribution";
 
-export type ServiceRequestSource =
-  | "registered"
-  | "contact"
-  | "service"
-  | "package"
-  | "booking";
+/** Public, no-login enquiry sources (website forms). */
+export const ENQUIRY_SOURCES = ["contact", "service", "package", "product"] as const;
+export type EnquirySource = (typeof ENQUIRY_SOURCES)[number];
+
+export type ServiceRequestSource = "registered" | "booking" | EnquirySource;
+
+export function isEnquirySource(source: unknown): source is EnquirySource {
+  return (ENQUIRY_SOURCES as readonly unknown[]).includes(source);
+}
 
 export interface IServiceRequest extends Document {
   title: string;
@@ -35,12 +38,7 @@ export interface IServiceRequest extends Document {
 }
 
 function isRegisteredSource(this: IServiceRequest): boolean {
-  return (
-    this.source !== "contact" &&
-    this.source !== "service" &&
-    this.source !== "package" &&
-    this.source !== "booking"
-  );
+  return !isEnquirySource(this.source) && this.source !== "booking";
 }
 
 function requiresMeetingDate(this: IServiceRequest): boolean {
@@ -57,7 +55,7 @@ const ServiceRequestSchema: Schema<IServiceRequest> = new Schema({
   },
   source: {
     type: String,
-    enum: ["registered", "contact", "service", "package", "booking"],
+    enum: ["registered", "booking", ...ENQUIRY_SOURCES],
     default: "registered",
   },
   meeting_date: {

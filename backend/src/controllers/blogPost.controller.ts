@@ -4,7 +4,7 @@ import { serverErrorMessage } from "../utils/serverError";
 
 export const getBlogPosts = async (req: Request, res: Response) => {
   try {
-    const blogPosts = await BlogPost.find();
+    const blogPosts = await BlogPost.find().populate("author", "name").sort({ createdAt: -1 });
     res.status(200).json({ blogPosts });
   } catch (err) {
     console.error(err);
@@ -16,7 +16,7 @@ export const getBlogPosts = async (req: Request, res: Response) => {
 
 export const getBlogPostById = async (req: Request, res: Response) => {
   try {
-    const blogPost = await BlogPost.findById(req.params.id);
+    const blogPost = await BlogPost.findById(req.params.id).populate("author", "name");
     if (!blogPost) {
       res.status(404).json({ error: "Blog post not found" });
       return;

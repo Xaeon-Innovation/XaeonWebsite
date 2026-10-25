@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { attributionRows, type Attribution } from "../utils/attribution";
+import type { EnquirySource } from "../models/serviceRequest.model";
 
 export function resendConfigured(): boolean {
   return Boolean(process.env.RESEND_API_KEY?.trim());
@@ -118,7 +119,7 @@ export async function sendBookingEmails(details: BookingEmailDetails): Promise<v
 }
 
 export type EnquiryEmailDetails = {
-  source: "contact" | "service" | "package";
+  source: EnquirySource;
   name: string;
   email: string;
   phone: string;
@@ -137,7 +138,9 @@ export async function sendEnquiryNotice(details: EnquiryEmailDetails): Promise<v
       ? "Package enquiry"
       : details.source === "service"
         ? "Service enquiry"
-        : "Contact form";
+        : details.source === "product"
+          ? "Product demo request"
+          : "Contact form";
 
   const rows: [string, string][] = [
     ["From", details.name],

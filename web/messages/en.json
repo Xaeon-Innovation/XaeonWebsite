@@ -1,0 +1,678 @@
+{
+  "meta": {
+    "siteName": "Xaeon Software Solutions",
+    "homeTitle": "Xaeon — Software, AI & Product Studio in Egypt",
+    "homeDescription": "Xaeon builds custom software, websites, web and mobile apps, AI features and SaaS products like Elevora HR. Based in Alexandria, Egypt. Book a free consultation."
+  },
+  "nav": {
+    "skip": "Skip to content",
+    "services": "Services",
+    "products": "Products",
+    "work": "Work",
+    "packages": "Packages",
+    "blog": "Blog",
+    "about": "About",
+    "book": "Book a call",
+    "clientLogin": "Client login",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "language": "العربية",
+    "languageLabel": "Switch to Arabic",
+    "home": "Home"
+  },
+  "common": {
+    "bookCall": "Book a free call",
+    "sendMessage": "Send a message",
+    "learnMore": "Learn more",
+    "viewAll": "View all",
+    "readArticle": "Read article",
+    "viewCaseStudy": "View case study",
+    "minRead": "{minutes} min read",
+    "comingSoon": "Coming soon",
+    "breadcrumbHome": "Home",
+    "whatsapp": "Chat on WhatsApp"
+  },
+  "footer": {
+    "tagline": "Software, AI and product studio. We design, build and run digital products for ambitious teams in the Middle East and beyond.",
+    "explore": "Explore",
+    "company": "Company",
+    "contact": "Contact",
+    "alexandria": "Alexandria, Egypt",
+    "address": "13 Roushdy Basha, Mustafa Kamel WA Bolkli, Sidi Gaber, Alexandria",
+    "uae": "UAE office opening soon",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "cookies": "Cookie settings",
+    "rights": "© {year} Xaeon Software Solutions. All rights reserved."
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Software · AI · Products",
+      "titleA": "Beyond time.",
+      "titleB": "Beyond limits.",
+      "subtitle": "Xaeon designs and builds custom software, websites, mobile apps and AI features, and runs our own SaaS products like Elevora HR. One team from first workshop to launch and beyond.",
+      "primary": "Book a free call",
+      "secondary": "See our services",
+      "badge": "New: Elevora, mobile-first HR for field and office teams"
+    },
+    "services": {
+      "eyebrow": "What we do",
+      "title": "Everything you need to launch and grow a digital product",
+      "intro": "Pick one service or bring us the whole product. Design, engineering, AI and marketing work as one team, so nothing gets lost between agencies."
+    },
+    "elevora": {
+      "eyebrow": "Our product",
+      "title": "Elevora: run your whole workforce from one app",
+      "body": "We build products as well as client work. Elevora replaces spreadsheets, WhatsApp groups and paper timesheets with clock-in, live maps, shifts, tasks, leave, KPIs, hiring and payroll.",
+      "cta": "Explore Elevora",
+      "trial": "Start a 14-day free trial"
+    },
+    "work": {
+      "eyebrow": "Selected work",
+      "title": "Recent projects",
+      "empty": "New case studies are being written up. Meanwhile, Elevora shows what we build: a production SaaS used by field and office teams."
+    },
+    "process": {
+      "eyebrow": "How we work",
+      "title": "From first call to launch, in four clear steps",
+      "steps": [
+        {
+          "title": "Discovery call",
+          "body": "A free 30-minute call to understand your goals, users and constraints. You leave with honest advice, even if we're not the right fit."
+        },
+        {
+          "title": "Scope and proposal",
+          "body": "We turn the conversation into a written scope with milestones, a timeline and a fixed quote or package."
+        },
+        {
+          "title": "Design and build",
+          "body": "Short cycles with working demos. You see progress every week and can change direction early, when it's cheap."
+        },
+        {
+          "title": "Launch and support",
+          "body": "We launch, monitor and hand over documentation. Ongoing support and improvements are available when you need them."
+        }
+      ]
+    },
+    "why": {
+      "eyebrow": "Why Xaeon",
+      "title": "One accountable team, built for this region",
+      "items": [
+        {
+          "title": "One team, full ownership",
+          "body": "Design, development, AI and deployment all in-house. No middlemen and no hand-offs between vendors."
+        },
+        {
+          "title": "AI where it pays off",
+          "body": "We add AI where it improves outcomes, with evaluation, safety and cost controls, not as a demo."
+        },
+        {
+          "title": "Made for MENA",
+          "body": "Arabic and right-to-left interfaces, local payment integrations and WhatsApp-native workflows."
+        },
+        {
+          "title": "Results you can measure",
+          "body": "We agree on the numbers that matter before we build, and report against them after launch."
+        }
+      ]
+    },
+    "testimonials": {
+      "eyebrow": "Clients",
+      "title": "What clients say"
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Questions we hear often"
+    }
+  },
+  "faq": [
+    {
+      "q": "How much does a project cost?",
+      "a": "It depends on scope. After a free discovery call we send a written proposal with a fixed quote or a package price, so you know the cost before any work starts. Our packages page shows common bundles."
+    },
+    {
+      "q": "How long does it take?",
+      "a": "Your proposal includes a timeline with milestones. A marketing website is usually a matter of weeks; web and mobile apps take longer depending on features. We share working demos throughout, so you're never waiting until the end to see progress."
+    },
+    {
+      "q": "Do you build in Arabic?",
+      "a": "Yes. We build bilingual Arabic and English products with proper right-to-left layouts, Arabic typography and local integrations."
+    },
+    {
+      "q": "Who owns the code and designs?",
+      "a": "Ownership of custom deliverables is set out in your contract. We document the work and hand it over so your team, or any future team, can maintain it."
+    },
+    {
+      "q": "Can you work with our existing team or system?",
+      "a": "Yes. We often extend existing products, integrate with tools you already use, or work alongside your in-house developers."
+    },
+    {
+      "q": "Do you offer support after launch?",
+      "a": "Yes. We monitor launches, fix issues, and offer ongoing improvement and maintenance plans."
+    }
+  ],
+  "services": {
+    "metaTitle": "Services — software, apps, AI, design and marketing",
+    "metaDescription": "Custom software, websites, web and mobile apps, AI solutions, design and branding, video production and digital marketing from one team in Alexandria, Egypt.",
+    "eyebrow": "Services",
+    "title": "Services built around your product",
+    "intro": "Eight disciplines, one team. Start with what you need now and add the rest as you grow.",
+    "deliverablesTitle": "What you get",
+    "ctaTitle": "Talk to us about {service}",
+    "ctaBody": "Book a free 30-minute call or send a message. We'll reply within one business day.",
+    "otherServices": "Other services",
+    "items": {
+      "custom-software-solutions": {
+        "title": "Custom Software Solutions",
+        "summary": "Bespoke systems aligned with your workflows, from discovery to long-term support.",
+        "body": "We design and build software around how your team actually works: integrations, automation and secure deployments that scale with you. You get clear milestones, documented handover and a codebase you can evolve without starting over.",
+        "deliverables": [
+          "Discovery workshop and written scope",
+          "System architecture and data model",
+          "Integrations with your existing tools",
+          "Automated deployments and monitoring",
+          "Documentation and handover"
+        ]
+      },
+      "ai-solutions": {
+        "title": "AI Solutions",
+        "summary": "Practical AI features: assistants, classification and workflow automation.",
+        "body": "We ship AI where it improves outcomes: grounded prompts, evaluation, safety and cost controls. It's integrated with your data and UX, not a demo that falls apart in production.",
+        "deliverables": [
+          "Use-case assessment and ROI estimate",
+          "Assistants grounded in your data",
+          "Classification and extraction pipelines",
+          "Evaluation and safety checks",
+          "Cost and latency monitoring"
+        ]
+      },
+      "websites": {
+        "title": "Websites",
+        "summary": "Fast, accessible marketing sites and product pages that convert and rank.",
+        "body": "Performance-first builds, SEO-aware structure and content workflows your team can maintain. We pair strong UX with solid technical foundations so your site stays fast after launch.",
+        "deliverables": [
+          "Sitemap, content structure and copy guidance",
+          "Responsive design in Arabic and English",
+          "Technical SEO and structured data",
+          "Analytics and conversion tracking",
+          "Editor-friendly content management"
+        ]
+      },
+      "web-apps-development": {
+        "title": "Web Apps & Development",
+        "summary": "Dashboards, portals and internal tools with robust APIs and clear UX.",
+        "body": "Full-stack delivery: authentication, roles, data modelling and integrations. We focus on reliability, observability and maintainability so your web app stays dependable as usage grows.",
+        "deliverables": [
+          "Product design and clickable prototype",
+          "Secure authentication and roles",
+          "APIs and integrations",
+          "Admin dashboards and reporting",
+          "Testing, monitoring and backups"
+        ]
+      },
+      "mobile-apps-development": {
+        "title": "Mobile Apps & Development",
+        "summary": "Native-quality experiences on iOS and Android with a shared product vision.",
+        "body": "From MVPs to production releases: offline handling, push notifications, analytics and store readiness. We align mobile patterns with your brand and backend so users get one coherent product.",
+        "deliverables": [
+          "iOS and Android apps from one codebase",
+          "Offline support and sync",
+          "Push notifications and analytics",
+          "App Store and Google Play submission",
+          "Release and update pipeline"
+        ]
+      },
+      "design-branding": {
+        "title": "Design & Branding",
+        "summary": "Visual systems, UI kits and brand language that stay consistent everywhere.",
+        "body": "We translate positioning into usable design systems (typography, colour, components and motion) so marketing and product teams ship cohesive experiences without constant rework.",
+        "deliverables": [
+          "Brand identity and logo system",
+          "Typography and colour palette",
+          "UI component kit",
+          "Brand guidelines",
+          "Marketing and social templates"
+        ]
+      },
+      "video-photography-production": {
+        "title": "Video & Photography Production",
+        "summary": "Campaign assets, explainers and product visuals tuned for web and social.",
+        "body": "Concept through delivery: storyboards, shoots, editing and export specs for every channel. Assets are produced to match your site and performance budgets.",
+        "deliverables": [
+          "Concept and storyboard",
+          "Filming and photography",
+          "Editing, motion and sound",
+          "Cut-downs for every social format",
+          "Web-optimised exports"
+        ]
+      },
+      "digital-marketing": {
+        "title": "Digital Marketing",
+        "summary": "Acquisition and nurture programmes grounded in measurable outcomes.",
+        "body": "We connect analytics, landing pages and messaging tests so you can see what moves the needle, then iterate with clear reporting, not vanity metrics.",
+        "deliverables": [
+          "Tracking and analytics setup",
+          "Paid campaigns on Google and Meta",
+          "Landing pages and A/B tests",
+          "SEO and content plan",
+          "Monthly reporting"
+        ]
+      }
+    }
+  },
+  "products": {
+    "metaTitle": "Products — SaaS built by Xaeon",
+    "metaDescription": "Software products designed and run by Xaeon, starting with Elevora: mobile-first HR, clock-in, KPIs and live field tracking.",
+    "eyebrow": "Products",
+    "title": "Products we build and run ourselves",
+    "intro": "Building our own products keeps us sharp. The same team that ships Elevora builds for our clients.",
+    "elevoraTag": "HR & workforce",
+    "elevoraSummary": "Mobile-first HR: clock-in, live field tracking, shifts, KPIs, leave, hiring and payroll in one app.",
+    "more": "More products are in development."
+  },
+  "elevora": {
+    "metaTitle": "Elevora — mobile-first HR and workforce app",
+    "metaDescription": "Elevora replaces spreadsheets and paper timesheets with geofenced clock-in, live maps, shifts, tasks, leave, KPIs, hiring and payroll. English and Arabic. 14-day free trial.",
+    "eyebrow": "Elevora by Xaeon",
+    "title": "Every operation. All in one place.",
+    "summary": "Elevora is a mobile-first HR and workforce app by Xaeon. It replaces spreadsheets, WhatsApp groups and paper timesheets with clock-in, live maps, shifts, tasks, leave, KPIs, hiring and payroll, in English and Arabic.",
+    "trial": "Start 14-day free trial",
+    "demo": "Request a demo",
+    "badges": [
+      "No card needed",
+      "English and Arabic",
+      "Works offline"
+    ],
+    "modulesTitle": "Everything a people team touches",
+    "modules": [
+      {
+        "title": "Clock-in",
+        "body": "Geofenced, one tap. Server timestamps, breaks and overtime prompts you can trust."
+      },
+      {
+        "title": "Live map",
+        "body": "See field staff in real time and know who is on site."
+      },
+      {
+        "title": "Shifts and tasks",
+        "body": "Plan rosters by branch and assign daily tasks with progress tracking."
+      },
+      {
+        "title": "KPI scorecards",
+        "body": "Weighted scorecards and roll-ups for every team and branch."
+      },
+      {
+        "title": "Leave",
+        "body": "Requests, approvals, balances and a full ledger."
+      },
+      {
+        "title": "Hiring",
+        "body": "Pipeline, interviews and offers, then one click to add the hire to your roster."
+      },
+      {
+        "title": "Compensation",
+        "body": "Base, allowances and variable pay with approvals and payroll."
+      },
+      {
+        "title": "Offline first",
+        "body": "Clock events queue on the phone and sync when the connection returns."
+      }
+    ],
+    "stepsTitle": "Live in an afternoon",
+    "steps": [
+      {
+        "title": "Set up your workspace",
+        "body": "Branches, job roles, shift patterns and work zones, in your brand colours."
+      },
+      {
+        "title": "Import your people",
+        "body": "Paste or upload a CSV and review incomplete rows before you commit."
+      },
+      {
+        "title": "Run the day",
+        "body": "Clock-ins, the live map, leave approvals and alerts in one place."
+      }
+    ],
+    "audienceTitle": "Built for teams in the field and the office",
+    "audience": [
+      {
+        "title": "Logistics and delivery",
+        "body": "Drivers clock in anywhere; managers see them live."
+      },
+      {
+        "title": "Clinics and healthcare",
+        "body": "Shifts, leave cover and staff credentials."
+      },
+      {
+        "title": "Facilities and maintenance",
+        "body": "Technicians, visits, jobs and KPIs."
+      },
+      {
+        "title": "Retail and hospitality",
+        "body": "Multi-branch rosters with fixed zones."
+      }
+    ],
+    "pricingTitle": "Simple per-seat pricing",
+    "pricingBody": "Plans start from $6 per seat per month, and every plan starts with a 14-day free trial. Enterprise plans with custom limits are available.",
+    "pricingCta": "See full pricing",
+    "faqTitle": "Elevora questions",
+    "faq": [
+      {
+        "q": "Does Elevora work in Arabic?",
+        "a": "Yes. Elevora is fully bilingual in English and Arabic."
+      },
+      {
+        "q": "What happens when staff have no signal?",
+        "a": "Elevora works offline. Clock events queue on the phone and sync automatically when the connection returns."
+      },
+      {
+        "q": "How do we get started?",
+        "a": "Start a 14-day free trial with no card needed, or request a demo and we'll walk your team through it."
+      },
+      {
+        "q": "Can Elevora connect to our other tools?",
+        "a": "Higher plans include integrations such as CMS Goals and HubSpot, plus a REST API and webhooks."
+      }
+    ],
+    "demoTitle": "Request an Elevora demo",
+    "demoBody": "Tell us about your team and we'll show you Elevora with your setup in mind.",
+    "comparisonTitle": "Elevora vs spreadsheets and WhatsApp",
+    "comparison": [
+      {
+        "topic": "Attendance",
+        "old": "Paper timesheets and screenshots",
+        "new": "Geofenced one-tap clock-in with server timestamps"
+      },
+      {
+        "topic": "Field visibility",
+        "old": "Calling around to find people",
+        "new": "Live map of who is on site"
+      },
+      {
+        "topic": "Leave",
+        "old": "Messages and manual balance sheets",
+        "new": "Requests, approvals and balances in one ledger"
+      },
+      {
+        "topic": "Performance",
+        "old": "Ad-hoc reviews",
+        "new": "Weighted KPI scorecards per team and branch"
+      }
+    ],
+    "compareTopic": "Topic",
+    "compareOld": "Spreadsheets and WhatsApp"
+  },
+  "work": {
+    "metaTitle": "Work — case studies",
+    "metaDescription": "Case studies and products from Xaeon: the problems, the work and the results.",
+    "eyebrow": "Work",
+    "title": "Work that ships and lasts",
+    "intro": "A selection of client projects and our own products.",
+    "ourProduct": "Our product",
+    "results": "Results",
+    "visit": "Visit project",
+    "backToWork": "All work",
+    "ctaTitle": "Have a similar project in mind?"
+  },
+  "packages": {
+    "metaTitle": "Packages — ready-made bundles for common projects",
+    "metaDescription": "Ready-made Xaeon packages combining websites, apps, design and marketing, with clear stages and bundled savings.",
+    "eyebrow": "Packages",
+    "title": "Packages for common projects",
+    "intro": "Bundles of services we deliver often, with a clear process and a bundle discount. Every package starts with a free call so we can tailor it to you.",
+    "save": "Save {discount}%",
+    "includes": "Includes",
+    "stages": "{count, plural, one {# stage} other {# stages}}",
+    "choose": "Discuss this package",
+    "empty": "Packages are being updated. Book a call and we'll put together the right bundle for you.",
+    "customTitle": "Need something different?",
+    "customBody": "Most projects don't fit a box. Tell us what you need and we'll send a tailored proposal."
+  },
+  "blog": {
+    "metaTitle": "Blog — insights on software, AI and growth",
+    "metaDescription": "Articles from the Xaeon team on software engineering, AI, product delivery and digital growth.",
+    "eyebrow": "Blog",
+    "title": "Insights that matter",
+    "intro": "Notes from building software, AI features and products for teams in the region.",
+    "empty": "New articles are on the way. Check back soon.",
+    "by": "By {author}",
+    "backToBlog": "All articles",
+    "ctaTitle": "Want help with this?"
+  },
+  "about": {
+    "metaTitle": "About Xaeon — creative technology studio in Alexandria",
+    "metaDescription": "Xaeon is a creative-technology studio in Alexandria, Egypt building software, brands and products like Elevora. Meet the team and our values.",
+    "eyebrow": "About",
+    "title": "We build software, brands and products that matter",
+    "body1": "Xaeon is a creative-technology studio shaping the future of branding and digital products. We partner with ambitious teams to build standout identities, powerful digital experiences and systems that scale.",
+    "body2": "Our work is driven by clarity, precision and the belief that great ideas must also be deeply engineered. We also build and run our own products, starting with Elevora.",
+    "valuesTitle": "What we value",
+    "values": [
+      {
+        "title": "Clarity over noise",
+        "body": "We focus on depth and purpose, not hype, and deliver solutions that matter."
+      },
+      {
+        "title": "Creative logic",
+        "body": "Bold ideas, always structured, turning imagination into practical innovation."
+      },
+      {
+        "title": "Consistency",
+        "body": "High standards at every step, so quality is reliable."
+      },
+      {
+        "title": "Design with intent",
+        "body": "Every detail serves a purpose."
+      },
+      {
+        "title": "Built to endure",
+        "body": "We design for the long run, not passing trends."
+      },
+      {
+        "title": "Adaptive innovation",
+        "body": "We evolve with change and turn challenges into opportunities."
+      }
+    ],
+    "teamTitle": "The team",
+    "officesTitle": "Where we are"
+  },
+  "book": {
+    "metaTitle": "Book a free consultation",
+    "metaDescription": "Book a free 30-minute Google Meet with Xaeon or send us a message. We reply within one business day.",
+    "eyebrow": "Contact",
+    "title": "Let's talk about your project",
+    "intro": "Pick a time for a free 30-minute Google Meet, or send a message and we'll reply within one business day.",
+    "tabMeet": "Book a Google Meet",
+    "tabMessage": "Send a message",
+    "packageContext": "You're asking about the {package} package.",
+    "direct": "Prefer to reach us directly?",
+    "phone": "Phone",
+    "email": "Email",
+    "whatsapp": "WhatsApp",
+    "office": "Office"
+  },
+  "form": {
+    "name": "Name",
+    "company": "Company",
+    "optional": "optional",
+    "phone": "Phone",
+    "email": "Email",
+    "message": "Message",
+    "messagePlaceholder": "What are you building and what do you need help with?",
+    "teamSize": "Team size",
+    "teamSizePlaceholder": "For example: 40 staff across 3 branches",
+    "submit": "Send message",
+    "sending": "Sending…",
+    "success": "Thanks, we received your message and will reply within one business day.",
+    "successTitle": "Message sent",
+    "errorGeneric": "We couldn't send your message. Please try again or contact us on WhatsApp.",
+    "errors": {
+      "name": "Please enter your name.",
+      "phone": "Please enter a valid phone number.",
+      "email": "Please enter a valid email address.",
+      "message": "Please add a short message (at least 10 characters)."
+    },
+    "consentNote": "By sending this form you agree to our <link>privacy policy</link>."
+  },
+  "booking": {
+    "step1": "1 · Choose a date",
+    "step1Help": "Highlighted dates have open times. Times are shown in Egypt time (Cairo).",
+    "step2": "2 · Choose a time of day",
+    "step3": "3 · Choose a time",
+    "step4": "4 · Your details",
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month",
+    "available": "Available",
+    "selected": "Selected",
+    "unavailable": "Unavailable",
+    "loading": "Loading open times…",
+    "loadError": "We couldn't load open times. Refresh the page or send us a message instead.",
+    "noTimesMonth": "No open times this month. Try next month.",
+    "noTimesDay": "No open times on this day.",
+    "closed": "Online booking is temporarily unavailable. Send a message, call or WhatsApp us and we'll set up a meeting.",
+    "continue": "Continue",
+    "back": "Back",
+    "confirm": "Confirm meeting",
+    "confirming": "Booking…",
+    "summary": "Google Meet · {date} · {time} Egypt time",
+    "doneEyebrow": "Confirmed",
+    "doneTitle": "You're booked",
+    "doneBody": "A confirmation email is on its way and the Google Meet is in your calendar.",
+    "join": "Join Google Meet",
+    "slotTaken": "That time was just taken. Please choose another.",
+    "errorGeneric": "That time could not be booked. Please try another time.",
+    "periods": {
+      "morning": "Morning",
+      "afternoon": "Afternoon",
+      "evening": "Evening",
+      "night": "Late evening"
+    }
+  },
+  "consent": {
+    "text": "We use cookies to understand how visitors find and use our site, and to measure our ads.",
+    "privacy": "Privacy policy",
+    "accept": "Accept",
+    "decline": "Decline",
+    "label": "Cookie preferences"
+  },
+  "cta": {
+    "title": "Ready to build something that lasts?",
+    "body": "Tell us what you're working on. The first call is free and you'll leave with a clear next step.",
+    "primary": "Book a free call",
+    "secondary": "Send a message"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "The page you're looking for has moved or doesn't exist.",
+    "home": "Go to the homepage"
+  },
+  "legal": {
+    "updated": "Last updated: {date}",
+    "terms": {
+      "metaTitle": "Terms and conditions",
+      "title": "Terms and conditions",
+      "date": "18 April 2025",
+      "sections": [
+        {
+          "h": "",
+          "p": [
+            "These Terms and Conditions (\"Terms\") govern your access to and use of the websites, applications and related services offered by Xaeon Software Solutions (\"Xaeon\", \"we\", \"us\" or \"our\"). By using our services, you agree to these Terms."
+          ]
+        },
+        {
+          "h": "Services",
+          "p": [
+            "Descriptions of our services on this site are for general information. Specific deliverables, timelines and fees are defined only in a written agreement or statement of work between you and Xaeon."
+          ]
+        },
+        {
+          "h": "Acceptable use",
+          "p": [
+            "You agree not to misuse our services, including by attempting to access systems or data without authorisation, introduce malware or disrupt infrastructure, or use our brand or materials in a way that is misleading or unlawful."
+          ]
+        },
+        {
+          "h": "Intellectual property",
+          "p": [
+            "Unless otherwise agreed in writing, Xaeon retains rights to pre-existing materials, tools and know-how. Ownership of custom deliverables will be as set out in your contract with us."
+          ]
+        },
+        {
+          "h": "Disclaimer",
+          "p": [
+            "Our site and content are provided \"as is\" to the extent permitted by law. We do not warrant uninterrupted or error-free operation. Liability is limited to the maximum extent permitted by applicable law and, where permitted, to fees paid to us for the specific engagement giving rise to the claim."
+          ]
+        },
+        {
+          "h": "Changes",
+          "p": [
+            "We may update these Terms from time to time. Continued use of the site after changes constitutes acceptance of the revised Terms."
+          ]
+        },
+        {
+          "h": "Contact",
+          "p": [
+            "Questions about these Terms: info@xaeons.com."
+          ]
+        }
+      ]
+    },
+    "privacy": {
+      "metaTitle": "Privacy policy",
+      "title": "Privacy policy",
+      "date": "25 October 2026",
+      "sections": [
+        {
+          "h": "",
+          "p": [
+            "Xaeon Software Solutions (\"Xaeon\", \"we\", \"us\") respects your privacy. This policy describes how we handle information when you visit our website or engage our services."
+          ]
+        },
+        {
+          "h": "Information we collect",
+          "p": [
+            "Depending on how you interact with us, we may collect contact details you submit (name, email, phone, company), messages and files you send when requesting a quote or support, and technical data such as IP address, browser type and approximate location from standard server logs."
+          ]
+        },
+        {
+          "h": "How we use information",
+          "p": [
+            "We use this information to respond to enquiries and deliver contracted services, to operate, secure and improve our website, and to comply with legal obligations."
+          ]
+        },
+        {
+          "h": "Cookies and analytics",
+          "p": [
+            "We use cookies and similar technologies that are needed for the site to work, such as keeping you signed in to your client dashboard.",
+            "With your consent, we also use Google Analytics to understand how visitors find and use the site, and the Meta Pixel to measure our advertising. Until you accept, Google Analytics runs without cookies and the Meta Pixel does not load. You can change your choice at any time with the \"Cookie settings\" link in the footer.",
+            "When you send us an enquiry or book a call, we record how you arrived at our site (for example the campaign link, referring website and the first page you visited) with your request, so we know which of our channels are working. You can also control cookies through your browser settings."
+          ]
+        },
+        {
+          "h": "Sharing",
+          "p": [
+            "We do not sell your personal information. We may share data with trusted processors (for example hosting and email providers) who assist our operations under appropriate agreements, or when required by law."
+          ]
+        },
+        {
+          "h": "Retention and security",
+          "p": [
+            "We retain information only as long as needed for the purposes above or as required by law. We apply reasonable technical and organisational measures to protect data."
+          ]
+        },
+        {
+          "h": "Your rights",
+          "p": [
+            "Depending on your jurisdiction, you may have rights to access, correct, delete or object to certain processing of your personal data. Contact us to make a request."
+          ]
+        },
+        {
+          "h": "Contact",
+          "p": [
+            "Privacy questions: info@xaeons.com."
+          ]
+        }
+      ]
+    }
+  }
+}

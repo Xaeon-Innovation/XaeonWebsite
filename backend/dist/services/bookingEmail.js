@@ -107,7 +107,9 @@ async function sendEnquiryNotice(details) {
         ? "Package enquiry"
         : details.source === "service"
             ? "Service enquiry"
-            : "Contact form";
+            : details.source === "product"
+                ? "Product demo request"
+                : "Contact form";
     const rows = [
         ["From", details.name],
         ["Email", details.email],

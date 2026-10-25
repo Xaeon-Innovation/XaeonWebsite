@@ -33,12 +33,16 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ENQUIRY_SOURCES = void 0;
+exports.isEnquirySource = isEnquirySource;
 const mongoose_1 = __importStar(require("mongoose"));
+/** Public, no-login enquiry sources (website forms). */
+exports.ENQUIRY_SOURCES = ["contact", "service", "package", "product"];
+function isEnquirySource(source) {
+    return exports.ENQUIRY_SOURCES.includes(source);
+}
 function isRegisteredSource() {
-    return (this.source !== "contact" &&
-        this.source !== "service" &&
-        this.source !== "package" &&
-        this.source !== "booking");
+    return !isEnquirySource(this.source) && this.source !== "booking";
 }
 function requiresMeetingDate() {
     return isRegisteredSource.call(this) || this.source === "booking";
@@ -53,7 +57,7 @@ const ServiceRequestSchema = new mongoose_1.Schema({
     },
     source: {
         type: String,
-        enum: ["registered", "contact", "service", "package", "booking"],
+        enum: ["registered", "booking", ...exports.ENQUIRY_SOURCES],
         default: "registered",
     },
     meeting_date: {

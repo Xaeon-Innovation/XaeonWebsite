@@ -1,4 +1,37 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -7,7 +40,7 @@ exports.deleteServiceRequest = exports.updateServiceRequest = exports.createServ
 const mongoose_1 = __importDefault(require("mongoose"));
 require("../types/expressAugment");
 const package_model_1 = __importDefault(require("../models/package.model"));
-const serviceRequest_model_1 = __importDefault(require("../models/serviceRequest.model"));
+const serviceRequest_model_1 = __importStar(require("../models/serviceRequest.model"));
 const bookingSettings_model_1 = require("../models/bookingSettings.model");
 const bookingEmail_1 = require("../services/bookingEmail");
 const attribution_1 = require("../utils/attribution");
@@ -30,11 +63,9 @@ const createServiceRequestEnquiry = async (req, res) => {
             return;
         }
         const source = body.source;
-        if (source !== "contact" &&
-            source !== "service" &&
-            source !== "package") {
+        if (!(0, serviceRequest_model_1.isEnquirySource)(source)) {
             res.status(400).json({
-                error: "source must be contact, service, or package",
+                error: "source must be contact, service, package, or product",
             });
             return;
         }
@@ -94,11 +125,13 @@ const createServiceRequestEnquiry = async (req, res) => {
         const interest = typeof body.interest === "string" && body.interest.trim() !== ""
             ? body.interest.trim()
             : undefined;
-        const title = source === "service" && interest
-            ? `Service interest: ${interest}`
-            : source === "service"
-                ? "Service interest"
-                : "Contact enquiry";
+        const title = source === "product"
+            ? `Product demo: ${interest ?? "Product"}`
+            : source === "service" && interest
+                ? `Service interest: ${interest}`
+                : source === "service"
+                    ? "Service interest"
+                    : "Contact enquiry";
         const newServiceRequest = await serviceRequest_model_1.default.create({
             source,
             title,
@@ -202,9 +235,7 @@ const createServiceRequest = async (req, res) => {
             res.status(400).json({ error: "serviceRequest payload is required" });
             return;
         }
-        if (payload.source === "contact" ||
-            payload.source === "service" ||
-            payload.source === "package") {
+        if ((0, serviceRequest_model_1.isEnquirySource)(payload.source)) {
             res.status(400).json({ error: "Use POST /system-request/enquiry for public enquiries" });
             return;
         }
@@ -327,9 +358,7 @@ const updateServiceRequest = async (req, res) => {
         if (Object.prototype.hasOwnProperty.call(body, "meeting_date")) {
             delete $set.meeting_date;
             if (meeting_date === null || meeting_date === "") {
-                if (existing.source === "contact" ||
-                    existing.source === "service" ||
-                    existing.source === "package") {
+                if ((0, serviceRequest_model_1.isEnquirySource)(existing.source)) {
                     $unset.meeting_date = 1;
                 }
             }

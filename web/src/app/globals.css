@@ -1,0 +1,168 @@
+@import "tailwindcss";
+
+/*
+ * Xaeon design tokens. Dark brand base (ink) with light "paper" sections for long reading,
+ * sage as the single accent. Fonts are injected by next/font as CSS variables in the layout.
+ */
+@theme {
+  --color-ink: #0a0a0a;
+  --color-ink-2: #121412;
+  --color-ink-3: #1b1f1c;
+  --color-line: #2a302c;
+  --color-line-strong: #3a423d;
+  --color-fog: #f3f5f2;
+  --color-mist: #b8c2bb;
+  --color-haze: #8a968e;
+  --color-paper: #f7f8f5;
+  --color-paper-2: #eceee8;
+  --color-paper-line: #d9ddd4;
+  --color-graphite: #1d2420;
+  --color-slate: #4d5a52;
+  --color-sage: #72c04f;
+  --color-sage-strong: #5ea83f;
+  --color-sage-deep: #3d7a26;
+  --color-sage-wash: #e3f1db;
+  --color-on-sage: #0b1207;
+  --color-teal: #1b3d50;
+  --color-pistachio: #c6d59c;
+  --color-danger: #f08a8d;
+
+  --font-display: var(--font-unbounded), var(--font-readex), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-jakarta), var(--font-plex-arabic), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --radius-card: 1.25rem;
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Arabic: display + body faces switch, everything else stays the same. */
+:root[lang="ar"] {
+  --font-display: var(--font-readex), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-plex-arabic), var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5.5rem;
+  }
+  body {
+    background: var(--color-ink);
+    color: var(--color-fog);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  :root[lang="ar"] h1, :root[lang="ar"] h2, :root[lang="ar"] h3, :root[lang="ar"] h4 {
+    letter-spacing: 0;
+    line-height: 1.3;
+  }
+  p { text-wrap: pretty; }
+  a, button { -webkit-tap-highlight-color: transparent; }
+  :focus-visible {
+    outline: 2px solid var(--color-sage);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  ::selection { background: var(--color-sage); color: var(--color-on-sage); }
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+}
+
+@layer components {
+  /* Page gutter that also clears notches/system bars. */
+  .container-x {
+    width: 100%;
+    max-width: 76rem;
+    margin-inline: auto;
+    padding-left: max(1.25rem, env(safe-area-inset-left, 0px));
+    padding-right: max(1.25rem, env(safe-area-inset-right, 0px));
+  }
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-sage);
+  }
+  :root[lang="ar"] .eyebrow { letter-spacing: 0; font-size: 0.875rem; }
+
+  /* Glass card on dark; solid fallback where backdrop-filter is unsupported. */
+  .glass {
+    background: rgba(27, 31, 28, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  @supports (backdrop-filter: blur(12px)) {
+    .glass {
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+  }
+
+  /* Light reading surface (case studies, blog, legal). */
+  .paper {
+    background: var(--color-paper);
+    color: var(--color-graphite);
+    color-scheme: light;
+  }
+
+  .prose-x { max-width: 68ch; }
+  .prose-x p + p { margin-top: 1rem; }
+  .prose-x h2 { font-size: 1.375rem; margin-top: 2.25rem; margin-bottom: 0.75rem; }
+  .prose-x ul { list-style: disc; padding-inline-start: 1.25rem; margin-top: 0.75rem; }
+  .prose-x li + li { margin-top: 0.375rem; }
+  .prose-x a { color: var(--color-sage-deep); text-decoration: underline; text-underline-offset: 3px; }
+
+  /* Faint engineering grid behind dark heroes. */
+  .grid-bg {
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, #000 40%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, #000 40%, transparent 100%);
+  }
+}
+
+/* Scroll reveal: content is visible by default; only animates when JS marks it ready. */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 500ms var(--ease-out-soft), transform 500ms var(--ease-out-soft);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .js [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+  @keyframes orbit {
+    to { transform: rotate(360deg); }
+  }
+  .animate-orbit { animation: orbit 40s linear infinite; }
+}
+
+/* Star riding the orbit arc (Orbit component). */
+.orbit-star {
+  offset-distance: 100%;
+  offset-rotate: 0deg;
+}
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes orbit-travel {
+    0% { offset-distance: 0%; opacity: 0; }
+    12% { opacity: 1; }
+    100% { offset-distance: 100%; opacity: 1; }
+  }
+  .orbit-star { animation: orbit-travel 2.4s var(--ease-out-soft) 0.3s both; }
+}
