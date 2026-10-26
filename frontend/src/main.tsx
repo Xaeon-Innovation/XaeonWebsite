@@ -20,6 +20,8 @@ import Packages from "./Pages/Packages.tsx";
 import Terms from "./Pages/Terms.tsx";
 import Privacy from "./Pages/Privacy.tsx";
 import MainLayout from "./layouts/MainLayout.tsx";
+import AppShellLayout from "./layouts/AppShellLayout.tsx";
+import { IS_APP_HOST, PUBLIC_SITE_ORIGIN } from "./lib/appHost.ts";
 import ContextProviders from "./context/ContextProviders.tsx";
 import RequireUser from "./context/RequireUser.tsx";
 import ClientDashboard from "./Pages/ClientDashboard.tsx";
@@ -69,15 +71,6 @@ const router = createBrowserRouter([
         path: "blog",
         element: <Blog />,
       },
-      { path: "set-password", element: <SetPassword /> },
-      {
-        path: "login",
-        element: <LoginSignup />,
-      },
-      {
-        path: "register",
-        element: <LoginSignup />,
-      },
       {
         path: "book-now",
         element: <BookNow />,
@@ -90,6 +83,16 @@ const router = createBrowserRouter([
         path: "privacy",
         element: <Privacy />,
       },
+    ],
+  },
+  // Sign-in and client portal: own minimal layout (no public-site navigation).
+  {
+    element: <AppShellLayout />,
+    errorElement: <ErrorPage />,
+    children: [
+      { path: "login", element: <LoginSignup /> },
+      { path: "register", element: <LoginSignup /> },
+      { path: "set-password", element: <SetPassword /> },
       {
         path: "dashboard",
         loader: clientDashboardLoader,
@@ -125,13 +128,12 @@ const router = createBrowserRouter([
 ]);
 
 /**
- * Once the public site runs on Next.js (xaeons.com), this app is served from app.xaeons.com for
- * the admin panel and client portal only. Set VITE_PUBLIC_SITE_ORIGIN there: any public page
- * is sent to the real site, and nothing on this host is indexed.
+ * On app.xaeons.com (or wherever VITE_PUBLIC_SITE_ORIGIN is set) this app serves only the admin
+ * panel and client portal: public pages are sent to the real website (xaeons.com), "/" opens
+ * the sign-in page, and nothing on this host is indexed.
  */
-const PUBLIC_SITE_ORIGIN = (import.meta.env.VITE_PUBLIC_SITE_ORIGIN ?? "").replace(/\/+$/, "");
 const APP_ONLY_PATH = /^\/(admin|dashboard|login|register|set-password)(\/|$)/;
-if (PUBLIC_SITE_ORIGIN) {
+if (IS_APP_HOST || import.meta.env.VITE_PUBLIC_SITE_ORIGIN) {
   const robots = document.createElement("meta");
   robots.name = "robots";
   robots.content = "noindex, nofollow";
