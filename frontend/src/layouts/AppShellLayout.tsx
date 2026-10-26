@@ -1,4 +1,6 @@
 import { Outlet } from "react-router";
+import "@fontsource-variable/plus-jakarta-sans";
+import "@fontsource-variable/unbounded";
 import { HelmetProvider } from "react-helmet-async";
 import { ArrowLeft } from "lucide-react";
 import { publicSiteUrl } from "../lib/appHost";

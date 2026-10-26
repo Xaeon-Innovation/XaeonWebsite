@@ -8,6 +8,8 @@ import api, { getApiErrorMessage } from "../lib/api";
 import styles from "./LoginSignup.module.css";
 import { useAuth } from "../context/AuthContext";
 import Seo from "../seo/Seo";
+import OrbitArc from "../Components/brand/OrbitArc";
+import { publicSiteUrl } from "../lib/appHost";
 
 const loginSchema = z.object({
   email: z.string().trim().email("Please enter a valid email."),
@@ -101,8 +103,6 @@ const LoginSignup = () => {
         noindex
       />
 
-      <div className={styles.bg} aria-hidden />
-
       <div className={styles.card}>
         <div className={styles.left}>
           <div className={styles.modeRow}>
@@ -123,8 +123,13 @@ const LoginSignup = () => {
           </div>
 
           <h1 className={styles.title}>
-            {mode === "login" ? "Log In" : "Register"}
+            {mode === "login" ? "Log in" : "Create your account"}
           </h1>
+          <p className={styles.intro}>
+            {mode === "login"
+              ? "Use the email and password for your Xaeon account."
+              : "For clients who want to send requests and follow their projects."}
+          </p>
 
           {mode === "login" ? (
             <form className={styles.form} onSubmit={onLogin} noValidate>
@@ -173,8 +178,12 @@ const LoginSignup = () => {
                 type="submit"
                 disabled={loginForm.formState.isSubmitting}
               >
-                {loginForm.formState.isSubmitting ? "Signing in..." : "Log in"}
+                {loginForm.formState.isSubmitting ? "Signing in…" : "Log in"}
               </button>
+              <p className={styles.note}>
+                Forgot your password or need an account set up?{" "}
+                <a href={publicSiteUrl("/book?tab=message")}>Contact us</a>.
+              </p>
             </form>
           ) : (
             <form className={styles.form} onSubmit={onRegister} noValidate>
@@ -297,21 +306,36 @@ const LoginSignup = () => {
                 type="submit"
                 disabled={registerForm.formState.isSubmitting}
               >
-                {registerForm.formState.isSubmitting ? "Creating..." : "Register"}
+                {registerForm.formState.isSubmitting ? "Creating…" : "Create account"}
               </button>
             </form>
           )}
         </div>
 
-        <aside className={styles.right} aria-label="Welcome">
+        <aside className={styles.right} aria-label="About the Xaeon portal">
+          <OrbitArc className={styles.orbit} />
+          <p className={styles.eyebrow}>Xaeon portal</p>
           <h2 className={styles.rightTitle}>
-            {mode === "login" ? "Welcome back!" : "Welcome!"}
+            {mode === "login" ? (
+              <>
+                Welcome <span className={styles.accent}>back.</span>
+              </>
+            ) : (
+              <>
+                Beyond time. <span className={styles.accent}>Beyond limits.</span>
+              </>
+            )}
           </h2>
           <p className={styles.rightText}>
             {mode === "login"
-              ? "Sign in to manage your requests and access your dashboard."
-              : "Create a user account to submit requests and track updates. Admin access is managed separately."}
+              ? "Pick up where you left off: your projects, requests and meetings in one place."
+              : "One account to send requests, book calls and follow every stage of your project."}
           </p>
+          <ul className={styles.points}>
+            <li>Follow each project stage as we deliver</li>
+            <li>Send new requests and book calls</li>
+            <li>Admins: leads, bookings and site content</li>
+          </ul>
         </aside>
       </div>
     </section>

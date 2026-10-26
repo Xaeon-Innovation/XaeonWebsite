@@ -1,10 +1,45 @@
+/*
+ * Sign-in + client portal frame, matching xaeons.com: near-black stage, faint grid, sage glow,
+ * Unbounded for display type and Plus Jakarta Sans for text.
+ */
 .shell {
+  --ink: #0a0a0a;
+  --ink-2: #121412;
+  --line: #2a302c;
+  --line-strong: #3a423d;
+  --fog: #f3f5f2;
+  --mist: #b8c2bb;
+  --haze: #8a968e;
+  --sage: #72c04f;
+  --sage-strong: #5ea83f;
+  --on-sage: #0b1207;
+  --font-display: "Unbounded Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-text: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  position: relative;
+  isolation: isolate;
   min-height: 100vh;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
   background: #050605;
-  color: var(--color-text, #f3f5f2);
+  color: var(--fog);
+  font-family: var(--font-text);
+}
+
+.shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(40% 45% at 18% 35%, rgba(114, 192, 79, 0.16), transparent 70%),
+    radial-gradient(35% 40% at 85% 75%, rgba(27, 61, 80, 0.45), transparent 70%),
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px) 0 0 / 56px 56px,
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px) 0 0 / 56px 56px;
+  mask-image: radial-gradient(ellipse 85% 75% at 50% 45%, #000 45%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 85% 75% at 50% 45%, #000 45%, transparent 100%);
 }
 
 .header {
@@ -12,8 +47,15 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 14px max(20px, env(safe-area-inset-left, 0px));
+  padding: 16px max(20px, env(safe-area-inset-left, 0px));
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(10, 10, 10, 0.6);
+}
+
+@supports (backdrop-filter: blur(8px)) {
+  .header {
+    backdrop-filter: blur(8px);
+  }
 }
 
 .logo img {
@@ -26,13 +68,18 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
   font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--mist);
   text-decoration: none;
+  transition: color 150ms ease, border-color 150ms ease;
 }
 
 .back:hover {
-  color: #fff;
+  color: var(--fog);
+  border-color: var(--mist);
 }
 
 .main {
@@ -53,7 +100,7 @@
   gap: 8px 20px;
   padding: 20px;
   font-size: 0.8125rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--haze);
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
@@ -63,5 +110,19 @@
 }
 
 .footer a:hover {
-  color: #fff;
+  color: var(--fog);
+}
+
+/* Orbit star: moving normally, still under reduced motion. */
+:global(.orbit-static) {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :global(.orbit-moving) {
+    display: none;
+  }
+  :global(.orbit-static) {
+    display: inline;
+  }
 }
