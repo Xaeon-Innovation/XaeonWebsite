@@ -8,7 +8,7 @@ export default async function CtaBand({ title, body, track = "cta_band" }: { tit
   return (
     <section className="container-x py-20 sm:py-28" aria-labelledby="cta-title">
       <div className="relative overflow-hidden rounded-[2rem] border border-line bg-ink-2 px-6 py-14 sm:px-14 sm:py-20">
-        <Orbit className="pointer-events-none absolute -end-24 -top-24 w-[34rem] opacity-60" />
+        <Orbit className="pointer-events-none absolute -end-8 top-2 w-[34rem] max-w-[70%] opacity-70" />
         <div className="relative flex max-w-2xl flex-col gap-5" data-reveal>
           <h2 id="cta-title" className="text-3xl font-semibold sm:text-4xl">
             {title ?? t("title")}

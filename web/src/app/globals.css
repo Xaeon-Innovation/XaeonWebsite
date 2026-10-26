@@ -154,18 +154,11 @@
   .animate-orbit { animation: orbit 40s linear infinite; }
 }
 
-/* Star riding the orbit arc (Orbit component). */
-.orbit-star {
-  offset-distance: 100%;
-  offset-rotate: 0deg;
-}
-@media (prefers-reduced-motion: no-preference) {
-  @keyframes orbit-travel {
-    0% { offset-distance: 0%; opacity: 0; }
-    12% { opacity: 1; }
-    100% { offset-distance: 100%; opacity: 1; }
-  }
-  .orbit-star { animation: orbit-travel 2.4s var(--ease-out-soft) 0.3s both; }
+/* Orbit component: moving star normally, still star under reduced motion. */
+.orbit-static { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .orbit-moving { display: none; }
+  .orbit-static { display: inline; }
 }
 
 /* Article typography for CMS Markdown (light "paper" surface). */
