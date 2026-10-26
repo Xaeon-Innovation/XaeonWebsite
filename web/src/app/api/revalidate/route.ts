@@ -6,7 +6,11 @@ import { revalidateTag } from "next/cache";
  * within 5 minutes. Protected by a shared secret (REVALIDATE_SECRET).
  */
 export async function POST(request: Request) {
-  const secret = process.env.REVALIDATE_SECRET ?? "";
+  // Tolerate common paste slips in the dashboard: surrounding spaces/quotes or the "NAME=" prefix.
+  const secret = (process.env.REVALIDATE_SECRET ?? "")
+    .trim()
+    .replace(/^REVALIDATE_SECRET=/, "")
+    .replace(/^["']|["']$/g, "");
   const given = (request.headers.get("authorization") ?? "").replace(/^Bearer\s+/i, "");
   const ok =
     secret.length >= 16 &&
