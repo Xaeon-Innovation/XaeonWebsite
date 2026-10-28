@@ -1041,7 +1041,9 @@
       "valu": "ڤاليو",
       "fawry": "فوري"
     },
-    "depositInvoiced": "المقدم (بفاتورة)"
+    "depositInvoiced": "المقدم (بفاتورة)",
+    "payOnlineConverted": "الدفع أونلاين بعملة {currency} عبر {methods}",
+    "chargedIn": "سيُخصم منك حوالي {amount} — تتم المدفوعات بعملة {currency} بسعر صرف Kashier في يوم الدفع، وقد يضيف بنكك رسوم تحويل."
   },
   "builderPage": {
     "metaTitle": "منشئ المواقع — أطلق موقع نشاطك مع Xaeon",

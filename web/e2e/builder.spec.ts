@@ -110,11 +110,11 @@ test.describe("website builder", () => {
     await expect(page.locator("#build").getByText("باقة أعمال أو أعلى")).toBeVisible();
   });
 
-  test("a country without online payment gets its currency and the invoice flow", async ({ page }) => {
+  test("Gulf customers see AED prices and a USD charge at Kashier's rate", async ({ page }) => {
     await page.goto("/website-builder");
     const wizard = page.locator("#build");
     await wizard.getByRole("radio", { name: "UAE" }).click();
-    await expect(wizard.getByText("we'll send your invoice")).toBeVisible();
+    await expect(wizard.getByText("pay online in USD by Bank cards", { exact: false })).toBeVisible();
     await wizard.getByRole("radio", { name: /Restaurants/ }).click();
     await wizard.getByRole("button", { name: "Continue" }).click();
     await wizard.getByRole("radio", { name: /Table/ }).click();
@@ -125,8 +125,9 @@ test.describe("website builder", () => {
     await expect(wizard.getByText("Prices in AED for UAE.")).toBeVisible();
     await expect(wizard.getByRole("radio", { name: /Business/ })).toContainText("AED");
     await wizard.getByRole("button", { name: "Continue" }).click();
-    await expect(wizard.getByText("Online payment isn't available for UAE yet.", { exact: false })).toBeVisible();
-    await expect(wizard.getByRole("button", { name: "Send my order" })).toBeVisible();
+    // Business AED 2,250 setup → AED 1,125 deposit → USD 306.34 at 0.2723.
+    await expect(wizard.getByText("You'll be charged about $306.34", { exact: false })).toBeVisible();
+    await expect(wizard.getByRole("button", { name: "Continue to payment" })).toBeVisible();
   });
 
   test("draft survives a reload", async ({ page }) => {

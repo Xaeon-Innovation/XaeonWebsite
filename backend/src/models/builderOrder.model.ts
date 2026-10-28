@@ -53,7 +53,11 @@ export interface IBuilderOrder extends Document {
     provider?: string;
     sessionId?: string;
     status: PaymentState;
+    /** Amount charged, in `currency` (may differ from the quote currency when converted). */
     amount?: number;
+    currency?: string;
+    /** 1 quote-currency unit = rate × `currency`, when converted. */
+    rate?: number;
     paidAt?: Date;
     lastEvent?: string;
   };
@@ -101,6 +105,8 @@ const BuilderOrderSchema = new Schema<IBuilderOrder>(
       sessionId: { type: String, trim: true },
       status: { type: String, enum: PAYMENT_STATES, default: "none" },
       amount: { type: Number },
+      currency: { type: String, trim: true },
+      rate: { type: Number },
       paidAt: { type: Date },
       lastEvent: { type: String, trim: true },
     },

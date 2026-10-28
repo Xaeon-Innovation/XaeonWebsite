@@ -1041,7 +1041,9 @@
       "valu": "valU",
       "fawry": "Fawry"
     },
-    "depositInvoiced": "Deposit (invoiced)"
+    "depositInvoiced": "Deposit (invoiced)",
+    "payOnlineConverted": "pay online in {currency} by {methods}",
+    "chargedIn": "You'll be charged about {amount} — card payments are processed in {currency} at Kashier's exchange rate on the day. Your bank may add its own conversion fee."
   },
   "builderPage": {
     "metaTitle": "Website Builder — launch your business website with Xaeon",

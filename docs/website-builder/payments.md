@@ -25,6 +25,30 @@ Order and webhook handling: `backend/src/controllers/builder.controller.ts` (`cr
   - on the submit button ("Continue to payment" or "Send my order").
 - A country with no online provider gets the invoice/bank-transfer message, and the quote shows "Deposit (invoiced)".
 
+## Other countries' currencies (Kashier currency rules)
+Per [Kashier's docs](https://developers.kashier.io/docs/accept-payments/currency-conversion), payment sessions only charge
+**EGP, USD, GBP or EUR**. Showing customers prices in their local currency at checkout is a separate gated feature; ask your Kashier account manager.
+
+So we keep the price list per market and **convert only the charge**:
+
+| Customer | Prices shown | Deposit charged |
+|---|---|---|
+| Egypt | EGP | EGP (direct) |
+| Gulf (AE, SA, KW, QA, BH, OM) | AED | **USD**: AED deposit × Kashier rate, rounded to cents |
+| Jordan / other | USD | USD (direct) |
+
+- **How it works:**
+  - `services/payments/index.ts` → `paymentPlan(currency)` charges the price-list currency directly when a provider supports it. Otherwise it converts to USD if a provider supports USD, and with neither the order falls back to an invoice.
+  - Rates come from `services/payments/fx.ts`, which calls Kashier's public `GET /v3/payment/exchange-rate?from=AED&to=USD` (test or live host per `KASHIER_MODE`). Rates are cached for 1 hour.
+  - If the lookup fails, it falls back to the official USD pegs (AED 3.6725, SAR 3.75, QAR 3.64, OMR 0.3845, BHD 0.376).
+- **What the customer sees** before paying, in the wizard:
+  - "pay online in USD by cards";
+  - in the review step, "You'll be charged about $X … your bank may add a conversion fee";
+  - in the quote, "≈ $X" under "Due now".
+- **What the order stores:** `payment.amount`, `payment.currency` and `payment.rate`, so the amount charged and the rate used are recorded.
+- **Webhook safety:** a signed `pay` event is only marked paid if Kashier's reported `amount`/`currency` match what we charged (±0.01). Otherwise it is logged on the order for staff to check.
+- **To enable:** Kashier must have **USD** activated on your merchant account. Then set `KASHIER_CURRENCIES=EGP,USD` and restart the API. With only `EGP`, Gulf and other countries keep the invoice flow.
+
 ## Flow
 1. `POST /api/v1/builder/orders` computes the quote and saves the order and its lead.
 2. If the deposit is above 0 and `providerFor(currency)` finds a configured provider:

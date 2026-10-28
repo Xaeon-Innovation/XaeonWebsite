@@ -56,3 +56,13 @@ The clinic system is the new product **Velora** (`/products/velora`), demo-reque
 **Why:**
 - Customers see the right price and the payment methods they can actually use.
 - The server can't be tricked into using a cheaper market.
+
+## 10. Non-EGP countries: keep local price lists, charge in USD through Kashier
+**Decision:**
+- Gulf customers see AED prices, and their deposit is charged in USD at Kashier's exchange rate.
+- Customers elsewhere see USD prices and are charged in USD.
+
+**Why:**
+- Kashier charges only EGP, USD, GBP and EUR, and its local-currency display at checkout is a gated feature.
+- USD is the natural card currency for Gulf and international cards, and AED, SAR and the other Gulf currencies are pegged to it, so the amount is stable.
+- The converted amount is shown before payment and stored on the order, and webhooks must match it.

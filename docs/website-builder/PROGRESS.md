@@ -26,6 +26,14 @@ Branch: `feature/website-builder`, fast-forwarded into `main`. **Phase 1 is LIVE
 ## Done log
 (newest first — date, step, files, notes)
 
+- 2026-10-28 **Currency conversion for non-EGP countries** (per Kashier: charges EGP/USD/GBP/EUR only)
+  - Code: `services/payments/fx.ts` (Kashier rate endpoint, 1h cache, Gulf peg fallback); `paymentPlan()` (direct or convert to USD); `order.payment.{currency,rate}`; webhook amount/currency check.
+  - Website: "≈ $X" in the quote and the review step.
+  - Test config now blanks every payment env, so `.env` keys never reach tests.
+  - Results: backend 54 pass, e2e 110/110.
+  - **Committed to the feature branch; deploy pending owner OK.**
+  - To activate: Kashier must enable USD, then set `KASHIER_CURRENCIES=EGP,USD`.
+
 - 2026-10-28 **Kashier test mode on (production)**
   - The owner set `PAYMENT_PROVIDERS=kashier`, MID, Payment API key, `KASHIER_MODE=test`, `KASHIER_CURRENCIES=EGP` and `KASHIER_METHODS=card,wallet` in `backend/.env`. The secret key isn't needed.
   - API restarted and the site cache revalidated. The live catalog returns `EGP: kashier card,wallet`.

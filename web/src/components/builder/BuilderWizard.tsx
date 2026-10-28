@@ -23,6 +23,7 @@ import {
   type BuilderCatalog,
   type BuilderCategory,
   type Country,
+  type Market,
   type PlanTier,
 } from "@/lib/builder";
 import { addonIcon, CATEGORY_ICONS } from "./icons";
@@ -134,6 +135,11 @@ export default function BuilderWizard({ catalog }: { catalog: BuilderCatalog }) 
   const market = COUNTRY_MARKET[d.country ?? "EG"];
   const payment = catalog.payments[market] ?? { online: false, methods: [] };
   const quote = estimateQuote(catalog, { planTier: d.planTier, addonKeys: d.addonKeys, market });
+  // Converted charge (e.g. AED deposit paid in USD); the server recomputes it with the live rate.
+  const charge =
+    payment.online && payment.chargeCurrency && payment.rate && quote
+      ? { currency: payment.chargeCurrency, amount: Math.round(quote.deposit * payment.rate * 100) / 100 }
+      : null;
 
   useEffect(() => {
     if (!moved.current) return;
@@ -287,7 +293,11 @@ export default function BuilderWizard({ catalog }: { catalog: BuilderCatalog }) 
           {d.country && (
             <p className="text-sm text-haze">
               {t("currencyFor", { currency: market, country: t(`countries.${d.country}`) })} ·{" "}
-              {payment.online ? t("payOnlineShort", { methods: methodList(payment.methods) }) : t("payInvoiceShort")}
+              {payment.online
+                ? payment.chargeCurrency
+                  ? t("payOnlineConverted", { currency: payment.chargeCurrency, methods: methodList(payment.methods) })
+                  : t("payOnlineShort", { methods: methodList(payment.methods) })
+                : t("payInvoiceShort")}
             </p>
           )}
         </fieldset>
@@ -582,6 +592,11 @@ export default function BuilderWizard({ catalog }: { catalog: BuilderCatalog }) 
           {payment.online && (quote?.deposit ?? 0) > 0 ? (
             <>
               <p className="text-mist">{t("paymentOnline", { deposit: money(quote!.deposit), provider: providerName(payment.provider) })}</p>
+              {charge && (
+                <p className="text-fog">
+                  {t("chargedIn", { amount: formatMoney(charge.amount, charge.currency as Market, locale, 2), currency: charge.currency })}
+                </p>
+              )}
               <ul className="flex flex-wrap gap-2">
                 {payment.methods.map((m) => (
                   <li key={m} className="rounded-full border border-line px-3 py-1 text-xs text-fog">{t.has(`paymentMethods.${m}`) ? t(`paymentMethods.${m}`) : m}</li>
@@ -683,7 +698,7 @@ export default function BuilderWizard({ catalog }: { catalog: BuilderCatalog }) 
               </button>
             )}
             <div className="ms-auto flex items-center gap-4">
-              <div className="lg:hidden"><QuoteSummary quote={quote} catalog={catalog} billing={d.billing} online={payment.online} compact /></div>
+              <div className="lg:hidden"><QuoteSummary quote={quote} catalog={catalog} billing={d.billing} online={payment.online} charge={charge} compact /></div>
               {d.step < LAST_STEP ? (
                 <button type="button" onClick={next} data-track={`builder_next_${d.step + 1}`} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-sage px-5 py-3 text-sm font-semibold text-on-sage hover:bg-sage-strong">
                   {t("next")} <ArrowRight size={16} aria-hidden className="rtl:rotate-180" />
@@ -700,8 +715,8 @@ export default function BuilderWizard({ catalog }: { catalog: BuilderCatalog }) 
 
         <aside className="flex min-w-0 flex-col gap-6 lg:sticky lg:top-24 lg:self-start">
           {d.category && <TemplatePreview template={template} category={d.category} brand={d.brand} />}
-          {d.step >= 3 && <div className="hidden lg:block"><QuoteSummary quote={quote} catalog={catalog} billing={d.billing} online={payment.online} /></div>}
-          {d.step === LAST_STEP && <div className="lg:hidden"><QuoteSummary quote={quote} catalog={catalog} billing={d.billing} online={payment.online} /></div>}
+          {d.step >= 3 && <div className="hidden lg:block"><QuoteSummary quote={quote} catalog={catalog} billing={d.billing} online={payment.online} charge={charge} /></div>}
+          {d.step === LAST_STEP && <div className="lg:hidden"><QuoteSummary quote={quote} catalog={catalog} billing={d.billing} online={payment.online} charge={charge} /></div>}
         </aside>
       </div>
     </div>

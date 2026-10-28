@@ -74,7 +74,14 @@ export type BuilderPlan = {
 };
 
 /** How a customer in this market can pay the deposit (from the API's configured providers). */
-export type PaymentOption = { online: boolean; provider?: string; methods: string[] };
+export type PaymentOption = {
+  online: boolean;
+  provider?: string;
+  methods: string[];
+  /** Set when the provider can't charge the price-list currency (e.g. AED → charged in USD at Kashier's rate). */
+  chargeCurrency?: string;
+  rate?: number;
+};
 
 export type BuilderCatalog = {
   templates: BuilderTemplate[];
@@ -171,11 +178,12 @@ export function estimateQuote(
   };
 }
 
-export function formatMoney(amount: number, currency: Market, locale: string): string {
+export function formatMoney(amount: number, currency: Market, locale: string, decimals = 0): string {
   return new Intl.NumberFormat(locale === "ar" ? "ar-EG-u-nu-latn" : "en-US", {
     style: "currency",
     currency,
-    maximumFractionDigits: 0,
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
   }).format(amount);
 }
 

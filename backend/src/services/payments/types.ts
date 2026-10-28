@@ -32,6 +32,9 @@ export type WebhookResult = {
   status: "paid" | "failed" | "pending";
   sessionId?: string;
   event: string;
+  /** What the provider says was paid, when it reports it; checked against the order before marking it paid. */
+  amount?: number;
+  currency?: string;
 };
 
 export interface PaymentProvider {

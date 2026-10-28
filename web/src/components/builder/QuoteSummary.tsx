@@ -10,6 +10,7 @@ export default function QuoteSummary({
   billing,
   compact = false,
   online = false,
+  charge = null,
 }: {
   quote: QuoteEstimate | null;
   catalog: BuilderCatalog;
@@ -17,6 +18,8 @@ export default function QuoteSummary({
   compact?: boolean;
   /** An online payment provider handles this currency; otherwise the team invoices. */
   online?: boolean;
+  /** Approximate converted charge when the deposit is paid in another currency. */
+  charge?: { amount: number; currency: string } | null;
 }) {
   const t = useTranslations("builder");
   const locale = useLocale();
@@ -78,7 +81,10 @@ export default function QuoteSummary({
         )}
         <div className="flex justify-between gap-3 border-t border-line pt-2">
           <dt className="font-semibold text-fog">{online ? t("deposit") : t("depositInvoiced")}</dt>
-          <dd className="font-semibold tabular-nums text-sage">{money(quote.deposit)}</dd>
+          <dd className="text-end font-semibold tabular-nums text-sage">
+            {money(quote.deposit)}
+            {charge && <span className="block text-xs font-normal text-mist">≈ {formatMoney(charge.amount, charge.currency as Market, locale, 2)}</span>}
+          </dd>
         </div>
       </dl>
       <p className="text-xs text-haze">{depositNote}</p>

@@ -18,6 +18,16 @@ export default defineConfig({
       CORS_ORIGIN: "",
       RESEND_API_KEY: "",
       DISABLE_JOBS: "true",
+      // Never let real payment credentials from .env reach the tests (dotenv won't override these).
+      PAYMENT_PROVIDERS: "",
+      KASHIER_MERCHANT_ID: "",
+      KASHIER_API_KEY: "",
+      KASHIER_MODE: "test",
+      KASHIER_CURRENCIES: "",
+      KASHIER_METHODS: "",
+      POLAR_ACCESS_TOKEN: "",
+      POLAR_WEBHOOK_SECRET: "",
+      POLAR_DEPOSIT_PRODUCT_ID: "",
     },
   },
 });

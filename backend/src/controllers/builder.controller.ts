@@ -10,7 +10,8 @@ import BuilderTemplate from "../models/builderTemplate.model";
 import { BUILDER_CATEGORIES, COUNTRIES, COUNTRY_MARKET, MARKETS, PLAN_TIERS, isOneOf, planRank } from "../models/builderShared";
 import ServiceRequest from "../models/serviceRequest.model";
 import { sendBuilderOrderConfirmation, sendBuilderOrderNotice, sendBuilderPaymentReceived } from "../services/builderEmails";
-import { getProvider, paymentOptions, providerFor, WebhookSignatureError } from "../services/payments";
+import { getProvider, paymentOptions, paymentPlan, WebhookSignatureError } from "../services/payments";
+import { convert } from "../services/payments/fx";
 import { putObject } from "../services/storage";
 import { parseAttribution } from "../utils/attribution";
 import { computeQuote, QuoteError, type QuoteAddon, type QuotePlan } from "../utils/builderQuote";
@@ -37,7 +38,7 @@ export const getCatalog = async (_req: Request, res: Response): Promise<void> =>
       BuilderPlan.find({ published: true }).sort(sort).select(PUBLIC_PLAN_FIELDS).lean(),
     ]);
     // Payment options per market, so the wizard can show them once the customer picks a country.
-    const payments = Object.fromEntries(MARKETS.map((m) => [m, paymentOptions(m)]));
+    const payments = Object.fromEntries(await Promise.all(MARKETS.map(async (m) => [m, await paymentOptions(m)] as const)));
     res.status(200).json({ templates, addons, plans, payments });
   } catch (err) {
     console.error(err);
@@ -246,15 +247,18 @@ export const createOrder = async (req: Request, res: Response): Promise<void> =>
     });
     order.lead = lead._id as typeof order.lead;
 
-    // Online deposit when a provider handles this currency and there is a fixed amount to pay.
+    // Online deposit: charged in the quote currency when the provider supports it, otherwise converted
+    // (e.g. AED price list → USD charge at Kashier's rate). No plan → the team invoices.
     let checkoutUrl: string | undefined;
-    const provider = quote.deposit > 0 ? providerFor(market) : undefined;
-    if (provider) {
+    const plan = quote.deposit > 0 ? await paymentPlan(market) : undefined;
+    if (plan) {
+      const { provider, chargeCurrency, rate } = plan;
+      const amount = convert(quote.deposit, rate);
       try {
         const session = await provider.createCheckout({
           ref: order.ref,
-          amount: quote.deposit,
-          currency: market,
+          amount,
+          currency: chargeCurrency,
           description: `Xaeon website deposit ${order.ref}`,
           customer: { name, email, phone },
           locale,
@@ -262,8 +266,22 @@ export const createOrder = async (req: Request, res: Response): Promise<void> =>
           webhookUrl: `${apiOrigin()}/api/v1/builder/payments/${provider.name}/webhook`,
         });
         order.status = "awaiting_payment";
-        order.payment = { provider: provider.name, sessionId: session.sessionId, status: "pending", amount: quote.deposit };
-        order.activity.push({ type: "payment", message: `Checkout started with ${provider.name}`, at: new Date() });
+        order.payment = {
+          provider: provider.name,
+          sessionId: session.sessionId,
+          status: "pending",
+          amount,
+          currency: chargeCurrency,
+          ...(chargeCurrency !== market ? { rate } : {}),
+        };
+        order.activity.push({
+          type: "payment",
+          message:
+            chargeCurrency === market
+              ? `Checkout started with ${provider.name}`
+              : `Checkout started with ${provider.name}: ${market} ${quote.deposit} charged as ${chargeCurrency} ${amount.toFixed(2)} (rate ${rate})`,
+          at: new Date(),
+        });
         checkoutUrl = session.url;
       } catch (err) {
         console.error(err);
@@ -280,7 +298,7 @@ export const createOrder = async (req: Request, res: Response): Promise<void> =>
       token: orderToken(order.ref),
       status: order.status,
       quote,
-      ...(checkoutUrl ? { checkoutUrl } : {}),
+      ...(checkoutUrl ? { checkoutUrl, charge: { amount: order.payment.amount, currency: order.payment.currency } } : {}),
     });
   } catch (err) {
     console.error(err);
@@ -326,6 +344,7 @@ export async function markOrderPaid(order: IBuilderOrder, source: { provider: st
   order.payment.paidAt = new Date();
   order.payment.lastEvent = source.event;
   order.payment.amount = order.payment.amount ?? order.quote.deposit;
+  order.payment.currency = order.payment.currency ?? order.quote.currency;
   if (order.status === "submitted" || order.status === "awaiting_payment") order.status = "paid";
   order.activity.push({ type: "payment", message: `Deposit paid (${source.provider})`, byName: source.byName, at: new Date() });
   await order.save();
@@ -360,7 +379,21 @@ export const paymentWebhook = async (req: Request, res: Response): Promise<void>
       res.status(200).json({ received: true });
       return;
     }
-    if (result.status === "paid") {
+    const expectedCurrency = order.payment.currency ?? order.quote.currency;
+    const expectedAmount = order.payment.amount ?? order.quote.deposit;
+    const mismatch =
+      (result.currency !== undefined && result.currency !== expectedCurrency) ||
+      (result.amount !== undefined && Math.abs(result.amount - expectedAmount) > 0.01);
+    if (result.status === "paid" && mismatch) {
+      // Signed, but not what we asked for: leave it for staff to check instead of marking paid.
+      order.payment.lastEvent = result.event;
+      order.activity.push({
+        type: "payment",
+        message: `Payment reported as ${result.currency ?? "?"} ${result.amount ?? "?"} but ${expectedCurrency} ${expectedAmount} was expected — check ${provider.name}`,
+        at: new Date(),
+      });
+      await order.save();
+    } else if (result.status === "paid") {
       await markOrderPaid(order, { provider: provider.name, event: result.event });
     } else if (order.payment.status !== "paid") {
       order.payment.status = result.status;

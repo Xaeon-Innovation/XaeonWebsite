@@ -73,8 +73,12 @@ const builderCatalog = {
     { tier: "business", name: L("Business", "أعمال"), summary: L("Five pages.", "خمس صفحات."), prices: P([16500, 1550], [2250, 185], [625, 51]), quoted: false, features: [L("Up to 5 pages", "حتى 5 صفحات")], highlighted: true },
   ],
 };
-// Kashier is enabled for EGP only, so other countries get the invoice flow.
-builderCatalog.payments = { EGP: { online: true, provider: "kashier", methods: ["card", "wallet"] }, AED: { online: false, methods: [] }, USD: { online: false, methods: [] } };
+// Kashier charges EGP and USD; Gulf (AED) deposits are converted to USD at Kashier's rate.
+builderCatalog.payments = {
+  EGP: { online: true, provider: "kashier", methods: ["card", "wallet"] },
+  AED: { online: true, provider: "kashier", methods: ["card"], chargeCurrency: "USD", rate: 0.2723 },
+  USD: { online: true, provider: "kashier", methods: ["card"] },
+};
 const stars = [
   { _id: "s1", name: "Delta Clinics", industry: "Healthcare", product: "velora", magnitude: 3, highlight: "38% fewer no-shows", caseStudy: { slug: "clinic-portal", title: "Clinic patient portal" } },
   { _id: "s2", name: "Nile Academy", industry: "Education", product: "website", magnitude: 2 },

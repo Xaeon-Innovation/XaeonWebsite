@@ -93,7 +93,10 @@ export async function sendBuilderOrderConfirmation(order: IBuilderOrder): Promis
 }
 
 export async function sendBuilderPaymentReceived(order: IBuilderOrder): Promise<void> {
-  const amount = formatMoney(order.payment.amount ?? order.quote.deposit, order.quote.currency);
+  const paid = order.payment.amount ?? order.quote.deposit;
+  const currency = order.payment.currency ?? order.quote.currency;
+  // Converted charges keep cents (e.g. USD 1,234.56); same-currency deposits are whole numbers.
+  const amount = currency === order.quote.currency ? formatMoney(paid, currency) : `${currency} ${paid.toFixed(2)}`;
   const results = await Promise.allSettled([
     sendEmail({
       to: notifyEmails(),

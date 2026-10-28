@@ -26,6 +26,7 @@ import ServiceRequest from "../src/models/serviceRequest.model";
 import Star from "../src/models/star.model";
 import { kashierSignaturePayload } from "../src/services/payments/kashier";
 import { polarSignature } from "../src/services/payments/polar";
+import { resetFxCache } from "../src/services/payments/fx";
 import { addonDocs, planDocs, templateDocs } from "../scripts/builderCatalogData";
 
 let admin: TestAgent;
@@ -56,6 +57,8 @@ beforeAll(async () => {
 });
 
 afterEach(() => {
+  vi.restoreAllMocks();
+  resetFxCache();
   delete process.env.PAYMENT_PROVIDERS;
   delete process.env.KASHIER_MERCHANT_ID;
   delete process.env.KASHIER_API_KEY;
@@ -172,8 +175,62 @@ describe("payments", () => {
     expect(sent).toHaveLength(0);
   });
 
+  it("Gulf orders (AED prices) are charged in USD at Kashier's rate", async () => {
+    kashierEnv();
+    process.env.KASHIER_CURRENCIES = "EGP,USD";
+    const realFetch = globalThis.fetch;
+    const fx = vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
+      const url = String(input);
+      if (url.includes("/v3/payment/exchange-rate")) {
+        expect(url).toContain("from=AED&to=USD");
+        return new Response(JSON.stringify({ success: true, base: "AED", rates: { USD: 0.2723 } }), { status: 200 });
+      }
+      return realFetch(input, init);
+    });
+
+    const catalog = await request(app).get("/api/v1/builder/catalog");
+    expect(catalog.body.payments.AED).toEqual({ online: true, provider: "kashier", methods: ["card", "wallet"], chargeCurrency: "USD", rate: 0.2723 });
+    expect(catalog.body.payments.EGP.chargeCurrency).toBeUndefined();
+
+    // Business 2,250 + booking 350 = 2,600 AED setup → 1,300 AED deposit → USD 353.99.
+    const res = await request(app).post("/api/v1/builder/orders").send(order({ country: "AE" }));
+    expect(res.body.quote).toMatchObject({ currency: "AED", deposit: 1300 });
+    expect(res.body.charge).toEqual({ amount: 353.99, currency: "USD" });
+    const url = new URL(res.body.checkoutUrl);
+    expect(url.searchParams.get("currency")).toBe("USD");
+    expect(url.searchParams.get("amount")).toBe("353.99");
+    const saved = await BuilderOrder.findOne({ ref: res.body.ref }).lean();
+    expect(saved?.payment).toMatchObject({ amount: 353.99, currency: "USD", rate: 0.2723, status: "pending" });
+    expect(fx).toHaveBeenCalledTimes(1); // cached for the order after the catalog lookup
+
+    // The webhook must report the converted amount/currency, not the AED price.
+    const wrong = { merchantOrderId: res.body.ref, status: "SUCCESS", amount: "1300", currency: "AED", signatureKeys: ["merchantOrderId", "status", "amount", "currency"] };
+    const sign = (d: Record<string, unknown>) => crypto.createHmac("sha256", "kashier-test-key").update(kashierSignaturePayload(d)).digest("hex");
+    await request(app).post("/api/v1/builder/payments/kashier/webhook").set("x-kashier-signature", sign(wrong)).send({ event: "pay", data: wrong });
+    expect((await BuilderOrder.findOne({ ref: res.body.ref }).lean())?.payment.status).toBe("pending");
+
+    const right = { ...wrong, amount: "353.99", currency: "USD" };
+    await request(app).post("/api/v1/builder/payments/kashier/webhook").set("x-kashier-signature", sign(right)).send({ event: "pay", data: right });
+    const paid = await BuilderOrder.findOne({ ref: res.body.ref }).lean();
+    expect(paid?.payment.status).toBe("paid");
+    expect(paid?.activity.map((a) => a.message).join("\n")).toMatch(/expected/);
+    expect(sent.some((m) => m.html.includes("USD 353.99"))).toBe(true);
+  });
+
+  it("uses the official peg when Kashier's rate lookup is down", async () => {
+    kashierEnv();
+    process.env.KASHIER_CURRENCIES = "EGP,USD";
+    const realFetch = globalThis.fetch;
+    vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) =>
+      String(input).includes("exchange-rate") ? new Response("{}", { status: 503 }) : realFetch(input, init),
+    );
+    const res = await request(app).post("/api/v1/builder/orders").send(order({ country: "SA" }));
+    expect(res.body.charge).toEqual({ amount: Math.round((1300 / 3.6725) * 100) / 100, currency: "USD" });
+  });
+
   it("falls back to a manual order when no provider supports the currency", async () => {
     kashierEnv();
+    process.env.KASHIER_CURRENCIES = "EGP"; // account without USD: Gulf orders can't be converted
     const res = await request(app).post("/api/v1/builder/orders").send(order({ country: "AE" }));
     expect(res.body.quote.currency).toBe("AED");
     expect(res.body.status).toBe("submitted");
