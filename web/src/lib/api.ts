@@ -168,7 +168,25 @@ export function socialProfileUrls(links: SocialLinks | null): string[] {
 /** Website Builder catalog (templates, add-ons, plans). Empty lists if the API is down. */
 export async function getBuilderCatalog(): Promise<BuilderCatalog> {
   const data = await getJson<Partial<BuilderCatalog>>("/builder/catalog", {});
-  return { templates: data.templates ?? [], addons: data.addons ?? [], plans: data.plans ?? [], payments: data.payments ?? {} };
+  // Defaults keep the wizard working if the API still serves older catalog data (e.g. mid-deploy).
+  const templates = (data.templates ?? []).map((t) => ({
+    ...t,
+    hero: t.hero ?? "split",
+    mode: t.mode ?? "light",
+    corners: t.corners ?? "soft",
+    pageKeys: t.pageKeys?.length ? t.pageKeys : (["home", "about", "services", "contact"] as BuilderCatalog["templates"][number]["pageKeys"]),
+    defaultPages: t.defaultPages ?? ["home", "contact"],
+    tags: t.tags ?? [],
+    goals: t.goals ?? [],
+    features: t.features ?? [],
+    recommendedAddons: t.recommendedAddons ?? [],
+  }));
+  const plans = (data.plans ?? []).map((p) => ({
+    ...p,
+    includedPages: p.includedPages ?? 5,
+    extraPagePrice: p.extraPagePrice ?? { EGP: 1000, AED: 140, USD: 40 },
+  }));
+  return { templates, addons: data.addons ?? [], plans, payments: data.payments ?? {} };
 }
 
 /** Published clients for the galaxy of stars. */
