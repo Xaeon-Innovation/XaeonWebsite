@@ -25,7 +25,14 @@ app.disable("x-powered-by");
 app.use((0, helmet_1.default)({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
 app.use((0, cors_1.default)(cors_config_1.corsOptions));
 app.use((0, cookie_parser_1.default)());
-app.use(express_1.default.json({ limit: "100kb" }));
+app.use(express_1.default.json({
+    limit: "100kb",
+    // Payment webhooks are signed over the exact bytes received.
+    verify: (req, _res, buf) => {
+        if (req.url?.includes("/payments/"))
+            req.rawBody = Buffer.from(buf);
+    },
+}));
 app.use(express_1.default.urlencoded({ extended: true, limit: "100kb" }));
 app.use(logger_1.logger);
 app.use("/uploads", express_1.default.static((0, siteUpload_config_1.getUploadRoot)(), {
@@ -56,6 +63,8 @@ const followUpDigest_1 = require("./jobs/followUpDigest");
 const siteUpload_routes_1 = __importDefault(require("./routes/siteUpload.routes"));
 const siteSettings_routes_1 = __importDefault(require("./routes/siteSettings.routes"));
 const booking_routes_1 = __importDefault(require("./routes/booking.routes"));
+const builder_routes_1 = __importDefault(require("./routes/builder.routes"));
+const builderAdmin_routes_1 = __importDefault(require("./routes/builderAdmin.routes"));
 app.use("/api/v1/auth", auth_routes_1.default);
 app.use("/api/v1/blog-post", blogPost_routes_1.default);
 app.use("/api/v1/package", package_routes_1.default);
@@ -72,6 +81,8 @@ app.use("/api/v1/lead", lead_routes_1.default);
 app.use("/api/v1/admin", siteUpload_routes_1.default);
 app.use("/api/v1/admin/site-settings", siteSettings_routes_1.default);
 app.use("/api/v1/bookings", booking_routes_1.default);
+app.use("/api/v1/builder", builder_routes_1.default);
+app.use("/api/v1/admin/builder", builderAdmin_routes_1.default);
 app.use((_req, res) => {
     res.status(404).json({ error: "Not found" });
 });

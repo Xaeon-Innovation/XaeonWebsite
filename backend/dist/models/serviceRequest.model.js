@@ -50,7 +50,7 @@ function isLeadStage(value) {
 }
 exports.LEAD_CURRENCIES = ["EGP", "USD", "AED", "SAR", "EUR"];
 function isRegisteredSource() {
-    return !isEnquirySource(this.source) && this.source !== "booking";
+    return !isEnquirySource(this.source) && this.source !== "booking" && this.source !== "builder";
 }
 function requiresMeetingDate() {
     return isRegisteredSource.call(this) || this.source === "booking";
@@ -65,7 +65,7 @@ const ServiceRequestSchema = new mongoose_1.Schema({
     },
     source: {
         type: String,
-        enum: ["registered", "booking", ...exports.ENQUIRY_SOURCES],
+        enum: ["registered", "booking", "builder", ...exports.ENQUIRY_SOURCES],
         default: "registered",
     },
     meeting_date: {

@@ -26,6 +26,13 @@ Branch: `feature/website-builder`, fast-forwarded into `main`. **Phase 1 is LIVE
 ## Done log
 (newest first — date, step, files, notes)
 
+- 2026-10-28 **Kashier test mode on (production)**
+  - The owner set `PAYMENT_PROVIDERS=kashier`, MID, Payment API key, `KASHIER_MODE=test`, `KASHIER_CURRENCIES=EGP` and `KASHIER_METHODS=card,wallet` in `backend/.env`. The secret key isn't needed.
+  - API restarted and the site cache revalidated. The live catalog returns `EGP: kashier card,wallet`.
+  - A dry-run checkout link (no order created) opened Kashier's HPP: "Xaeon TEST MODE, 10.00 EGP, Card / Wallet". The MID and hash are accepted.
+  - **Still to verify:** a real test payment and its webhook. Claude wasn't permitted to create a production order, so the owner places one in the browser.
+  - ⚠️ While `KASHIER_MODE=test`, real Egyptian customers reach the test checkout. Switch to live keys or unset `PAYMENT_PROVIDERS` before launch.
+
 - 2026-10-28 **Deployed**
   - API: `cd backend && npm run build && pm2 restart xaeon-api --update-env`; the previous `dist` was backed up first.
   - Verified `https://api.xaeons.com/api/v1/builder/catalog` returns 200 with 18 templates, 13 add-ons and 4 plans.

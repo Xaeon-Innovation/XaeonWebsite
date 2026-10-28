@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.honeypot = exports.publicFormLimiter = exports.authLimiter = void 0;
+exports.builderUploadLimiter = exports.honeypot = exports.publicFormLimiter = exports.authLimiter = void 0;
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const tooMany = { error: "Too many requests, please try again later." };
 /** The test suite logs in many times; limits apply there only when a test opts in. */
@@ -41,3 +41,12 @@ const honeypot = (req, res, next) => {
     next();
 };
 exports.honeypot = honeypot;
+/** Website Builder brand uploads (logo + a few images per visitor). */
+exports.builderUploadLimiter = (0, express_rate_limit_1.default)({
+    windowMs: 10 * 60 * 1000,
+    limit: 20,
+    standardHeaders: "draft-7",
+    legacyHeaders: false,
+    message: tooMany,
+    skip: skipInTests,
+});
