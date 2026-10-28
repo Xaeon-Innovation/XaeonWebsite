@@ -26,6 +26,19 @@ Branch: `feature/website-builder`, fast-forwarded into `main`. **Phase 1 is LIVE
 ## Done log
 (newest first — date, step, files, notes)
 
+- 2026-10-28 **v2 + USD conversion deployed**
+  - API rebuilt and restarted. The previous `dist` is backed up in the session scratchpad.
+  - Production catalog updated: 40 templates, 4 plans with page allowances, 12 add-ons; `extra-pages` hidden.
+  - `main` pushed, Vercel deployed, cache revalidated.
+  - Live smoke test, with no order placed:
+    - geo pre-selects the country;
+    - 4 Beauty templates show;
+    - the proposal recommends Launch with a "Pay EGP 19,500 deposit" button;
+    - no page errors.
+  - **Notes:**
+    - `backend/dist` is tracked in git: commit it after `npm run build`, or `git checkout main` refuses.
+    - `getBuilderCatalog()` now fills defaults, so a deploy in either order can't break the wizard.
+
 - 2026-10-28 **Wizard v2 (conversion-focused)**: see DECISIONS #11.
   - **Backend:**
     - `builderShared` gains all ISO `COUNTRIES` with `marketFor()`, 10 industries, `PAGE_KEYS`, and the style values (hero, mode, corners).
@@ -43,7 +56,7 @@ Branch: `feature/website-builder`, fast-forwarded into `main`. **Phase 1 is LIVE
     - The terms links never rendered (rich-text tags).
     - Country search ranking.
   - **Results:** backend 57 pass, e2e 110/110, Lighthouse `/website-builder` EN/AR 100×4.
-  - **NOT deployed.** Deploy needs, in order:
+  - **Deployed 2026-10-28** (main 729b426). Order followed:
     1. Merge to `main` and push.
     2. Run `cd backend && npm run build && pm2 restart xaeon-api --update-env`.
     3. Run `npx ts-node scripts/seed-builder.ts --apply --update` (adds 22 templates, updates 18 plus plans and add-ons, hides `extra-pages`).
