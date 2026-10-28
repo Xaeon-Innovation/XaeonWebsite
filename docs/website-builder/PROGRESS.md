@@ -3,7 +3,7 @@
 > Start here in any new session. Read `PLAN.md` (approved plan), `DECISIONS.md`, then continue from the first
 > unchecked item below. Update this file after every step: tick it, note files touched, and add open TODOs.
 
-Branch: `feature/website-builder` (created from `phase-4-content-quality`). **Phase 1 complete; not committed yet** (owner to review & commit).
+Branch: `feature/website-builder`, fast-forwarded into `main`. **Phase 1 is LIVE** (deployed 2026-10-28, commit b9272ab).
 
 ## Build order
 
@@ -25,6 +25,12 @@ Branch: `feature/website-builder` (created from `phase-4-content-quality`). **Ph
 
 ## Done log
 (newest first — date, step, files, notes)
+
+- 2026-10-28 **Deployed**
+  - API: `cd backend && npm run build && pm2 restart xaeon-api --update-env`; the previous `dist` was backed up first.
+  - Verified `https://api.xaeons.com/api/v1/builder/catalog` returns 200 with 18 templates, 13 add-ons and 4 plans.
+  - Web and admin: pushed `main`, which Vercel built. `xaeons.com/website-builder` (EN/AR), `/products/velora` and `/products/polara` all return 200, `/products/elevora` returns 308 to Polara, and the app.xaeons.com bundle contains the builder admin routes.
+  - Payments are still in invoice mode everywhere (no `PAYMENT_PROVIDERS` set).
 
 - 2026-10-28 **Go-live + country-first payments**
   - **Production catalog seeded** (`seed-builder.ts --apply` against the prod `DB_URI`): 4 plans, 13 add-ons, 18 templates.
@@ -69,7 +75,7 @@ Branch: `feature/website-builder` (created from `phase-4-content-quality`). **Ph
 - 2026-10-28 **0** — `graphify update .` + `graphify export obsidian --dir graphify-out/obsidian` (1659 nodes). `graphify-out/` gitignored.
 
 ## Next (phase 2 ideas)
-- Deploy: merge branch → `cd backend && npm run build && pm2 restart xaeon-api` (+ worker/others if they share code) and push web to Vercel. Then add/publish real client stars in admin.
+- Redeploy recipe: merge to `main` + push (Vercel: web + admin); API: `cd backend && npm run build && pm2 restart xaeon-api --update-env`. Add/publish real client stars in admin.
 - Real template screenshots (`previewImageUrl`) per template, or richer preview layouts.
 - Recurring subscription billing (Polar subscriptions or Kashier tokenised payments).
 - Customer portal view of their builder order (frontend `/dashboard`).
