@@ -2,7 +2,7 @@
   "meta": {
     "siteName": "Xaeon Software Solutions",
     "homeTitle": "Xaeon — Software, AI & Product Studio in Egypt",
-    "homeDescription": "Xaeon builds custom software, websites, web and mobile apps, AI features and SaaS products like Elevora HR. Based in Alexandria, Egypt. Book a free consultation."
+    "homeDescription": "Xaeon builds custom software, websites, web and mobile apps, AI features and SaaS products like Polara HR. Based in Alexandria, Egypt. Book a free consultation."
   },
   "nav": {
     "skip": "Skip to content",
@@ -18,7 +18,9 @@
     "closeMenu": "Close menu",
     "language": "العربية",
     "languageLabel": "Switch to Arabic",
-    "home": "Home"
+    "home": "Home",
+    "websiteBuilder": "Website Builder",
+    "new": "New"
   },
   "common": {
     "bookCall": "Book a free call",
@@ -50,10 +52,10 @@
       "eyebrow": "Software · AI · Products",
       "titleA": "Beyond time.",
       "titleB": "Beyond limits.",
-      "subtitle": "Xaeon designs and builds custom software, websites, mobile apps and AI features, and runs our own SaaS products like Elevora HR. One team from first workshop to launch and beyond.",
+      "subtitle": "Xaeon designs and builds custom software, websites, mobile apps and AI features, and runs our own SaaS products: Polara for HR and Velora for clinics. One team from first workshop to launch and beyond.",
       "primary": "Book a free call",
       "secondary": "See our services",
-      "badge": "New: Elevora, mobile-first HR for field and office teams",
+      "badge": "New: the Xaeon Website Builder. Pick a template, add your brand, launch with us",
       "weBuild": "We build",
       "words": [
         "HR platforms",
@@ -73,17 +75,17 @@
       "title": "Everything you need to launch and grow a digital product",
       "intro": "Pick one service or bring us the whole product. Design, engineering, AI and marketing work as one team, so nothing gets lost between agencies."
     },
-    "elevora": {
+    "polara": {
       "eyebrow": "Our product",
-      "title": "Elevora: run your whole workforce from one app",
-      "body": "We build products as well as client work. Elevora replaces spreadsheets, WhatsApp groups and paper timesheets with clock-in, live maps, shifts, tasks, leave, KPIs, hiring and payroll.",
-      "cta": "Explore Elevora",
+      "title": "Polara: run your whole workforce from one app",
+      "body": "We build products as well as client work. Polara replaces spreadsheets, WhatsApp groups and paper timesheets with clock-in, live maps, shifts, tasks, leave, KPIs, hiring and payroll.",
+      "cta": "Explore Polara",
       "trial": "Start a 14-day free trial"
     },
     "work": {
       "eyebrow": "Selected work",
       "title": "Recent projects",
-      "empty": "New case studies are being written up. Meanwhile, Elevora shows what we build: a production SaaS used by field and office teams."
+      "empty": "New case studies are being written up. Meanwhile, Polara shows what we build: a production SaaS used by field and office teams."
     },
     "process": {
       "eyebrow": "How we work",
@@ -275,20 +277,22 @@
   },
   "products": {
     "metaTitle": "Products — SaaS built by Xaeon",
-    "metaDescription": "Software products designed and run by Xaeon, starting with Elevora: mobile-first HR, clock-in, KPIs and live field tracking.",
+    "metaDescription": "Software products designed and run by Xaeon: Polara for HR and workforce, and Velora for clinics and healthcare practices.",
     "eyebrow": "Products",
     "title": "Products we build and run ourselves",
-    "intro": "Building our own products keeps us sharp. The same team that ships Elevora builds for our clients.",
-    "elevoraTag": "HR & workforce",
-    "elevoraSummary": "Mobile-first HR: clock-in, live field tracking, shifts, KPIs, leave, hiring and payroll in one app.",
-    "more": "More products are in development."
+    "intro": "Building our own products keeps us sharp. The same team that ships Polara and Velora builds for our clients.",
+    "polaraTag": "HR & workforce",
+    "polaraSummary": "Mobile-first HR: clock-in, live field tracking, shifts, KPIs, leave, hiring and payroll in one app.",
+    "more": "Both products work in English and Arabic, and we can connect either one to a website you build with us.",
+    "veloraTag": "Clinics & healthcare",
+    "veloraSummary": "Clinic management: online booking, patient records, billing, WhatsApp reminders and multi-branch reports in one system."
   },
-  "elevora": {
-    "metaTitle": "Elevora — mobile-first HR and workforce app",
-    "metaDescription": "Elevora replaces spreadsheets and paper timesheets with geofenced clock-in, live maps, shifts, tasks, leave, KPIs, hiring and payroll. English and Arabic. 14-day free trial.",
-    "eyebrow": "Elevora by Xaeon",
+  "polara": {
+    "metaTitle": "Polara — mobile-first HR and workforce app",
+    "metaDescription": "Polara replaces spreadsheets and paper timesheets with geofenced clock-in, live maps, shifts, tasks, leave, KPIs, hiring and payroll. English and Arabic. 14-day free trial.",
+    "eyebrow": "Polara by Xaeon",
     "title": "Every operation. All in one place.",
-    "summary": "Elevora is a mobile-first HR and workforce app by Xaeon. It replaces spreadsheets, WhatsApp groups and paper timesheets with clock-in, live maps, shifts, tasks, leave, KPIs, hiring and payroll, in English and Arabic.",
+    "summary": "Polara is a mobile-first HR and workforce app by Xaeon. It replaces spreadsheets, WhatsApp groups and paper timesheets with clock-in, live maps, shifts, tasks, leave, KPIs, hiring and payroll, in English and Arabic.",
     "trial": "Start 14-day free trial",
     "demo": "Request a demo",
     "badges": [
@@ -368,28 +372,28 @@
     "pricingTitle": "Simple per-seat pricing",
     "pricingBody": "Plans start from $6 per seat per month, and every plan starts with a 14-day free trial. Enterprise plans with custom limits are available.",
     "pricingCta": "See full pricing",
-    "faqTitle": "Elevora questions",
+    "faqTitle": "Polara questions",
     "faq": [
       {
-        "q": "Does Elevora work in Arabic?",
-        "a": "Yes. Elevora is fully bilingual in English and Arabic."
+        "q": "Does Polara work in Arabic?",
+        "a": "Yes. Polara is fully bilingual in English and Arabic."
       },
       {
         "q": "What happens when staff have no signal?",
-        "a": "Elevora works offline. Clock events queue on the phone and sync automatically when the connection returns."
+        "a": "Polara works offline. Clock events queue on the phone and sync automatically when the connection returns."
       },
       {
         "q": "How do we get started?",
         "a": "Start a 14-day free trial with no card needed, or request a demo and we'll walk your team through it."
       },
       {
-        "q": "Can Elevora connect to our other tools?",
+        "q": "Can Polara connect to our other tools?",
         "a": "Higher plans include integrations such as CMS Goals and HubSpot, plus a REST API and webhooks."
       }
     ],
-    "demoTitle": "Request an Elevora demo",
-    "demoBody": "Tell us about your team and we'll show you Elevora with your setup in mind.",
-    "comparisonTitle": "Elevora vs spreadsheets and WhatsApp",
+    "demoTitle": "Request an Polara demo",
+    "demoBody": "Tell us about your team and we'll show you Polara with your setup in mind.",
+    "comparisonTitle": "Polara vs spreadsheets and WhatsApp",
     "comparison": [
       {
         "topic": "Attendance",
@@ -454,11 +458,11 @@
   },
   "about": {
     "metaTitle": "About Xaeon — creative technology studio in Alexandria",
-    "metaDescription": "Xaeon is a creative-technology studio in Alexandria, Egypt building software, brands and products like Elevora. Meet the team and our values.",
+    "metaDescription": "Xaeon is a creative-technology studio in Alexandria, Egypt building software, brands and products like Polara. Meet the team and our values.",
     "eyebrow": "About",
     "title": "We build software, brands and products that matter",
     "body1": "Xaeon is a creative-technology studio shaping the future of branding and digital products. We partner with ambitious teams to build standout identities, powerful digital experiences and systems that scale.",
-    "body2": "Our work is driven by clarity, precision and the belief that great ideas must also be deeply engineered. We also build and run our own products, starting with Elevora.",
+    "body2": "Our work is driven by clarity, precision and the belief that great ideas must also be deeply engineered. We also build and run our own products, starting with Polara.",
     "valuesTitle": "What we value",
     "values": [
       {
@@ -687,5 +691,453 @@
         }
       ]
     }
+  },
+  "velora": {
+    "metaTitle": "Velora — clinic management system",
+    "metaDescription": "Velora runs your clinic: online booking, patient records, billing, WhatsApp reminders and reports across branches. English and Arabic.",
+    "eyebrow": "Velora by Xaeon",
+    "title": "Velora: your whole clinic, calmly organised",
+    "summary": "Velora is a clinic management system by Xaeon. It brings appointments, patient files, billing, reminders and reports into one bilingual system, so your front desk and doctors spend less time on paperwork and more time with patients.",
+    "demo": "Request a demo",
+    "website": "Pair it with a website",
+    "badges": [
+      "English & Arabic",
+      "Online booking",
+      "WhatsApp reminders",
+      "Multi-branch"
+    ],
+    "modulesTitle": "Everything the clinic runs on",
+    "modules": [
+      {
+        "title": "Appointments",
+        "body": "Doctor calendars, room schedules, walk-ins and a waiting list in one view."
+      },
+      {
+        "title": "Online booking",
+        "body": "Patients book from your website or a link, and only see real free slots."
+      },
+      {
+        "title": "Patient records",
+        "body": "Visits, notes, prescriptions and attachments in one secure file per patient."
+      },
+      {
+        "title": "Billing & invoices",
+        "body": "Services, packages, insurance shares and receipts, with daily cash-up."
+      },
+      {
+        "title": "Reminders",
+        "body": "Automatic WhatsApp and SMS reminders cut no-shows."
+      },
+      {
+        "title": "Multi-branch",
+        "body": "Run several branches with shared patients and separate schedules."
+      },
+      {
+        "title": "Reports",
+        "body": "Revenue, doctor utilisation, no-show rate and top services at a glance."
+      },
+      {
+        "title": "Roles & privacy",
+        "body": "Front desk, doctors and managers each see only what they need."
+      }
+    ],
+    "stepsTitle": "Live in three steps",
+    "steps": [
+      {
+        "title": "Set up your clinic",
+        "body": "Branches, doctors, services, prices and working hours."
+      },
+      {
+        "title": "Bring your patients",
+        "body": "Import your patient list and connect booking to your website."
+      },
+      {
+        "title": "Run the day",
+        "body": "Bookings, check-ins, billing and reminders from one screen."
+      }
+    ],
+    "audienceTitle": "Built for",
+    "audience": [
+      {
+        "title": "Private clinics",
+        "body": "One or two doctors who want a calmer front desk."
+      },
+      {
+        "title": "Dental centres",
+        "body": "Chairs, treatment plans and recalls in one place."
+      },
+      {
+        "title": "Polyclinics",
+        "body": "Many specialties, shared reception, clear reports."
+      },
+      {
+        "title": "Beauty & wellness",
+        "body": "Sessions, packages and repeat visits."
+      }
+    ],
+    "websiteTitle": "Your clinic website, booking included",
+    "websiteBody": "Build a clinic website with the Xaeon Website Builder and connect Velora booking, so patients book real slots straight from your site.",
+    "websiteCta": "Start a clinic website",
+    "faqTitle": "Velora questions",
+    "faq": [
+      {
+        "q": "Does Velora work in Arabic?",
+        "a": "Yes. Velora is fully bilingual in English and Arabic, for staff and for patients."
+      },
+      {
+        "q": "Can patients book online?",
+        "a": "Yes. Patients book from your website or a shared link, and receive WhatsApp confirmations and reminders."
+      },
+      {
+        "q": "Is patient data secure?",
+        "a": "Data is encrypted in transit, access is role-based and every sensitive action is logged."
+      },
+      {
+        "q": "Can we move our existing patient list?",
+        "a": "Yes. We import your existing patient list during onboarding."
+      }
+    ],
+    "demoTitle": "Request a Velora demo",
+    "demoBody": "Tell us about your clinic and we'll walk you through Velora with your setup in mind."
+  },
+  "builder": {
+    "metaDescription": "Build your business website with Xaeon: choose your industry and a proven template, add your brand, pick add-ons and a plan, and we launch it for you. Arabic and English.",
+    "steps": [
+      "Business",
+      "Template",
+      "Brand",
+      "Add-ons",
+      "Plan",
+      "Review"
+    ],
+    "stepOf": "Step {current} of {total}",
+    "back": "Back",
+    "next": "Continue",
+    "unavailable": "The builder is being updated. Book a call and we'll build your site with you.",
+    "unavailableCta": "Book a call",
+    "categories": {
+      "clinics": {
+        "title": "Clinics & healthcare",
+        "body": "Doctors, dental, beauty and wellness."
+      },
+      "education": {
+        "title": "Education & training",
+        "body": "Schools, academies and training centres."
+      },
+      "professional": {
+        "title": "Professional services",
+        "body": "Law, accounting, consultancy and studios."
+      },
+      "restaurants": {
+        "title": "Restaurants & cafés",
+        "body": "Menus, reservations and delivery."
+      },
+      "home-services": {
+        "title": "Home services & contractors",
+        "body": "Construction, maintenance and cleaning."
+      },
+      "catalogue": {
+        "title": "Products & catalogue",
+        "body": "Showrooms, retail and small online stores."
+      }
+    },
+    "categoryTitle": "What does your business do?",
+    "goalTitle": "What should your website do first?",
+    "goals": {
+      "calls": "Get calls & WhatsApp",
+      "bookings": "Take bookings",
+      "leads": "Collect leads",
+      "sales": "Sell online",
+      "catalogue": "Show products"
+    },
+    "templateTitle": "Pick a starting design",
+    "templateBody": "Every template is fully adapted to your brand. You can change direction with our team later.",
+    "minPlan": "{plan} plan or higher",
+    "pagesIncluded": "Pages",
+    "brandTitle": "Make it yours",
+    "brandBody": "Add your name, colours and logo. The preview updates as you type.",
+    "businessName": "Business name",
+    "businessNamePlaceholder": "e.g. Delta Clinics",
+    "primary": "Main colour",
+    "accent": "Second colour",
+    "contrastHint": "This colour is light, so we'll use dark text on it.",
+    "font": "Font style",
+    "fonts": {
+      "modern": "Modern",
+      "rounded": "Friendly",
+      "serif": "Classic",
+      "display": "Bold"
+    },
+    "tone": "Tone of voice",
+    "tones": {
+      "friendly": "Friendly",
+      "professional": "Professional",
+      "premium": "Premium",
+      "playful": "Playful"
+    },
+    "logo": "Logo",
+    "logoHint": "PNG, JPG, WebP or SVG, up to 10MB.",
+    "assets": "Brand images (optional)",
+    "assetsHint": "Photos, brand guidelines as images, up to 5.",
+    "upload": "Upload",
+    "uploading": "Uploading…",
+    "uploadError": "That file couldn't be uploaded. Try a JPG or PNG under 10MB.",
+    "remove": "Remove",
+    "noLogo": "No logo yet? Add “Brand identity design” in the next step.",
+    "notes": "Anything we should know? (optional)",
+    "notesPlaceholder": "Brand guidelines link, services to highlight, websites you like…",
+    "addonsTitle": "Add what your business needs",
+    "modules": "Website features",
+    "services": "Grow with Xaeon",
+    "servicesBody": "Bundle another Xaeon product or service with your website and save.",
+    "recommended": "Recommended",
+    "included": "Included in {plan}",
+    "from": "from {price}",
+    "needsPlan": "Needs {plan}",
+    "perMonth": "/mo",
+    "oneTime": "one-time",
+    "planTitle": "Choose your plan",
+    "planBody": "A one-time setup fee plus a monthly plan for hosting, updates, backups and support.",
+    "popular": "Most popular",
+    "monthly": "Monthly",
+    "annual": "Annual (2 months free)",
+    "currency": "Currency",
+    "planTooLow": "Your template or add-ons need a higher plan.",
+    "reviewTitle": "Review and send",
+    "reviewBody": "We'll confirm everything with you before we start building.",
+    "contactTitle": "Your details",
+    "name": "Full name",
+    "email": "Email",
+    "phone": "Phone / WhatsApp",
+    "company": "Company (optional)",
+    "terms": "I agree to the {terms} and {privacy}.",
+    "termsLink": "terms",
+    "privacyLink": "privacy policy",
+    "errors": {
+      "category": "Choose your business type.",
+      "template": "Choose a template.",
+      "businessName": "Enter your business name.",
+      "name": "Please enter your name.",
+      "email": "Please enter a valid email.",
+      "phone": "Please enter a valid phone number.",
+      "terms": "Please accept the terms to continue.",
+      "submit": "We couldn't send your order. Please try again or message us on WhatsApp.",
+      "country": "Choose your country."
+    },
+    "summary": "Your website",
+    "setup": "One-time setup",
+    "monthlyTotal": "Monthly",
+    "annualTotal": "Billed yearly",
+    "savings": "You save",
+    "deposit": "Due now",
+    "depositNote": "Pay {deposit} now to reserve your build. The rest is due before launch.",
+    "depositNoteLaunch": "Pay the setup in full now; your plan starts at launch.",
+    "manualNote": "No payment now — our team confirms scope and sends your invoice.",
+    "quotedNote": "Items marked “from” are estimates; we confirm the final price with you.",
+    "submit": "Send my order",
+    "submitPay": "Continue to payment",
+    "sending": "Sending…",
+    "preview": "Live preview",
+    "desktop": "Desktop",
+    "mobile": "Mobile",
+    "previewNote": "Illustrative preview. Your real site uses your content and photos.",
+    "samples": {
+      "clinics": {
+        "headline": "Care that puts you first",
+        "sub": "Book a visit with our specialists in minutes.",
+        "cta": "Book an appointment",
+        "items": [
+          "Dental",
+          "Dermatology",
+          "Check-ups"
+        ]
+      },
+      "education": {
+        "headline": "Learn skills that move you forward",
+        "sub": "Practical courses with expert instructors.",
+        "cta": "Enrol now",
+        "items": [
+          "Courses",
+          "Workshops",
+          "Certificates"
+        ]
+      },
+      "professional": {
+        "headline": "Clear advice. Real results.",
+        "sub": "Trusted experts for growing businesses.",
+        "cta": "Book a consultation",
+        "items": [
+          "Advisory",
+          "Accounting",
+          "Legal"
+        ]
+      },
+      "restaurants": {
+        "headline": "Fresh food, made to share",
+        "sub": "Dine in, take away or order delivery.",
+        "cta": "See the menu",
+        "items": [
+          "Breakfast",
+          "Lunch",
+          "Desserts"
+        ]
+      },
+      "home-services": {
+        "headline": "Done right, the first time",
+        "sub": "Licensed teams for every job at home.",
+        "cta": "Get a free quote",
+        "items": [
+          "Maintenance",
+          "Renovation",
+          "Cleaning"
+        ]
+      },
+      "catalogue": {
+        "headline": "Quality you can see",
+        "sub": "Browse our collection and order on WhatsApp.",
+        "cta": "Shop the collection",
+        "items": [
+          "New in",
+          "Best sellers",
+          "Offers"
+        ]
+      }
+    },
+    "success": {
+      "title": "Welcome to our galaxy",
+      "body": "Your order {ref} is in. We've emailed you a copy and our team will contact you within one business day.",
+      "paid": "Payment received — thank you! Work on your website has started.",
+      "pending": "We're confirming your payment. This page updates automatically.",
+      "failed": "Your payment didn't go through. No charge was made — we'll contact you to complete it, or message us on WhatsApp.",
+      "submitted": "No payment needed now: we'll confirm the scope and send your invoice.",
+      "missing": "We couldn't find that order. If you just placed one, check your email for the confirmation.",
+      "home": "Back to home",
+      "explore": "Explore our work"
+    },
+    "countryTitle": "Where is your business based?",
+    "countryBody": "We'll show prices in your currency and the payment options available in your country.",
+    "countries": {
+      "EG": "Egypt",
+      "AE": "UAE",
+      "SA": "Saudi Arabia",
+      "KW": "Kuwait",
+      "QA": "Qatar",
+      "BH": "Bahrain",
+      "OM": "Oman",
+      "JO": "Jordan",
+      "OTHER": "Another country"
+    },
+    "currencyFor": "Prices in {currency} for {country}.",
+    "changeCountry": "Change country",
+    "payOnlineShort": "pay online by {methods}",
+    "payInvoiceShort": "we'll send your invoice",
+    "paymentTitle": "Payment",
+    "paymentOnline": "Pay the {deposit} deposit securely with {provider} after you send your order:",
+    "paymentManual": "Online payment isn't available for {country} yet. We'll send your invoice with bank transfer details after confirming your order.",
+    "paymentMethods": {
+      "card": "Bank cards (Visa, Mastercard, Meeza)",
+      "wallet": "Mobile wallets",
+      "bank_installments": "Bank instalments",
+      "valu": "valU",
+      "fawry": "Fawry"
+    },
+    "depositInvoiced": "Deposit (invoiced)"
+  },
+  "builderPage": {
+    "metaTitle": "Website Builder — launch your business website with Xaeon",
+    "eyebrow": "Xaeon Website Builder",
+    "title": "Choose a proven website. Make it yours. Launch with Xaeon.",
+    "intro": "Pick your industry and a template, add your brand and the features you need, and see your price instantly. Our team builds, checks and launches it for you, in Arabic and English.",
+    "start": "Start building",
+    "talk": "Talk to us first",
+    "badges": [
+      "Arabic & English",
+      "Your own domain",
+      "Built and launched by our team",
+      "Hosting, updates & support"
+    ],
+    "categoriesTitle": "Built for your industry",
+    "howTitle": "How it works",
+    "how": [
+      {
+        "title": "Choose & customise",
+        "body": "Pick your business type, a template, your colours, logo and add-ons."
+      },
+      {
+        "title": "We build & review",
+        "body": "Our team adds your content, connects your tools and checks every page."
+      },
+      {
+        "title": "Launch & grow",
+        "body": "We connect your domain, launch, and keep it fast, secure and up to date."
+      }
+    ],
+    "builderTitle": "Build your website",
+    "builderBody": "Your choices are saved on this device, so you can come back any time.",
+    "plansTitle": "Simple plans",
+    "plansBody": "A one-time setup fee plus a monthly plan. Prices shown in Egyptian pounds; switch currency in the builder.",
+    "plansFrom": "from",
+    "crossTitle": "More than a website",
+    "crossBody": "Bundle another Xaeon product with your website and save.",
+    "crossApp": {
+      "title": "Add a mobile app",
+      "body": "An iOS & Android app that shares your website's content and bookings.",
+      "badge": "Save 15%"
+    },
+    "crossPolara": {
+      "title": "Polara for your team",
+      "body": "Mobile-first HR: clock-in, shifts, leave, KPIs and payroll."
+    },
+    "crossVelora": {
+      "title": "Velora for clinics",
+      "body": "Appointments, patient records and billing, connected to your site."
+    },
+    "faqTitle": "Website Builder questions",
+    "faq": [
+      {
+        "q": "Do I build the website myself?",
+        "a": "No. You choose and customise in the builder; our team builds, checks and launches it with your content."
+      },
+      {
+        "q": "How long does it take?",
+        "a": "Most Launch and Business sites go live within 1–3 weeks of receiving your content."
+      },
+      {
+        "q": "Can I use my own domain?",
+        "a": "Yes. Your domain stays in your name; we guide you through connecting it."
+      },
+      {
+        "q": "What does the monthly plan cover?",
+        "a": "Hosting, SSL, security updates, backups, monitoring and support, plus the features in your plan."
+      },
+      {
+        "q": "Can I change my template later?",
+        "a": "Yes. Your content and brand move with you; a redesign may have a setup fee."
+      },
+      {
+        "q": "How do I pay?",
+        "a": "Pay the deposit online by card or wallet where available, or by invoice. The rest is due before launch."
+      }
+    ]
+  },
+  "galaxy": {
+    "eyebrow": "Our galaxy of stars",
+    "title": "Every client is a star in our galaxy",
+    "body": "Clinics, academies, restaurants and growing companies across Egypt, the Gulf and beyond. Hover a star to meet them.",
+    "join": "Join our galaxy",
+    "joinBody": "Your business could be our next star.",
+    "all": "All",
+    "constellations": {
+      "website": "Websites",
+      "app": "Apps",
+      "polara": "Polara",
+      "velora": "Velora",
+      "custom": "Custom software"
+    },
+    "readCase": "Read the case study",
+    "visit": "Visit website",
+    "since": "Client since {year}",
+    "listLabel": "Our clients",
+    "empty": "Our first stars are being added. Yours could be one of them."
   }
 }

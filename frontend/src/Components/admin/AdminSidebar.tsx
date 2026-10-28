@@ -15,6 +15,8 @@ import {
   Images,
   Share2,
   Quote,
+  LayoutTemplate,
+  Sparkles,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -28,7 +30,9 @@ const NAV_ITEMS = [
   { to: "/admin/site-team", label: "Site — Team", icon: UsersRound },
   { to: "/admin/site-case-studies", label: "Site — Case studies", icon: Images },
   { to: "/admin/site-testimonials", label: "Site — Testimonials", icon: Quote },
+  { to: "/admin/site-stars", label: "Site — Galaxy of stars", icon: Sparkles },
   { to: "/admin/site-social", label: "Site — Social links", icon: Share2 },
+  { to: "/admin/builder-orders", label: "Website Builder", icon: LayoutTemplate },
   { to: "/admin/bookings", label: "Bookings", icon: CalendarClock },
   { to: "/admin/leads", label: "Leads", icon: MessageSquareText },
 ] as const;

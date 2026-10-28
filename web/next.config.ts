@@ -34,6 +34,9 @@ const nextConfig: NextConfig = {
       { source: "/book-now", destination: "/book", permanent: true },
       { source: "/contact", destination: "/book", permanent: true },
       { source: "/case-studies/:slug", destination: "/work/:slug", permanent: true },
+      // Elevora (HR) was renamed Polara.
+      { source: "/products/elevora", destination: "/products/polara", permanent: true },
+      { source: "/ar/products/elevora", destination: "/ar/products/polara", permanent: true },
       // Accounts, client portal and admin stay on the app.
       { source: "/login", destination: `${APP_ORIGIN}/login`, permanent: false },
       { source: "/register", destination: `${APP_ORIGIN}/register`, permanent: false },

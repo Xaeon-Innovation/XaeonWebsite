@@ -89,3 +89,11 @@ cd backend && TEST_DB_URI=mongodb://127.0.0.1:27017/xaeon_test npm test
 cd web && (node e2e/mock-api.mjs &) && npm run build:e2e && npx playwright install --with-deps && npm run e2e
 ```
 CI runs all of this on every pull request (`.github/workflows/*-ci.yml`), plus Lighthouse budgets.
+
+## Website Builder, Polara/Velora, galaxy of stars
+Full docs: `docs/website-builder/` (start with `PROGRESS.md`).
+1. Deploy the API, then seed the catalog once: `cd backend && npx ts-node scripts/seed-builder.ts --apply`.
+2. Optional: `npx ts-node scripts/migrate-stars.ts --apply`. Stars are created hidden; publish them in Admin → Site — Galaxy of stars.
+3. Online deposits (optional): set `PAYMENT_PROVIDERS` and the Kashier/Polar variables in `backend/.env` (see `docs/website-builder/payments.md`).
+   Without them, orders are saved and staff send the invoice.
+4. `/products/elevora` now 308-redirects to `/products/polara`. No action is needed.

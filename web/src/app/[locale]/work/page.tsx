@@ -5,7 +5,8 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import CtaBand from "@/components/CtaBand";
-import ElevoraMock from "@/components/ElevoraMock";
+import GalaxySection from "@/components/galaxy/GalaxySection";
+import PolaraMock from "@/components/PolaraMock";
 import SectionHeading from "@/components/SectionHeading";
 import { getCaseStudies } from "@/lib/api";
 import { cmsImage } from "@/lib/images";
@@ -38,16 +39,16 @@ export default async function WorkPage({ params }: LocaleParams) {
         <ul className="grid gap-8 md:grid-cols-2">
           {/* Our own product leads the list: it's real, shipped work we can show in full. */}
           <li className="md:col-span-2" data-reveal>
-            <Link href="/products/elevora" className="group grid items-center gap-10 rounded-[2rem] border border-line bg-ink-2 p-8 transition-colors hover:border-sage/50 sm:p-12 lg:grid-cols-2">
+            <Link href="/products/polara" className="group grid items-center gap-10 rounded-[2rem] border border-line bg-ink-2 p-8 transition-colors hover:border-sage/50 sm:p-12 lg:grid-cols-2">
               <span className="flex flex-col gap-4">
                 <span className="eyebrow">{t("work.ourProduct")}</span>
-                <span className="font-display text-3xl font-semibold text-fog">Elevora</span>
-                <span className="text-mist">{t("products.elevoraSummary")}</span>
+                <span className="font-display text-3xl font-semibold text-fog">Polara</span>
+                <span className="text-mist">{t("products.polaraSummary")}</span>
                 <span className="inline-flex items-center gap-2 font-semibold text-sage">
                   {t("common.learnMore")} <ArrowRight size={16} aria-hidden className="rtl:rotate-180" />
                 </span>
               </span>
-              <ElevoraMock locale={locale} />
+              <PolaraMock locale={locale} />
             </Link>
           </li>
           {caseStudies.map((cs) => {
@@ -70,6 +71,7 @@ export default async function WorkPage({ params }: LocaleParams) {
         </ul>
       </section>
 
+      <GalaxySection id="work-galaxy" />
       <CtaBand title={t("work.ctaTitle")} track="work_cta" />
     </>
   );

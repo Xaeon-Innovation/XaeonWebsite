@@ -40,3 +40,13 @@ export const honeypot = (req: Request, res: Response, next: NextFunction): void 
   }
   next();
 };
+
+/** Website Builder brand uploads (logo + a few images per visitor). */
+export const builderUploadLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  limit: 20,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: tooMany,
+  skip: skipInTests,
+});

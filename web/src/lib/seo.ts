@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { routing, type Locale } from "@/i18n/routing";
-import { CONTACT, ELEVORA_URL, SITE_ORIGIN } from "./site";
+import { CONTACT, POLARA_URL, SITE_ORIGIN } from "./site";
 
 /** Absolute URL of `path` (unprefixed, e.g. "/services") in `locale`. */
 export function localeUrl(locale: Locale, path: string): string {
@@ -101,7 +101,7 @@ export function organizationJsonLd(sameAs: string[]): Json {
       telephone: CONTACT.phoneDisplay,
       availableLanguage: ["English", "Arabic"],
     },
-    owns: { "@id": `${ELEVORA_URL}/#software` },
+    owns: { "@id": `${POLARA_URL}/#software` },
     ...(sameAs.length ? { sameAs } : {}),
   };
 }
@@ -145,14 +145,14 @@ export function serviceJsonLd(opts: { name: string; description: string; url: st
   };
 }
 
-export function elevoraJsonLd(opts: { description: string; url: string; locale: Locale }): Json {
+export function polaraJsonLd(opts: { description: string; url: string; locale: Locale }): Json {
   return {
     "@context": "https://schema.org",
     "@type": ["SoftwareApplication", "WebApplication"],
-    "@id": `${ELEVORA_URL}/#software`,
-    name: "Elevora",
+    "@id": `${POLARA_URL}/#software`,
+    name: "Polara",
     description: opts.description,
-    url: ELEVORA_URL,
+    url: POLARA_URL,
     sameAs: [opts.url],
     applicationCategory: "BusinessApplication",
     applicationSubCategory: "Human resources and workforce management",
@@ -163,8 +163,24 @@ export function elevoraJsonLd(opts: { description: string; url: string; locale: 
       price: "6",
       priceCurrency: "USD",
       description: "From $6 per seat per month, 14-day free trial",
-      url: `${ELEVORA_URL}/pricing`,
+      url: `${POLARA_URL}/pricing`,
     },
+    publisher: { "@id": ORG_ID },
+  };
+}
+
+export function veloraJsonLd(opts: { description: string; url: string; locale: Locale }): Json {
+  return {
+    "@context": "https://schema.org",
+    "@type": ["SoftwareApplication", "WebApplication"],
+    "@id": `${opts.url}#software`,
+    name: "Velora",
+    description: opts.description,
+    url: opts.url,
+    applicationCategory: "BusinessApplication",
+    applicationSubCategory: "Clinic and healthcare practice management",
+    operatingSystem: "Web",
+    inLanguage: ["en", "ar"],
     publisher: { "@id": ORG_ID },
   };
 }

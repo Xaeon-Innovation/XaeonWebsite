@@ -121,6 +121,11 @@ const router = createBrowserRouter([
       { path: "site-social", lazy: () => import("./Pages/admin/SiteSocialSettingsPage") },
       { path: "bookings", lazy: () => import("./Pages/admin/BookingsPage") },
       { path: "leads", lazy: () => import("./Pages/admin/LeadsPage") },
+      { path: "builder-orders", lazy: () => import("./Pages/admin/BuilderOrdersPage") },
+      { path: "builder-templates", lazy: () => import("./Pages/admin/BuilderTemplatesPage") },
+      { path: "builder-addons", lazy: () => import("./Pages/admin/BuilderAddonsPage") },
+      { path: "builder-plans", lazy: () => import("./Pages/admin/BuilderPlansPage") },
+      { path: "site-stars", lazy: () => import("./Pages/admin/StarsPage") },
       // Old "Requests" page now lives in Leads.
       { path: "service-requests", element: <Navigate to="/admin/leads" replace /> },
     ],

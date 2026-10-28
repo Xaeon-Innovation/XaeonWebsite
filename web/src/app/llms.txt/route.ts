@@ -1,7 +1,7 @@
 import { getBlogPosts, getCaseStudies, getPackages } from "@/lib/api";
 import { blogSlug } from "@/lib/blog";
 import { localeUrl } from "@/lib/seo";
-import { CONTACT, ELEVORA_URL, SERVICE_SLUGS } from "@/lib/site";
+import { CONTACT, POLARA_URL, SERVICE_SLUGS } from "@/lib/site";
 import en from "../../../messages/en.json";
 
 export const revalidate = 3600;
@@ -16,13 +16,15 @@ export async function GET() {
     "",
     `> ${en.meta.homeDescription}`,
     "",
-    "Xaeon is a software, AI and product studio based in Alexandria, Egypt, serving clients in Egypt, the Gulf and worldwide in English and Arabic. One in-house team covers design, engineering, AI, video and marketing. Xaeon also builds and runs its own SaaS products, starting with Elevora (HR and workforce management).",
+    "Xaeon is a software, AI and product studio based in Alexandria, Egypt, serving clients in Egypt, the Gulf and worldwide in English and Arabic. One in-house team covers design, engineering, AI, video and marketing. Xaeon also builds and runs its own SaaS products, including Polara (HR and workforce management, formerly Elevora) and Velora (clinic management).",
     "",
     "## Services",
     ...SERVICE_SLUGS.map((s) => `- [${services[s].title}](${localeUrl("en", `/services/${s}`)}): ${services[s].summary}`),
     "",
     "## Products",
-    `- [Elevora](${localeUrl("en", "/products/elevora")}): ${en.elevora.summary} Pricing from $6 per seat per month with a 14-day free trial. Product site: ${ELEVORA_URL}`,
+    `- [Polara](${localeUrl("en", "/products/polara")}): ${en.polara.summary} Pricing from $6 per seat per month with a 14-day free trial. Product site: ${POLARA_URL}`,
+    `- [Velora](${localeUrl("en", "/products/velora")}): ${en.velora.summary}`,
+    `- [Website Builder](${localeUrl("en", "/website-builder")}): ${en.builder.metaDescription}`,
     "",
     ...(packages.length
       ? ["## Packages", ...packages.map((p) => `- ${p.title}${p.discount ? ` (${p.discount}% bundle saving)` : ""}: ${localeUrl("en", "/packages")}`), ""]

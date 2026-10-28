@@ -9,7 +9,7 @@ We are a software company building:
 - Digital marketing (acquisition, analytics, landing pages, conversion optimization)
 
 Products:
-- Elevora — HR management system (employees, HR operations): https://elevora.xaeons.com/
+- Polara (formerly Elevora) — HR management system (employees, HR operations): https://elevora.xaeons.com/
 
 Primary site sections (authoritative):
 - Home: https://xaeons.com/

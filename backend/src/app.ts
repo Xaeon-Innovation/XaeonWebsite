@@ -27,7 +27,15 @@ app.disable("x-powered-by");
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
 app.use(cors(corsOptions));
 app.use(cookieParser());
-app.use(express.json({ limit: "100kb" }));
+app.use(
+  express.json({
+    limit: "100kb",
+    // Payment webhooks are signed over the exact bytes received.
+    verify: (req, _res, buf) => {
+      if (req.url?.includes("/payments/")) (req as typeof req & { rawBody?: Buffer }).rawBody = Buffer.from(buf);
+    },
+  })
+);
 app.use(express.urlencoded({ extended: true, limit: "100kb" }));
 app.use(logger);
 
@@ -64,6 +72,8 @@ import { startFollowUpDigest } from "./jobs/followUpDigest";
 import siteUploadRouter from "./routes/siteUpload.routes";
 import siteSettingsRouter from "./routes/siteSettings.routes";
 import bookingRouter from "./routes/booking.routes";
+import builderRouter from "./routes/builder.routes";
+import builderAdminRouter from "./routes/builderAdmin.routes";
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/blog-post", blogPostRouter);
@@ -81,6 +91,8 @@ app.use("/api/v1/lead", leadRouter);
 app.use("/api/v1/admin", siteUploadRouter);
 app.use("/api/v1/admin/site-settings", siteSettingsRouter);
 app.use("/api/v1/bookings", bookingRouter);
+app.use("/api/v1/builder", builderRouter);
+app.use("/api/v1/admin/builder", builderAdminRouter);
 
 app.use((_req, res) => {
   res.status(404).json({ error: "Not found" });

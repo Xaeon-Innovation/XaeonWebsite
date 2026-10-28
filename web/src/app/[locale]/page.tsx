@@ -5,9 +5,10 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import ButtonLink from "@/components/ButtonLink";
 import CtaBand from "@/components/CtaBand";
-import ElevoraMock from "@/components/ElevoraMock";
+import PolaraMock from "@/components/PolaraMock";
 import HeroCinematic from "@/components/hero/HeroCinematic";
 import Faq from "@/components/Faq";
+import GalaxySection from "@/components/galaxy/GalaxySection";
 import ProcessSteps from "@/components/ProcessSteps";
 import SectionHeading from "@/components/SectionHeading";
 import ServiceGrid from "@/components/ServiceGrid";
@@ -15,7 +16,7 @@ import Testimonials from "@/components/Testimonials";
 import { getCaseStudies, getTestimonials } from "@/lib/api";
 import { resolveLocale, type LocaleParams } from "@/lib/page";
 import { pageMetadata } from "@/lib/seo";
-import { ELEVORA_URL } from "@/lib/site";
+import { POLARA_URL } from "@/lib/site";
 
 export async function generateMetadata({ params }: LocaleParams): Promise<Metadata> {
   const locale = await resolveLocale(params);
@@ -32,7 +33,7 @@ export default async function HomePage({ params }: LocaleParams) {
   const faq = t.raw("faq") as { q: string; a: string }[];
   const why = t.raw("home.why.items") as { title: string; body: string }[];
   const steps = t.raw("home.process.steps") as { title: string; body: string }[];
-  const badges = t.raw("elevora.badges") as string[];
+  const badges = t.raw("polara.badges") as string[];
 
   return (
     <>
@@ -49,13 +50,13 @@ export default async function HomePage({ params }: LocaleParams) {
         <ServiceGrid />
       </section>
 
-      {/* Elevora */}
-      <section className="border-y border-line bg-ink-2" aria-labelledby="elevora-title">
+      {/* Polara */}
+      <section className="border-y border-line bg-ink-2" aria-labelledby="polara-title">
         <div className="container-x grid items-center gap-14 py-20 sm:py-28 lg:grid-cols-2">
           <div className="flex flex-col gap-6" data-reveal>
-            <p className="eyebrow">{t("home.elevora.eyebrow")}</p>
-            <h2 id="elevora-title" className="text-3xl font-semibold sm:text-4xl">{t("home.elevora.title")}</h2>
-            <p className="text-lg text-mist">{t("home.elevora.body")}</p>
+            <p className="eyebrow">{t("home.polara.eyebrow")}</p>
+            <h2 id="polara-title" className="text-3xl font-semibold sm:text-4xl">{t("home.polara.title")}</h2>
+            <p className="text-lg text-mist">{t("home.polara.body")}</p>
             <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-fog">
               {badges.map((b) => (
                 <li key={b} className="inline-flex items-center gap-2">
@@ -64,22 +65,22 @@ export default async function HomePage({ params }: LocaleParams) {
               ))}
             </ul>
             <div className="flex flex-wrap gap-3">
-              <ButtonLink href="/products/elevora" data-track="home_elevora_explore">
-                {t("home.elevora.cta")}
+              <ButtonLink href="/products/polara" data-track="home_polara_explore">
+                {t("home.polara.cta")}
               </ButtonLink>
               <a
-                href={`${ELEVORA_URL}/signup`}
+                href={`${POLARA_URL}/signup`}
                 target="_blank"
                 rel="noopener"
                 className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line-strong px-5 py-3 text-sm font-semibold text-fog hover:border-mist"
-                data-track="home_elevora_trial"
+                data-track="home_polara_trial"
               >
-                {t("home.elevora.trial")} <ArrowUpRight size={16} aria-hidden className="rtl:-scale-x-100" />
+                {t("home.polara.trial")} <ArrowUpRight size={16} aria-hidden className="rtl:-scale-x-100" />
               </a>
             </div>
           </div>
           <div data-reveal>
-            <ElevoraMock locale={locale} />
+            <PolaraMock locale={locale} />
           </div>
         </div>
       </section>
@@ -104,8 +105,8 @@ export default async function HomePage({ params }: LocaleParams) {
         ) : (
           <div className="mt-10 flex flex-col items-start gap-4 rounded-[var(--radius-card)] border border-line p-8" data-reveal>
             <p className="max-w-2xl text-mist">{t("home.work.empty")}</p>
-            <ButtonLink href="/products/elevora" variant="ghost">
-              {t("home.elevora.cta")} <ArrowRight size={16} aria-hidden className="rtl:rotate-180" />
+            <ButtonLink href="/products/polara" variant="ghost">
+              {t("home.polara.cta")} <ArrowRight size={16} aria-hidden className="rtl:rotate-180" />
             </ButtonLink>
           </div>
         )}
@@ -138,6 +139,8 @@ export default async function HomePage({ params }: LocaleParams) {
       </section>
 
       <Testimonials items={testimonials} eyebrow={t("home.testimonials.eyebrow")} title={t("home.testimonials.title")} />
+
+      <GalaxySection id="home-galaxy" />
 
       {/* FAQ */}
       <section className="container-x py-20 sm:py-28" aria-labelledby="faq-title">

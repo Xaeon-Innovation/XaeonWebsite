@@ -38,3 +38,5 @@ frontend/public/assets/**
 .env.*
 backend/.env
 frontend/.env
+# graphify knowledge graph + Obsidian vault (regenerate with `graphify update .`)
+graphify-out/

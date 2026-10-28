@@ -36,10 +36,10 @@ const COPY = {
 } as const;
 
 /**
- * Illustrative Elevora interface built in HTML (sharp at any size, no image weight).
+ * Illustrative Polara interface built in HTML (sharp at any size, no image weight).
  * Decorative: the same information is in the page text.
  */
-export default function ElevoraMock({ locale }: { locale: string }) {
+export default function PolaraMock({ locale }: { locale: string }) {
   const c = COPY[locale === "ar" ? "ar" : "en"];
   return (
     <div aria-hidden="true" className="relative mx-auto grid w-full max-w-md grid-cols-2 gap-3 text-[13px] select-none">

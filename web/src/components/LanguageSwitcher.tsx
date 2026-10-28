@@ -16,11 +16,14 @@ export default function LanguageSwitcher({ label, ariaLabel, className = "" }: {
       locale={target}
       hrefLang={target}
       lang={target}
-      aria-label={ariaLabel}
       className={`inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm text-mist hover:text-fog ${className}`}
     >
       <Languages size={16} aria-hidden />
       <span>{label}</span>
+      {/* Spoken name keeps the visible word first (WCAG 2.5.3 "label in name"), then explains it in the page's language. */}
+      <span className="sr-only" lang={locale}>
+        {" "}({ariaLabel})
+      </span>
     </Link>
   );
 }

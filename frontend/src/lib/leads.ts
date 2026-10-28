@@ -20,6 +20,7 @@ export const SOURCE_LABELS: Record<string, string> = {
   service: "Service page",
   package: "Package",
   product: "Product demo",
+  builder: "Website Builder",
   booking: "Google Meet",
   registered: "Client portal",
 };

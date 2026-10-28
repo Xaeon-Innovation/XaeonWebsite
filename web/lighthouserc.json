@@ -5,7 +5,9 @@
         "http://127.0.0.1:3100/",
         "http://127.0.0.1:3100/ar",
         "http://127.0.0.1:3100/services/websites",
-        "http://127.0.0.1:3100/products/elevora",
+        "http://127.0.0.1:3100/products/polara",
+        "http://127.0.0.1:3100/products/velora",
+        "http://127.0.0.1:3100/website-builder",
         "http://127.0.0.1:3100/blog/how-to-digitise-hr-in-2027",
         "http://127.0.0.1:3100/book"
       ],

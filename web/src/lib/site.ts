@@ -1,6 +1,7 @@
 export const SITE_ORIGIN = (process.env.NEXT_PUBLIC_SITE_ORIGIN || "https://xaeons.com").replace(/\/+$/, "");
 export const APP_ORIGIN = (process.env.NEXT_PUBLIC_APP_ORIGIN || "https://app.xaeons.com").replace(/\/+$/, "");
-export const ELEVORA_URL = "https://elevora.xaeons.com";
+// Polara (formerly Elevora) still runs on its original product domain until the new one is live.
+export const POLARA_URL = "https://elevora.xaeons.com";
 
 export const CONTACT = {
   email: "info@xaeons.com",

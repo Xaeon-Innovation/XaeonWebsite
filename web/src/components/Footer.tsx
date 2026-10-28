@@ -21,7 +21,9 @@ export default async function Footer({ social }: { social: SocialLinks | null })
   const company = [
     { href: "/about", label: t("nav.about") },
     { href: "/work", label: t("nav.work") },
-    { href: "/products/elevora", label: "Elevora" },
+    { href: "/website-builder", label: t("nav.websiteBuilder") },
+    { href: "/products/polara", label: "Polara" },
+    { href: "/products/velora", label: "Velora" },
     { href: "/packages", label: t("nav.packages") },
     { href: "/blog", label: t("nav.blog") },
     { href: "/book", label: t("nav.book") },

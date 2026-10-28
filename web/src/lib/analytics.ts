@@ -147,7 +147,7 @@ export function trackEvent(name: string, params: Record<string, unknown> = {}): 
   window.gtag?.("event", name, params);
 }
 
-export type LeadKind = "contact" | "service" | "package" | "product" | "booking" | "registered";
+export type LeadKind = "contact" | "service" | "package" | "product" | "booking" | "registered" | "builder";
 
 /** A submitted lead: GA4 `generate_lead` (mark it as a key event in GA4) + Meta `Lead`/`Schedule`. */
 export function trackLead(kind: LeadKind, params: Record<string, unknown> = {}): void {

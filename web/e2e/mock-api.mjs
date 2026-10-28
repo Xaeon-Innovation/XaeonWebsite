@@ -22,7 +22,7 @@ const posts = [
       "",
       "# Why it matters",
       "",
-      "Read the [Elevora product page](https://xaeons.com/products/elevora) or the [GDPR text](https://example.org/gdpr).",
+      "Read the [Polara product page](https://xaeons.com/products/polara) or the [GDPR text](https://example.org/gdpr).",
       "",
       "<script>window.__xss = true</script>",
       "",
@@ -30,9 +30,9 @@ const posts = [
       "",
       "| Tool | Cost |",
       "| --- | --- |",
-      "| Elevora | $6/seat |",
+      "| Polara | $6/seat |",
     ].join("\n"),
-    tags: ["hr", "elevora"],
+    tags: ["hr", "polara"],
     status: "published",
     publishedAt: iso(-3),
     createdAt: iso(-3),
@@ -55,6 +55,32 @@ const caseStudy = {
   updatedAt: iso(-2),
 };
 
+
+const L = (en, ar) => ({ en, ar });
+const P = (egp, aed, usd) => ({ EGP: { setup: egp[0], monthly: egp[1] }, AED: { setup: aed[0], monthly: aed[1] }, USD: { setup: usd[0], monthly: usd[1] } });
+const builderCatalog = {
+  templates: [
+    { slug: "clinic-care", category: "clinics", layout: "classic", name: L("Clinic Care", "كلينك كير"), tagline: L("Calm, booking-first.", "هادئ والحجز أولًا."), defaultBrand: { primary: "#1b7f79", accent: "#0f2f3a", font: "modern" }, pages: [L("Home", "الرئيسية"), L("Book", "احجز")], features: [], recommendedAddons: ["booking"], minPlan: "launch" },
+    { slug: "medica-plus", category: "clinics", layout: "bold", name: L("Medica Plus", "ميديكا بلس"), tagline: L("Multi-specialty.", "متعدد التخصصات."), defaultBrand: { primary: "#0e9f6e", accent: "#062a20", font: "modern" }, pages: [L("Home", "الرئيسية")], features: [], recommendedAddons: [], minPlan: "business" },
+    { slug: "table", category: "restaurants", layout: "minimal", name: L("Table", "تيبل"), tagline: L("Menus.", "القوائم."), defaultBrand: { primary: "#b45309", accent: "#1c1917", font: "serif" }, pages: [L("Menu", "القائمة")], features: [], recommendedAddons: [], minPlan: "launch" },
+  ],
+  addons: [
+    { key: "booking", kind: "module", name: L("Online booking", "الحجز الإلكتروني"), description: L("Book from your site.", "احجز من موقعك."), icon: "calendar", prices: P([2500, 0], [350, 0], [95, 0]), quoted: false, discountPercent: 0, includedIn: ["growth"], categories: ["clinics"] },
+    { key: "mobile-app", kind: "service", name: L("Mobile app for your website", "تطبيق جوال لموقعك"), description: L("iOS & Android.", "iOS وAndroid."), icon: "smartphone", prices: P([60000, 0], [9000, 0], [2400, 0]), quoted: true, discountPercent: 15, badge: L("Save 15% with your website", "وفّر 15% مع موقعك"), includedIn: [], categories: [] },
+  ],
+  plans: [
+    { tier: "launch", name: L("Launch", "انطلاق"), summary: L("One page.", "صفحة واحدة."), prices: P([7500, 650], [950, 75], [275, 21]), quoted: false, features: [L("One-page site", "موقع صفحة واحدة")], highlighted: false },
+    { tier: "business", name: L("Business", "أعمال"), summary: L("Five pages.", "خمس صفحات."), prices: P([16500, 1550], [2250, 185], [625, 51]), quoted: false, features: [L("Up to 5 pages", "حتى 5 صفحات")], highlighted: true },
+  ],
+};
+// Kashier is enabled for EGP only, so other countries get the invoice flow.
+builderCatalog.payments = { EGP: { online: true, provider: "kashier", methods: ["card", "wallet"] }, AED: { online: false, methods: [] }, USD: { online: false, methods: [] } };
+const stars = [
+  { _id: "s1", name: "Delta Clinics", industry: "Healthcare", product: "velora", magnitude: 3, highlight: "38% fewer no-shows", caseStudy: { slug: "clinic-portal", title: "Clinic patient portal" } },
+  { _id: "s2", name: "Nile Academy", industry: "Education", product: "website", magnitude: 2 },
+  { _id: "s3", name: "Atlas Logistics", industry: "Logistics", product: "polara", magnitude: 1 },
+];
+
 const routes = {
   "/api/v1/package": () => ({
     packages: [
@@ -68,6 +94,8 @@ const routes = {
   "/api/v1/blog-post/64b000000000000000000001": () => ({ blogPost: posts[0] }),
   "/api/v1/site/team-members": () => ({ teamMembers: [], showSection: true }),
   "/api/v1/site/testimonials": () => ({ testimonials: [{ _id: "q1", quote: "They shipped our portal in six weeks.", name: "Dr. Hana", role: "Director", company: "Delta Clinics" }] }),
+  "/api/v1/builder/catalog": () => builderCatalog,
+  "/api/v1/site/stars": () => ({ stars }),
   "/api/v1/site/social-links": () => ({ socialLinks: { linkedinUrl: "https://www.linkedin.com/company/xaeon", facebookUrl: "", instagramUrl: "", twitterUrl: "", emailUrl: "" } }),
   "/api/v1/bookings/availability": () => {
     const day = new Date(now + 2 * 86_400_000);
@@ -91,6 +119,16 @@ const server = http.createServer((req, res) => {
     res.end(JSON.stringify(body));
   };
   if (req.method === "GET" && url.pathname === "/__requests") return send(200, requests);
+  if (req.method === "POST" && url.pathname === "/api/v1/builder/assets") {
+    req.resume();
+    requests.push({ path: url.pathname, body: {} });
+    return send(200, { url: "http://127.0.0.1:3100/logo.webp" });
+  }
+  if (req.method === "GET" && /^\/api\/v1\/builder\/orders\/[^/]+\/status$/.test(url.pathname)) {
+    const ref = url.pathname.split("/")[5];
+    if (url.searchParams.get("token") !== "tok") return send(404, { error: "Order not found" });
+    return send(200, { ref, status: "submitted", paymentStatus: "none", businessName: "Delta Clinics", deposit: 8250, currency: "EGP" });
+  }
   if (req.method === "POST") {
     let raw = "";
     req.on("data", (c) => (raw += c));
@@ -99,6 +137,9 @@ const server = http.createServer((req, res) => {
       requests.push({ path: url.pathname, body });
       if (url.pathname === "/api/v1/bookings") {
         return send(201, { meeting: { start: body.slot, whenLabel: "Wednesday, 10:30", meetLink: "https://meet.google.com/abc-defg-hij", timezone: "Africa/Cairo" } });
+      }
+      if (url.pathname === "/api/v1/builder/orders") {
+        return send(201, { ref: "XB-TEST01", token: "tok", status: "submitted", quote: {} });
       }
       return send(201, { message: "ok", id: "x" });
     });

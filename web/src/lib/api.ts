@@ -1,4 +1,5 @@
 import "server-only";
+import type { BuilderCatalog, Star } from "./builder";
 
 /**
  * Server-side reads from the Express API. Every call is cached by Next and refreshed in the
@@ -162,4 +163,16 @@ export function socialProfileUrls(links: SocialLinks | null): string[] {
   return [links.linkedinUrl, links.facebookUrl, links.instagramUrl, links.twitterUrl].filter((u) =>
     /^https?:\/\//.test(u ?? ""),
   );
+}
+
+/** Website Builder catalog (templates, add-ons, plans). Empty lists if the API is down. */
+export async function getBuilderCatalog(): Promise<BuilderCatalog> {
+  const data = await getJson<Partial<BuilderCatalog>>("/builder/catalog", {});
+  return { templates: data.templates ?? [], addons: data.addons ?? [], plans: data.plans ?? [], payments: data.payments ?? {} };
+}
+
+/** Published clients for the galaxy of stars. */
+export async function getStars(): Promise<Star[]> {
+  const data = await getJson<{ stars?: Star[] }>("/site/stars", {});
+  return data.stars ?? [];
 }

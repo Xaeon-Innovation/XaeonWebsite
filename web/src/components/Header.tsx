@@ -9,7 +9,8 @@ import { APP_ORIGIN } from "@/lib/site";
 
 export const NAV_ITEMS = [
   { href: "/services", key: "services" },
-  { href: "/products/elevora", key: "products" },
+  { href: "/website-builder", key: "websiteBuilder" },
+  { href: "/products", key: "products" },
   { href: "/work", key: "work" },
   { href: "/packages", key: "packages" },
   { href: "/about", key: "about" },

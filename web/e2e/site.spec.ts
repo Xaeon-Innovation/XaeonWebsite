@@ -58,7 +58,7 @@ test.describe("pages and SEO", () => {
     expect(robots).toContain("GPTBot");
     expect(robots).toContain("Disallow: /admin");
     const llms = await (await request.get("/llms.txt")).text();
-    expect(llms).toContain("Elevora");
+    expect(llms).toContain("Polara");
     expect(llms).toContain("A practical guide to replacing spreadsheets");
   });
 });
@@ -103,22 +103,22 @@ test.describe("lead forms", () => {
   });
 
   test("form validation blocks empty submissions", async ({ page }) => {
-    await page.goto("/products/elevora#demo");
+    await page.goto("/products/polara#demo");
     await page.locator('#demo button[type="submit"]').click();
     await expect(page.locator("#demo [id$='-err']")).toHaveCount(4);
   });
 
-  test("Elevora demo request in Arabic", async ({ page }) => {
-    await page.goto("/ar/products/elevora");
-    await page.locator("#elevora-name").fill("منى عادل");
-    await page.locator("#elevora-phone").fill("+20 100 000 0001");
-    await page.locator("#elevora-email").fill("mona@example.com");
-    await page.locator("#elevora-teamSize").fill("40");
-    await page.locator("#elevora-message").fill("نريد استبدال كشوف الحضور الورقية.");
+  test("Polara demo request in Arabic", async ({ page }) => {
+    await page.goto("/ar/products/polara");
+    await page.locator("#polara-name").fill("منى عادل");
+    await page.locator("#polara-phone").fill("+20 100 000 0001");
+    await page.locator("#polara-email").fill("mona@example.com");
+    await page.locator("#polara-teamSize").fill("40");
+    await page.locator("#polara-message").fill("نريد استبدال كشوف الحضور الورقية.");
     await page.locator('#demo button[type="submit"]').click();
     await expect(page.locator("#demo [role='status']")).toBeVisible();
     const body = await lastRequest("/api/v1/system-request/enquiry");
-    expect(body?.serviceRequest).toMatchObject({ source: "product", interest: "Elevora", locale: "ar" });
+    expect(body?.serviceRequest).toMatchObject({ source: "product", interest: "Polara", locale: "ar" });
     expect(body?.serviceRequest.message).toContain("Team size: 40");
   });
 

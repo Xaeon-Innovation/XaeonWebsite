@@ -72,10 +72,10 @@ export default async function HeroCinematic() {
 
       <div className={`container-x ${styles.content}`}>
         <Link
-          href="/products/elevora"
+          href="/website-builder"
           className={`glass ${styles.fade} inline-flex max-w-full items-center gap-2 self-start rounded-full px-4 py-2 text-sm text-mist hover:text-fog`}
           style={fade(0.05)}
-          data-track="hero_elevora_badge"
+          data-track="hero_builder_badge"
         >
           <span className="relative flex h-2 w-2 shrink-0" aria-hidden>
             <span className="absolute inline-flex h-full w-full rounded-full bg-sage opacity-60 motion-safe:animate-ping" />

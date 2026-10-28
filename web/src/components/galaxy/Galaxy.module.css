@@ -1,0 +1,143 @@
+.sky {
+  background:
+    radial-gradient(ellipse 60% 50% at 30% 40%, rgb(114 192 79 / 0.08), transparent 70%),
+    radial-gradient(ellipse 50% 45% at 75% 60%, rgb(27 61 80 / 0.45), transparent 70%),
+    #050605;
+}
+
+.group {
+  transition: opacity 300ms var(--ease-out-soft);
+}
+
+.line {
+  fill: none;
+  stroke: rgb(198 213 156 / 0.28);
+  stroke-width: 1;
+  stroke-dasharray: 3 5;
+}
+
+.label {
+  fill: rgb(198 213 156 / 0.55);
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-family: var(--font-unbounded), var(--font-plex-arabic), sans-serif;
+}
+
+.twinkle {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.star {
+  position: absolute;
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: opacity 300ms var(--ease-out-soft);
+}
+
+.star:focus-visible {
+  outline: 2px solid var(--color-sage);
+  outline-offset: 2px;
+}
+
+.core {
+  display: block;
+  border-radius: 9999px;
+  background: #f3f5f2;
+  box-shadow: 0 0 10px 2px rgb(198 213 156 / 0.8);
+  transition: transform 200ms var(--ease-out-soft);
+}
+
+.star:hover .core,
+.on .core {
+  transform: scale(1.6);
+  background: #c6d59c;
+}
+
+.joinRing {
+  fill: none;
+  stroke: rgb(114 192 79 / 0.6);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.join {
+  position: absolute;
+  translate: -50% -50%;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  color: var(--color-sage);
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.join > svg {
+  box-sizing: content-box;
+  padding: 0.6rem;
+  border-radius: 9999px;
+  background: rgb(114 192 79 / 0.12);
+}
+
+.joinText {
+  position: absolute;
+  inset-inline-end: calc(100% + 0.5rem);
+}
+
+.join:hover,
+.join:focus-visible {
+  color: var(--color-fog);
+}
+
+.card {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  width: min(18rem, 70%);
+  flex-direction: column;
+  gap: 0.6rem;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .twinkle {
+    animation: twinkle 4s ease-in-out infinite;
+  }
+
+  .joinRing {
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.75;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
