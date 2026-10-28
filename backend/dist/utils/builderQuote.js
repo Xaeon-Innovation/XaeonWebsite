@@ -23,6 +23,20 @@ function computeQuote(config, catalog, market) {
             quoted: plan.quoted,
         },
     ];
+    // Pages beyond the plan's allowance are charged one by one.
+    const pageCount = Math.max(1, Math.round(config.pageCount || 1));
+    const extraPages = Math.max(0, pageCount - plan.includedPages);
+    if (extraPages > 0) {
+        lines.push({
+            key: "pages:extra",
+            label: `Extra pages (${extraPages})`,
+            setup: extraPages * plan.extraPagePrice[market],
+            monthly: 0,
+            discount: 0,
+            included: false,
+            quoted: plan.quoted,
+        });
+    }
     const keys = [...new Set(config.addonKeys)];
     for (const key of keys) {
         const addon = catalog.addons.find((a) => a.key === key);
@@ -58,6 +72,7 @@ function computeQuote(config, catalog, market) {
         discountTotal: sum(lines.map((l) => l.discount)),
         deposit,
         hasQuotedItems: lines.some((l) => l.quoted),
+        pages: { count: pageCount, included: plan.includedPages, extra: extraPages },
     };
 }
 function sum(values) {

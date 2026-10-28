@@ -106,6 +106,8 @@ exports.kashier = {
             ref,
             status: status === "SUCCESS" ? "paid" : status === "FAILURE" || status === "FAILED" ? "failed" : "pending",
             sessionId: typeof data.transactionId === "string" ? data.transactionId : undefined,
+            ...(data.amount !== undefined && Number.isFinite(Number(data.amount)) ? { amount: Number(data.amount) } : {}),
+            ...(typeof data.currency === "string" ? { currency: data.currency.toUpperCase() } : {}),
             event: `kashier.${event}.${status.toLowerCase()}`,
         };
     },

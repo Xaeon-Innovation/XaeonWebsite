@@ -71,13 +71,19 @@ const templateFields = (b) => pick(b, {
     tagline: builderShared_1.toLocalized,
     previewImageUrl: (v) => optStr(v) ?? undefined,
     layout: enumOf(builderShared_1.TEMPLATE_LAYOUTS),
+    hero: enumOf(builderShared_1.HERO_STYLES),
+    mode: enumOf(builderShared_1.THEME_MODES),
+    corners: enumOf(builderShared_1.CORNER_STYLES),
     defaultBrand: (v) => {
         if (!v || typeof v !== "object")
             return undefined;
         const o = v;
         return { primary: optStr(o.primary, 9) ?? "#72c04f", accent: optStr(o.accent, 9) ?? "#1b3d50", font: optStr(o.font, 40) ?? "modern" };
     },
-    pages: builderShared_1.toLocalizedList,
+    pageKeys: enumList(builderShared_1.PAGE_KEYS),
+    defaultPages: enumList(builderShared_1.PAGE_KEYS),
+    tags: builderShared_1.toLocalizedList,
+    goals: (v) => (0, builderShared_1.toStringList)(v, 5),
     features: builderShared_1.toLocalizedList,
     recommendedAddons: (v) => (0, builderShared_1.toStringList)(v)?.map((k) => k.toLowerCase()),
     minPlan: enumOf(builderShared_1.PLAN_TIERS),
@@ -105,6 +111,14 @@ const planFields = (b) => pick(b, {
     name: builderShared_1.toLocalized,
     summary: builderShared_1.toLocalized,
     prices: builderShared_1.toPrices,
+    includedPages: (v) => (typeof v === "number" && v >= 1 ? Math.round(v) : undefined),
+    extraPagePrice: (v) => {
+        if (!v || typeof v !== "object")
+            return undefined;
+        const o = v;
+        const money = (x) => (typeof x === "number" && x >= 0 ? Math.round(x) : 0);
+        return { EGP: money(o.EGP), AED: money(o.AED), USD: money(o.USD) };
+    },
     quoted: bool,
     features: builderShared_1.toLocalizedList,
     highlighted: bool,

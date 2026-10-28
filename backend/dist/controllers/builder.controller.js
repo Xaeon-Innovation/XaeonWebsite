@@ -51,6 +51,7 @@ const builderShared_1 = require("../models/builderShared");
 const serviceRequest_model_1 = __importDefault(require("../models/serviceRequest.model"));
 const builderEmails_1 = require("../services/builderEmails");
 const payments_1 = require("../services/payments");
+const fx_1 = require("../services/payments/fx");
 const storage_1 = require("../services/storage");
 const attribution_1 = require("../utils/attribution");
 const builderQuote_1 = require("../utils/builderQuote");
@@ -60,9 +61,9 @@ const serverError_1 = require("../utils/serverError");
 const siteOrigin = () => (process.env.SITE_ORIGIN || "https://xaeons.com").replace(/\/+$/, "");
 const apiOrigin = () => (process.env.API_PUBLIC_URL || "https://api.xaeons.com").replace(/\/+$/, "");
 /* ───────────── catalog ───────────── */
-const PUBLIC_TEMPLATE_FIELDS = "slug category name tagline previewImageUrl layout defaultBrand pages features recommendedAddons minPlan";
+const PUBLIC_TEMPLATE_FIELDS = "slug category name tagline previewImageUrl layout hero mode corners defaultBrand pageKeys defaultPages tags goals features recommendedAddons minPlan";
 const PUBLIC_ADDON_FIELDS = "key kind name description icon prices quoted discountPercent badge includedIn minPlan categories";
-const PUBLIC_PLAN_FIELDS = "tier name summary prices quoted features highlighted";
+const PUBLIC_PLAN_FIELDS = "tier name summary prices includedPages extraPagePrice quoted features highlighted";
 const getCatalog = async (_req, res) => {
     try {
         const sort = { sortOrder: 1, createdAt: 1 };
@@ -72,7 +73,7 @@ const getCatalog = async (_req, res) => {
             builderPlan_model_1.default.find({ published: true }).sort(sort).select(PUBLIC_PLAN_FIELDS).lean(),
         ]);
         // Payment options per market, so the wizard can show them once the customer picks a country.
-        const payments = Object.fromEntries(builderShared_1.MARKETS.map((m) => [m, (0, payments_1.paymentOptions)(m)]));
+        const payments = Object.fromEntries(await Promise.all(builderShared_1.MARKETS.map(async (m) => [m, await (0, payments_1.paymentOptions)(m)])));
         res.status(200).json({ templates, addons, plans, payments });
     }
     catch (err) {
@@ -84,7 +85,14 @@ exports.getCatalog = getCatalog;
 async function quoteCatalog() {
     const [plans, addons] = await Promise.all([builderPlan_model_1.default.find({ published: true }).lean(), builderAddon_model_1.default.find({ published: true }).lean()]);
     return {
-        plans: plans.map((p) => ({ tier: p.tier, name: p.name.en, prices: p.prices, quoted: p.quoted })),
+        plans: plans.map((p) => ({
+            tier: p.tier,
+            name: p.name.en,
+            prices: p.prices,
+            quoted: p.quoted,
+            includedPages: p.includedPages ?? 5,
+            extraPagePrice: { EGP: p.extraPagePrice?.EGP ?? 0, AED: p.extraPagePrice?.AED ?? 0, USD: p.extraPagePrice?.USD ?? 0 },
+        })),
         addons: addons.map((a) => ({
             key: a.key,
             name: a.name.en,
@@ -170,8 +178,10 @@ const createOrder = async (req, res) => {
         const brand = (body.brand ?? {});
         const contact = (body.contact ?? {});
         // The country decides the currency; a `market` sent by the browser is ignored.
-        const country = (0, builderShared_1.isOneOf)(builderShared_1.COUNTRIES, body.country) ? body.country : undefined;
-        const market = builderShared_1.COUNTRY_MARKET[country ?? "EG"];
+        const country = typeof body.country === "string" && (0, builderShared_1.isCountry)(body.country.toUpperCase()) ? body.country.toUpperCase() : undefined;
+        const market = (0, builderShared_1.marketFor)(country ?? "EG");
+        // "Send without paying" on the proposal step: save the order, the team follows up.
+        const payNow = body.payNow !== false;
         const locale = body.locale === "ar" ? "ar" : "en";
         const category = config.category;
         const planTier = config.planTier;
@@ -210,9 +220,15 @@ const createOrder = async (req, res) => {
             res.status(400).json({ error: `This template needs the ${template.minPlan} plan or higher` });
             return;
         }
+        // Pages must come from the template's list; home is always included.
+        const requested = Array.isArray(config.pages) ? config.pages.filter((p) => typeof p === "string") : [];
+        const offered = template.pageKeys?.length ? template.pageKeys : ["home"];
+        const pages = offered.filter((p) => p === "home" || requested.includes(p));
+        if (!pages.includes("home"))
+            pages.unshift("home");
         let quote;
         try {
-            quote = (0, builderQuote_1.computeQuote)({ planTier: tier, addonKeys, billing }, await quoteCatalog(), market);
+            quote = (0, builderQuote_1.computeQuote)({ planTier: tier, addonKeys, billing, pageCount: pages.length }, await quoteCatalog(), market);
         }
         catch (err) {
             if (err instanceof builderQuote_1.QuoteError) {
@@ -231,6 +247,7 @@ const createOrder = async (req, res) => {
                 category,
                 goal: str(config.goal, 40) || undefined,
                 templateSlug: template.slug,
+                pages,
                 planTier: tier,
                 addonKeys: quote.lines.filter((l) => !l.key.startsWith("plan:")).map((l) => l.key),
                 billing,
@@ -240,6 +257,8 @@ const createOrder = async (req, res) => {
                 primary: HEX.test(str(brand.primary)) ? str(brand.primary) : template.defaultBrand.primary,
                 accent: HEX.test(str(brand.accent)) ? str(brand.accent) : template.defaultBrand.accent,
                 font: str(brand.font, 40) || template.defaultBrand.font,
+                mode: (0, builderShared_1.isOneOf)(builderShared_1.THEME_MODES, brand.mode) ? brand.mode : template.mode,
+                corners: (0, builderShared_1.isOneOf)(builderShared_1.CORNER_STYLES, brand.corners) ? brand.corners : template.corners,
                 tone: str(brand.tone, 40) || undefined,
                 logoUrl: isBuilderAssetUrl(brand.logoUrl) ? brand.logoUrl : undefined,
                 assetUrls,
@@ -256,6 +275,7 @@ const createOrder = async (req, res) => {
             description: [
                 `Business: ${businessName} (${country})`,
                 `Template: ${template.name.en} (${template.slug}), plan ${tier}, billed ${billing}`,
+                `Pages (${pages.length}): ${pages.join(", ")}`,
                 `Add-ons: ${order.config.addonKeys.join(", ") || "none"}`,
                 `Setup ${market} ${quote.setup}, monthly ${market} ${quote.monthly}, deposit ${market} ${quote.deposit}`,
                 order.brand.notes ? `Notes: ${order.brand.notes}` : "",
@@ -274,15 +294,18 @@ const createOrder = async (req, res) => {
             locale,
         });
         order.lead = lead._id;
-        // Online deposit when a provider handles this currency and there is a fixed amount to pay.
+        // Online deposit: charged in the quote currency when the provider supports it, otherwise converted
+        // (e.g. AED price list → USD charge at Kashier's rate). No plan → the team invoices.
         let checkoutUrl;
-        const provider = quote.deposit > 0 ? (0, payments_1.providerFor)(market) : undefined;
-        if (provider) {
+        const plan = payNow && quote.deposit > 0 ? await (0, payments_1.paymentPlan)(market) : undefined;
+        if (plan) {
+            const { provider, chargeCurrency, rate } = plan;
+            const amount = (0, fx_1.convert)(quote.deposit, rate);
             try {
                 const session = await provider.createCheckout({
                     ref: order.ref,
-                    amount: quote.deposit,
-                    currency: market,
+                    amount,
+                    currency: chargeCurrency,
                     description: `Xaeon website deposit ${order.ref}`,
                     customer: { name, email, phone },
                     locale,
@@ -290,8 +313,21 @@ const createOrder = async (req, res) => {
                     webhookUrl: `${apiOrigin()}/api/v1/builder/payments/${provider.name}/webhook`,
                 });
                 order.status = "awaiting_payment";
-                order.payment = { provider: provider.name, sessionId: session.sessionId, status: "pending", amount: quote.deposit };
-                order.activity.push({ type: "payment", message: `Checkout started with ${provider.name}`, at: new Date() });
+                order.payment = {
+                    provider: provider.name,
+                    sessionId: session.sessionId,
+                    status: "pending",
+                    amount,
+                    currency: chargeCurrency,
+                    ...(chargeCurrency !== market ? { rate } : {}),
+                };
+                order.activity.push({
+                    type: "payment",
+                    message: chargeCurrency === market
+                        ? `Checkout started with ${provider.name}`
+                        : `Checkout started with ${provider.name}: ${market} ${quote.deposit} charged as ${chargeCurrency} ${amount.toFixed(2)} (rate ${rate})`,
+                    at: new Date(),
+                });
                 checkoutUrl = session.url;
             }
             catch (err) {
@@ -299,6 +335,8 @@ const createOrder = async (req, res) => {
                 order.activity.push({ type: "payment", message: `Checkout could not start (${provider.name}); team will send a payment link`, at: new Date() });
             }
         }
+        if (!payNow)
+            order.activity.push({ type: "payment", message: "Customer chose to send the order without paying now", at: new Date() });
         await order.save();
         const results = await Promise.allSettled([(0, builderEmails_1.sendBuilderOrderNotice)(order), (0, builderEmails_1.sendBuilderOrderConfirmation)(order)]);
         for (const r of results)
@@ -309,7 +347,7 @@ const createOrder = async (req, res) => {
             token: orderToken(order.ref),
             status: order.status,
             quote,
-            ...(checkoutUrl ? { checkoutUrl } : {}),
+            ...(checkoutUrl ? { checkoutUrl, charge: { amount: order.payment.amount, currency: order.payment.currency } } : {}),
         });
     }
     catch (err) {
@@ -357,6 +395,7 @@ async function markOrderPaid(order, source) {
     order.payment.paidAt = new Date();
     order.payment.lastEvent = source.event;
     order.payment.amount = order.payment.amount ?? order.quote.deposit;
+    order.payment.currency = order.payment.currency ?? order.quote.currency;
     if (order.status === "submitted" || order.status === "awaiting_payment")
         order.status = "paid";
     order.activity.push({ type: "payment", message: `Deposit paid (${source.provider})`, byName: source.byName, at: new Date() });
@@ -390,7 +429,21 @@ const paymentWebhook = async (req, res) => {
             res.status(200).json({ received: true });
             return;
         }
-        if (result.status === "paid") {
+        const expectedCurrency = order.payment.currency ?? order.quote.currency;
+        const expectedAmount = order.payment.amount ?? order.quote.deposit;
+        const mismatch = (result.currency !== undefined && result.currency !== expectedCurrency) ||
+            (result.amount !== undefined && Math.abs(result.amount - expectedAmount) > 0.01);
+        if (result.status === "paid" && mismatch) {
+            // Signed, but not what we asked for: leave it for staff to check instead of marking paid.
+            order.payment.lastEvent = result.event;
+            order.activity.push({
+                type: "payment",
+                message: `Payment reported as ${result.currency ?? "?"} ${result.amount ?? "?"} but ${expectedCurrency} ${expectedAmount} was expected — check ${provider.name}`,
+                at: new Date(),
+            });
+            await order.save();
+        }
+        else if (result.status === "paid") {
             await markOrderPaid(order, { provider: provider.name, event: result.event });
         }
         else if (order.payment.status !== "paid") {

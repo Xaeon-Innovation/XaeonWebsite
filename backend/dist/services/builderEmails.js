@@ -37,8 +37,9 @@ async function sendBuilderOrderNotice(order) {
         ["Contact", `${order.contact.name} · ${order.contact.email} · ${order.contact.phone}`],
         ["Category", order.config.category + (order.config.goal ? ` (goal: ${order.config.goal})` : "")],
         ["Template", order.config.templateSlug],
+        ["Pages", (order.config.pages ?? []).join(", ") || "—"],
         ["Plan", `${order.config.planTier} · billed ${order.config.billing}`],
-        ["Brand", `${order.brand.primary} / ${order.brand.accent} · font ${order.brand.font}${order.brand.tone ? ` · tone ${order.brand.tone}` : ""}`],
+        ["Brand", `${order.brand.primary} / ${order.brand.accent} · font ${order.brand.font} · ${order.brand.mode ?? "light"} · ${order.brand.corners ?? "soft"} corners${order.brand.tone ? ` · tone ${order.brand.tone}` : ""}`],
     ];
     if (order.brand.logoUrl)
         rows.push(["Logo", order.brand.logoUrl]);
@@ -86,7 +87,10 @@ async function sendBuilderOrderConfirmation(order) {
     });
 }
 async function sendBuilderPaymentReceived(order) {
-    const amount = formatMoney(order.payment.amount ?? order.quote.deposit, order.quote.currency);
+    const paid = order.payment.amount ?? order.quote.deposit;
+    const currency = order.payment.currency ?? order.quote.currency;
+    // Converted charges keep cents (e.g. USD 1,234.56); same-currency deposits are whole numbers.
+    const amount = currency === order.quote.currency ? formatMoney(paid, currency) : `${currency} ${paid.toFixed(2)}`;
     const results = await Promise.allSettled([
         (0, email_1.sendEmail)({
             to: (0, bookingEmail_1.notifyEmails)(),

@@ -40,6 +40,12 @@ const BuilderPlanSchema = new mongoose_1.Schema({
     name: { type: builderShared_1.LocalizedSchema, required: true },
     summary: { type: builderShared_1.LocalizedSchema, default: () => ({}) },
     prices: { type: builderShared_1.PricesSchema, default: () => ({}) },
+    includedPages: { type: Number, min: 1, default: 5 },
+    extraPagePrice: {
+        EGP: { type: Number, min: 0, default: 1000 },
+        AED: { type: Number, min: 0, default: 140 },
+        USD: { type: Number, min: 0, default: 40 },
+    },
     quoted: { type: Boolean, default: false },
     features: { type: [builderShared_1.LocalizedSchema], default: [] },
     highlighted: { type: Boolean, default: false },
