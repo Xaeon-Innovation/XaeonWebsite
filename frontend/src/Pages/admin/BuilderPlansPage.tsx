@@ -26,6 +26,8 @@ import { LocalizedInputs, LocalizedLines, PriceGrid, PublishedBadge } from "../.
 type Plan = {
   _id: string;
   tier: string;
+  includedPages?: number;
+  extraPagePrice?: Record<string, number>;
   name: Localized;
   summary: Localized;
   prices: Prices;
@@ -38,6 +40,10 @@ type Plan = {
 
 type FormValues = PriceFields & {
   tier: string;
+  includedPages: number;
+  extra_EGP: number;
+  extra_AED: number;
+  extra_USD: number;
   nameEn: string;
   nameAr: string;
   summaryEn: string;
@@ -60,6 +66,10 @@ export function Component() {
     setEditing(p);
     form.reset({
       tier: p?.tier ?? missingTiers[0] ?? "launch",
+      includedPages: p?.includedPages ?? 5,
+      extra_EGP: p?.extraPagePrice?.EGP ?? 1000,
+      extra_AED: p?.extraPagePrice?.AED ?? 140,
+      extra_USD: p?.extraPagePrice?.USD ?? 40,
       nameEn: p?.name.en ?? "",
       nameAr: p?.name.ar ?? "",
       summaryEn: p?.summary?.en ?? "",
@@ -81,6 +91,8 @@ export function Component() {
       summary: { en: v.summaryEn, ar: v.summaryAr },
       features: linesToLocalized(v.features),
       prices: fieldsToPrices(v),
+      includedPages: Number(v.includedPages) || 1,
+      extraPagePrice: { EGP: Number(v.extra_EGP) || 0, AED: Number(v.extra_AED) || 0, USD: Number(v.extra_USD) || 0 },
       quoted: v.quoted,
       highlighted: v.highlighted,
       sortOrder: Number(v.sortOrder) || 0,
@@ -98,6 +110,7 @@ export function Component() {
   const columns: Column<Plan>[] = [
     { header: "Order", accessor: "sortOrder", sortable: true },
     { header: "Plan", accessor: (r) => r.name.en, render: (v, r) => <><strong>{String(v)}</strong>{r.highlighted ? <span className="admin-badge admin-badge-green" style={{ marginInlineStart: 6 }}>Popular</span> : null}</> },
+    { header: "Pages", accessor: (r) => `${r.includedPages ?? "—"} incl.` },
     ...MARKETS.map<Column<Plan>>((m) => ({ header: m, accessor: (r) => formatPrice(r.prices, m) + (r.quoted ? " (from)" : "") })),
     { header: "On website", accessor: "published", render: (v) => <PublishedBadge value={v} /> },
     {
@@ -119,7 +132,7 @@ export function Component() {
       <BuilderTabs />
       <p className="admin-field-hint" style={{ marginBottom: 16 }}>
         Setup fee + monthly subscription per market. The online deposit is 100% of setup on Launch and 50% otherwise; "From" plans (Custom) take no online deposit.
-        Annual billing charges 10 months.
+        Annual billing charges 10 months. Pages beyond "Pages included" cost the extra-page price each (one-time).
       </p>
       {error && <p style={{ color: "#ef4444", marginBottom: 12 }}>{error}</p>}
       {loading ? <div style={{ color: "#72c04f", padding: 32, textAlign: "center" }}>Loading…</div> : (
@@ -140,6 +153,18 @@ export function Component() {
             <LocalizedInputs register={form.register} name="name" label="Name" />
             <LocalizedInputs register={form.register} name="summary" label="Summary" />
             <PriceGrid register={form.register} />
+            <div className="admin-form-row">
+              <div className="admin-field">
+                <label className="admin-label" htmlFor="pl-pages">Pages included</label>
+                <input id="pl-pages" type="number" min={1} className="admin-input" {...form.register("includedPages", { valueAsNumber: true })} />
+              </div>
+              {MARKETS.map((m) => (
+                <div key={m} className="admin-field">
+                  <label className="admin-label" htmlFor={`pl-extra-${m}`}>Extra page ({m})</label>
+                  <input id={`pl-extra-${m}`} type="number" min={0} className="admin-input" {...form.register(`extra_${m}` as const, { valueAsNumber: true })} />
+                </div>
+              ))}
+            </div>
             <LocalizedLines register={form.register} name="features" label="What's included" />
             <div className="admin-form-row">
               <label className="admin-field" style={{ display: "flex", gap: 8, alignItems: "center" }}>

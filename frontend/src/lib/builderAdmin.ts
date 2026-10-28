@@ -3,15 +3,25 @@
  * (Pages/admin/Builder*Page.tsx, StarsPage.tsx). API: backend/src/routes/builderAdmin.routes.ts.
  */
 
-export const BUILDER_CATEGORIES = ["clinics", "education", "professional", "restaurants", "home-services", "catalogue"] as const;
+export const BUILDER_CATEGORIES = ["clinics", "beauty", "fitness", "education", "professional", "real-estate", "restaurants", "home-services", "catalogue", "startups"] as const;
 export const CATEGORY_LABELS: Record<string, string> = {
   clinics: "Clinics & healthcare",
+  beauty: "Beauty & wellness",
+  fitness: "Fitness & sports",
   education: "Education & training",
   professional: "Professional services",
+  "real-estate": "Real estate",
   restaurants: "Restaurants & cafés",
   "home-services": "Home services & contractors",
   catalogue: "Product catalogue / store",
+  startups: "Startups & tech",
 };
+/** Page library (same keys as backend PAGE_KEYS); the website shows each page's name, contents and preview. */
+export const PAGE_KEYS = ["home", "about", "services", "team", "booking", "contact", "gallery", "menu", "pricing", "blog", "faq", "testimonials", "products", "courses", "projects", "listings", "schedule", "careers"] as const;
+export const HERO_STYLES = ["split", "centered", "banner"] as const;
+export const THEME_MODES = ["light", "dark"] as const;
+export const CORNER_STYLES = ["sharp", "soft", "round"] as const;
+export const GOAL_KEYS = ["calls", "bookings", "leads", "sales", "catalogue"] as const;
 export const PLAN_TIERS = ["launch", "business", "growth", "custom"] as const;
 export const MARKETS = ["EGP", "AED", "USD"] as const;
 export const LAYOUTS = ["classic", "bold", "minimal"] as const;

@@ -1,5 +1,25 @@
 import {
+  BookOpen,
   Briefcase,
+  Building2,
+  CalendarCheck,
+  Contact,
+  Dumbbell,
+  FolderKanban,
+  HelpCircle,
+  Home,
+  Images,
+  Info,
+  ListChecks,
+  MessageSquareQuote,
+  Rocket,
+  Scissors,
+  Tag,
+  UsersRound,
+  UtensilsCrossed as MenuIcon,
+  CalendarRange,
+  BriefcaseBusiness,
+  Package,
   CalendarDays,
   CreditCard,
   Files,
@@ -19,15 +39,40 @@ import {
   UtensilsCrossed,
   type LucideIcon,
 } from "lucide-react";
-import type { BuilderCategory } from "@/lib/builder";
+import type { BuilderCategory, PageKey } from "@/lib/builder";
 
 export const CATEGORY_ICONS: Record<BuilderCategory, LucideIcon> = {
   clinics: Stethoscope,
+  beauty: Scissors,
+  fitness: Dumbbell,
   education: GraduationCap,
   professional: Briefcase,
+  "real-estate": Building2,
   restaurants: UtensilsCrossed,
   "home-services": Hammer,
   catalogue: ShoppingBag,
+  startups: Rocket,
+};
+
+export const PAGE_ICONS: Record<PageKey, LucideIcon> = {
+  home: Home,
+  about: Info,
+  services: ListChecks,
+  team: UsersRound,
+  booking: CalendarCheck,
+  contact: Contact,
+  gallery: Images,
+  menu: MenuIcon,
+  pricing: Tag,
+  blog: Newspaper,
+  faq: HelpCircle,
+  testimonials: MessageSquareQuote,
+  products: Package,
+  courses: BookOpen,
+  projects: FolderKanban,
+  listings: Building2,
+  schedule: CalendarRange,
+  careers: BriefcaseBusiness,
 };
 
 /** Add-on `icon` names set in the admin → lucide icons (unknown names fall back to a plus). */

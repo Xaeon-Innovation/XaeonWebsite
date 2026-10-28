@@ -7,7 +7,7 @@ import BuilderAddon from "../models/builderAddon.model";
 import BuilderOrder, { type IBuilderOrder } from "../models/builderOrder.model";
 import BuilderPlan from "../models/builderPlan.model";
 import BuilderTemplate from "../models/builderTemplate.model";
-import { BUILDER_CATEGORIES, COUNTRIES, COUNTRY_MARKET, MARKETS, PLAN_TIERS, isOneOf, planRank } from "../models/builderShared";
+import { BUILDER_CATEGORIES, CORNER_STYLES, MARKETS, PLAN_TIERS, THEME_MODES, isCountry, isOneOf, marketFor, planRank, type PageKey } from "../models/builderShared";
 import ServiceRequest from "../models/serviceRequest.model";
 import { sendBuilderOrderConfirmation, sendBuilderOrderNotice, sendBuilderPaymentReceived } from "../services/builderEmails";
 import { getProvider, paymentOptions, paymentPlan, WebhookSignatureError } from "../services/payments";
@@ -25,9 +25,9 @@ const apiOrigin = () => (process.env.API_PUBLIC_URL || "https://api.xaeons.com")
 
 /* ───────────── catalog ───────────── */
 
-const PUBLIC_TEMPLATE_FIELDS = "slug category name tagline previewImageUrl layout defaultBrand pages features recommendedAddons minPlan";
+const PUBLIC_TEMPLATE_FIELDS = "slug category name tagline previewImageUrl layout hero mode corners defaultBrand pageKeys defaultPages tags goals features recommendedAddons minPlan";
 const PUBLIC_ADDON_FIELDS = "key kind name description icon prices quoted discountPercent badge includedIn minPlan categories";
-const PUBLIC_PLAN_FIELDS = "tier name summary prices quoted features highlighted";
+const PUBLIC_PLAN_FIELDS = "tier name summary prices includedPages extraPagePrice quoted features highlighted";
 
 export const getCatalog = async (_req: Request, res: Response): Promise<void> => {
   try {
@@ -49,7 +49,14 @@ export const getCatalog = async (_req: Request, res: Response): Promise<void> =>
 async function quoteCatalog(): Promise<{ plans: QuotePlan[]; addons: QuoteAddon[] }> {
   const [plans, addons] = await Promise.all([BuilderPlan.find({ published: true }).lean(), BuilderAddon.find({ published: true }).lean()]);
   return {
-    plans: plans.map((p) => ({ tier: p.tier, name: p.name.en, prices: p.prices, quoted: p.quoted })),
+    plans: plans.map((p) => ({
+      tier: p.tier,
+      name: p.name.en,
+      prices: p.prices,
+      quoted: p.quoted,
+      includedPages: p.includedPages ?? 5,
+      extraPagePrice: { EGP: p.extraPagePrice?.EGP ?? 0, AED: p.extraPagePrice?.AED ?? 0, USD: p.extraPagePrice?.USD ?? 0 },
+    })),
     addons: addons.map((a) => ({
       key: a.key,
       name: a.name.en,
@@ -144,8 +151,10 @@ export const createOrder = async (req: Request, res: Response): Promise<void> =>
     const contact = (body.contact ?? {}) as Record<string, unknown>;
 
     // The country decides the currency; a `market` sent by the browser is ignored.
-    const country = isOneOf(COUNTRIES, body.country) ? body.country : undefined;
-    const market = COUNTRY_MARKET[country ?? "EG"];
+    const country = typeof body.country === "string" && isCountry(body.country.toUpperCase()) ? body.country.toUpperCase() : undefined;
+    const market = marketFor(country ?? "EG");
+    // "Send without paying" on the proposal step: save the order, the team follows up.
+    const payNow = body.payNow !== false;
     const locale = body.locale === "ar" ? "ar" : "en";
     const category = config.category;
     const planTier = config.planTier;
@@ -181,9 +190,15 @@ export const createOrder = async (req: Request, res: Response): Promise<void> =>
       return;
     }
 
+    // Pages must come from the template's list; home is always included.
+    const requested = Array.isArray(config.pages) ? config.pages.filter((p): p is string => typeof p === "string") : [];
+    const offered = template.pageKeys?.length ? template.pageKeys : (["home"] as PageKey[]);
+    const pages = offered.filter((p) => p === "home" || requested.includes(p));
+    if (!pages.includes("home")) pages.unshift("home");
+
     let quote;
     try {
-      quote = computeQuote({ planTier: tier, addonKeys, billing }, await quoteCatalog(), market);
+      quote = computeQuote({ planTier: tier, addonKeys, billing, pageCount: pages.length }, await quoteCatalog(), market);
     } catch (err) {
       if (err instanceof QuoteError) {
         res.status(400).json({ error: err.message });
@@ -202,6 +217,7 @@ export const createOrder = async (req: Request, res: Response): Promise<void> =>
         category,
         goal: str(config.goal, 40) || undefined,
         templateSlug: template.slug,
+        pages,
         planTier: tier,
         addonKeys: quote.lines.filter((l) => !l.key.startsWith("plan:")).map((l) => l.key),
         billing,
@@ -211,6 +227,8 @@ export const createOrder = async (req: Request, res: Response): Promise<void> =>
         primary: HEX.test(str(brand.primary)) ? str(brand.primary) : template.defaultBrand.primary,
         accent: HEX.test(str(brand.accent)) ? str(brand.accent) : template.defaultBrand.accent,
         font: str(brand.font, 40) || template.defaultBrand.font,
+        mode: isOneOf(THEME_MODES, brand.mode) ? brand.mode : template.mode,
+        corners: isOneOf(CORNER_STYLES, brand.corners) ? brand.corners : template.corners,
         tone: str(brand.tone, 40) || undefined,
         logoUrl: isBuilderAssetUrl(brand.logoUrl) ? brand.logoUrl : undefined,
         assetUrls,
@@ -228,6 +246,7 @@ export const createOrder = async (req: Request, res: Response): Promise<void> =>
       description: [
         `Business: ${businessName} (${country})`,
         `Template: ${template.name.en} (${template.slug}), plan ${tier}, billed ${billing}`,
+        `Pages (${pages.length}): ${pages.join(", ")}`,
         `Add-ons: ${order.config.addonKeys.join(", ") || "none"}`,
         `Setup ${market} ${quote.setup}, monthly ${market} ${quote.monthly}, deposit ${market} ${quote.deposit}`,
         order.brand.notes ? `Notes: ${order.brand.notes}` : "",
@@ -250,7 +269,7 @@ export const createOrder = async (req: Request, res: Response): Promise<void> =>
     // Online deposit: charged in the quote currency when the provider supports it, otherwise converted
     // (e.g. AED price list → USD charge at Kashier's rate). No plan → the team invoices.
     let checkoutUrl: string | undefined;
-    const plan = quote.deposit > 0 ? await paymentPlan(market) : undefined;
+    const plan = payNow && quote.deposit > 0 ? await paymentPlan(market) : undefined;
     if (plan) {
       const { provider, chargeCurrency, rate } = plan;
       const amount = convert(quote.deposit, rate);
@@ -288,6 +307,7 @@ export const createOrder = async (req: Request, res: Response): Promise<void> =>
         order.activity.push({ type: "payment", message: `Checkout could not start (${provider.name}); team will send a payment link`, at: new Date() });
       }
     }
+    if (!payNow) order.activity.push({ type: "payment", message: "Customer chose to send the order without paying now", at: new Date() });
     await order.save();
 
     const results = await Promise.allSettled([sendBuilderOrderNotice(order), sendBuilderOrderConfirmation(order)]);

@@ -7,8 +7,12 @@ import BuilderPlan from "../models/builderPlan.model";
 import BuilderTemplate from "../models/builderTemplate.model";
 import {
   BUILDER_CATEGORIES,
+  CORNER_STYLES,
+  HERO_STYLES,
+  PAGE_KEYS,
   PLAN_TIERS,
   TEMPLATE_LAYOUTS,
+  THEME_MODES,
   isOneOf,
   toLocalized,
   toLocalizedList,
@@ -61,12 +65,18 @@ const templateFields = (b: Fields) =>
     tagline: toLocalized,
     previewImageUrl: (v) => optStr(v) ?? undefined,
     layout: enumOf(TEMPLATE_LAYOUTS),
+    hero: enumOf(HERO_STYLES),
+    mode: enumOf(THEME_MODES),
+    corners: enumOf(CORNER_STYLES),
     defaultBrand: (v) => {
       if (!v || typeof v !== "object") return undefined;
       const o = v as Fields;
       return { primary: optStr(o.primary, 9) ?? "#72c04f", accent: optStr(o.accent, 9) ?? "#1b3d50", font: optStr(o.font, 40) ?? "modern" };
     },
-    pages: toLocalizedList,
+    pageKeys: enumList(PAGE_KEYS),
+    defaultPages: enumList(PAGE_KEYS),
+    tags: toLocalizedList,
+    goals: (v) => toStringList(v, 5),
     features: toLocalizedList,
     recommendedAddons: (v) => toStringList(v)?.map((k) => k.toLowerCase()),
     minPlan: enumOf(PLAN_TIERS),
@@ -98,6 +108,13 @@ const planFields = (b: Fields) =>
     name: toLocalized,
     summary: toLocalized,
     prices: toPrices,
+    includedPages: (v) => (typeof v === "number" && v >= 1 ? Math.round(v) : undefined),
+    extraPagePrice: (v) => {
+      if (!v || typeof v !== "object") return undefined;
+      const o = v as Record<string, unknown>;
+      const money = (x: unknown) => (typeof x === "number" && x >= 0 ? Math.round(x) : 0);
+      return { EGP: money(o.EGP), AED: money(o.AED), USD: money(o.USD) };
+    },
     quoted: bool,
     features: toLocalizedList,
     highlighted: bool,

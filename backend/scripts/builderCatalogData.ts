@@ -1,9 +1,10 @@
 /**
  * Starting catalog for the Website Builder: plans and add-on prices from
  * "Xaeon Website Builder  Product, Technical, and Pricing Plan.md", plus 3 templates per launch category.
- * Used by scripts/seed-builder.ts and the backend tests. Everything is editable later in the admin panel.
+ * Used by scripts/seed-builder.ts and the backend tests.
+ * Template names are brand-style names, kept in Latin script in both languages. Everything is editable later in the admin panel.
  */
-import type { BuilderCategory, Localized, PlanTier, Prices, TemplateLayout } from "../src/models/builderShared";
+import type { BuilderCategory, CornerStyle, HeroStyle, Localized, PageKey, PlanTier, Prices, TemplateLayout, ThemeMode } from "../src/models/builderShared";
 
 const L = (en: string, ar: string): Localized => ({ en, ar });
 const P = (egp: [number, number], aed: [number, number], usd: [number, number]): Prices => ({
@@ -17,6 +18,7 @@ export const PLANS: {
   name: Localized;
   summary: Localized;
   prices: Prices;
+  includedPages: number;
   quoted: boolean;
   highlighted: boolean;
   features: Localized[];
@@ -26,6 +28,7 @@ export const PLANS: {
     name: L("Launch", "انطلاق"),
     summary: L("A polished one-page site, launched for you.", "موقع من صفحة واحدة، نطلقه لك باحتراف."),
     prices: P([7500, 650], [950, 75], [275, 21]),
+    includedPages: 1,
     quoted: false,
     highlighted: false,
     features: [
@@ -41,6 +44,7 @@ export const PLANS: {
     name: L("Business", "أعمال"),
     summary: L("A complete bilingual business website.", "موقع أعمال متكامل بلغتين."),
     prices: P([16500, 1550], [2250, 185], [625, 51]),
+    includedPages: 5,
     quoted: false,
     highlighted: true,
     features: [
@@ -56,6 +60,7 @@ export const PLANS: {
     name: L("Growth", "نمو"),
     summary: L("Operations built in: booking, catalogue, payments.", "تشغيل متكامل: حجز وكتالوج ومدفوعات."),
     prices: P([29500, 3250], [4950, 385], [1350, 105]),
+    includedPages: 15,
     quoted: false,
     highlighted: false,
     features: [
@@ -71,6 +76,7 @@ export const PLANS: {
     name: L("Custom", "مخصص"),
     summary: L("Bespoke modules and workflows, scoped with you.", "وحدات وسير عمل مخصصة، نحددها معك."),
     prices: P([60000, 6500], [10000, 750], [2750, 210]),
+    includedPages: 30,
     quoted: true,
     highlighted: false,
     features: [
@@ -147,14 +153,6 @@ export const ADDONS: AddonSeed[] = [
     includedIn: ["business", "growth", "custom"],
   },
   {
-    key: "extra-pages",
-    kind: "module",
-    name: L("Extra pages (×3)", "صفحات إضافية (×3)"),
-    description: L("Three more standard pages.", "ثلاث صفحات إضافية."),
-    icon: "files",
-    prices: P([3000, 0], [420, 0], [120, 0]),
-  },
-  {
     key: "email-automation",
     kind: "module",
     name: L("Email automation", "أتمتة البريد"),
@@ -225,72 +223,125 @@ export const ADDONS: AddonSeed[] = [
 type TemplateSeed = {
   slug: string;
   category: BuilderCategory;
-  layout: TemplateLayout;
-  name: Localized;
+  name: string;
   tagline: Localized;
-  primary: string;
-  accent: string;
+  style: [TemplateLayout, HeroStyle, ThemeMode, CornerStyle];
+  colors: [string, string];
   font: string;
-  minPlan?: PlanTier;
+  defaultPages: PageKey[];
+  goals: string[];
   recommendedAddons: string[];
+  minPlan?: PlanTier;
 };
 
-const PAGES: Record<BuilderCategory, Localized[]> = {
-  clinics: [L("Home", "الرئيسية"), L("Services", "الخدمات"), L("Doctors", "الأطباء"), L("Book", "احجز"), L("Contact", "تواصل")],
-  education: [L("Home", "الرئيسية"), L("Courses", "الدورات"), L("Instructors", "المدربون"), L("Enrol", "سجّل"), L("Contact", "تواصل")],
-  professional: [L("Home", "الرئيسية"), L("Services", "الخدمات"), L("About", "من نحن"), L("Insights", "مقالات"), L("Contact", "تواصل")],
-  restaurants: [L("Home", "الرئيسية"), L("Menu", "القائمة"), L("Gallery", "المعرض"), L("Reserve", "احجز طاولة"), L("Contact", "تواصل")],
-  "home-services": [L("Home", "الرئيسية"), L("Services", "الخدمات"), L("Projects", "المشاريع"), L("Quote", "اطلب عرض سعر"), L("Contact", "تواصل")],
-  catalogue: [L("Home", "الرئيسية"), L("Products", "المنتجات"), L("Categories", "التصنيفات"), L("About", "من نحن"), L("Contact", "تواصل")],
+/** Pages each industry can choose from, in menu order. */
+const CATEGORY_PAGES: Record<BuilderCategory, PageKey[]> = {
+  clinics: ["home", "about", "services", "team", "booking", "testimonials", "gallery", "faq", "blog", "contact"],
+  beauty: ["home", "services", "pricing", "gallery", "team", "booking", "products", "testimonials", "faq", "contact"],
+  fitness: ["home", "schedule", "pricing", "team", "booking", "gallery", "testimonials", "blog", "faq", "contact"],
+  education: ["home", "courses", "about", "team", "schedule", "pricing", "gallery", "blog", "faq", "contact"],
+  professional: ["home", "about", "services", "team", "projects", "testimonials", "blog", "careers", "faq", "contact"],
+  "real-estate": ["home", "listings", "projects", "about", "services", "team", "testimonials", "blog", "faq", "contact"],
+  restaurants: ["home", "menu", "about", "gallery", "booking", "testimonials", "careers", "faq", "contact"],
+  "home-services": ["home", "services", "projects", "about", "pricing", "testimonials", "faq", "booking", "careers", "contact"],
+  catalogue: ["home", "products", "about", "gallery", "testimonials", "faq", "blog", "contact"],
+  startups: ["home", "services", "pricing", "about", "testimonials", "team", "blog", "careers", "faq", "contact"],
 };
 
 export const TEMPLATES: TemplateSeed[] = [
-  { slug: "clinic-care", category: "clinics", layout: "classic", name: L("Clinic Care", "كلينك كير"), tagline: L("Calm, trustworthy, booking-first.", "هادئ وموثوق والحجز أولًا."), primary: "#1b7f79", accent: "#0f2f3a", font: "modern", recommendedAddons: ["booking", "velora"] },
-  { slug: "smile-studio", category: "clinics", layout: "minimal", name: L("Smile Studio", "سمايل ستوديو"), tagline: L("Bright and minimal for dental & beauty.", "مشرق وبسيط لعيادات الأسنان والتجميل."), primary: "#3b82f6", accent: "#0b1b3a", font: "rounded", recommendedAddons: ["booking"] },
-  { slug: "medica-plus", category: "clinics", layout: "bold", name: L("Medica Plus", "ميديكا بلس"), tagline: L("Multi-specialty centres with many doctors.", "للمراكز متعددة التخصصات."), primary: "#0e9f6e", accent: "#062a20", font: "modern", minPlan: "business", recommendedAddons: ["booking", "velora", "second-language"] },
+  // Clinics & healthcare
+  { slug: "clinic-care", category: "clinics", name: "Clinic Care", tagline: L("Calm, trustworthy and booking-first.", "هادئ وموثوق والحجز أولًا."), style: ["classic", "split", "light", "soft"], colors: ["#1b7f79", "#0f2f3a"], font: "modern", defaultPages: ["home", "services", "team", "booking", "contact"], goals: ["bookings", "calls"], recommendedAddons: ["booking", "velora"] },
+  { slug: "smile-studio", category: "clinics", name: "Smile Studio", tagline: L("Bright and friendly for dental and cosmetic clinics.", "مشرق وودود لعيادات الأسنان والتجميل."), style: ["minimal", "centered", "light", "round"], colors: ["#3b82f6", "#0b1b3a"], font: "rounded", defaultPages: ["home", "services", "gallery", "booking", "contact"], goals: ["bookings"], recommendedAddons: ["booking"] },
+  { slug: "medica-plus", category: "clinics", name: "Medica Plus", tagline: L("Multi-specialty centres with many doctors and branches.", "للمراكز متعددة التخصصات والفروع."), style: ["bold", "banner", "light", "sharp"], colors: ["#0e9f6e", "#062a20"], font: "modern", defaultPages: ["home", "about", "services", "team", "booking", "faq", "contact"], goals: ["bookings", "leads"], recommendedAddons: ["booking", "velora", "second-language"], minPlan: "business" },
+  { slug: "vita-dark", category: "clinics", name: "Vita", tagline: L("Premium and modern for dermatology and aesthetics.", "فاخر وعصري للجلدية والتجميل."), style: ["classic", "split", "dark", "soft"], colors: ["#22d3ee", "#0b1220"], font: "display", defaultPages: ["home", "services", "gallery", "testimonials", "booking", "contact"], goals: ["bookings", "leads"], recommendedAddons: ["booking"] },
 
-  { slug: "campus", category: "education", layout: "classic", name: L("Campus", "كامبس"), tagline: L("Courses, schedules and enrolment.", "الدورات والمواعيد والتسجيل."), primary: "#4f46e5", accent: "#1e1b4b", font: "modern", recommendedAddons: ["booking", "payments"] },
-  { slug: "academy-bold", category: "education", layout: "bold", name: L("Academy Bold", "أكاديمي بولد"), tagline: L("Energetic, for training centres.", "حيوي لمراكز التدريب."), primary: "#f59e0b", accent: "#1f2937", font: "display", recommendedAddons: ["payments", "blog"] },
-  { slug: "learn-light", category: "education", layout: "minimal", name: L("Learn Light", "ليرن لايت"), tagline: L("Clean pages for tutors and schools.", "صفحات نظيفة للمدرسين والمدارس."), primary: "#0ea5e9", accent: "#0c4a6e", font: "rounded", recommendedAddons: ["booking"] },
+  // Beauty & wellness
+  { slug: "glow-salon", category: "beauty", name: "Glow", tagline: L("Soft and elegant for salons and nail studios.", "ناعم وأنيق للصالونات واستوديوهات الأظافر."), style: ["minimal", "centered", "light", "round"], colors: ["#e11d74", "#2a0a18"], font: "serif", defaultPages: ["home", "services", "pricing", "gallery", "booking", "contact"], goals: ["bookings"], recommendedAddons: ["booking"] },
+  { slug: "velvet-spa", category: "beauty", name: "Velvet", tagline: L("Dark, warm and luxurious for spas and wellness.", "داكن ودافئ وفاخر للسبا والعناية."), style: ["classic", "split", "dark", "soft"], colors: ["#c9a96e", "#141210"], font: "serif", defaultPages: ["home", "services", "pricing", "booking", "testimonials", "contact"], goals: ["bookings"], recommendedAddons: ["booking", "payments"] },
+  { slug: "bloom-studio", category: "beauty", name: "Bloom", tagline: L("Playful colour for makeup artists and beauty brands.", "ألوان مرحة لخبراء المكياج وعلامات التجميل."), style: ["bold", "banner", "light", "round"], colors: ["#f472b6", "#3b0764"], font: "display", defaultPages: ["home", "services", "gallery", "products", "contact"], goals: ["bookings", "sales"], recommendedAddons: ["booking", "catalogue"] },
+  { slug: "barber-co", category: "beauty", name: "Barber & Co", tagline: L("Sharp and confident for barbershops and grooming.", "حاد وواثق لصالونات الحلاقة والعناية بالرجال."), style: ["bold", "split", "dark", "sharp"], colors: ["#f59e0b", "#111111"], font: "display", defaultPages: ["home", "services", "pricing", "team", "booking", "contact"], goals: ["bookings", "calls"], recommendedAddons: ["booking"] },
 
-  { slug: "counsel", category: "professional", layout: "classic", name: L("Counsel", "كاونسل"), tagline: L("Law, accounting and advisory firms.", "لمكاتب المحاماة والمحاسبة والاستشارات."), primary: "#1e3a5f", accent: "#b08d57", font: "serif", recommendedAddons: ["blog", "booking"] },
-  { slug: "consult-pro", category: "professional", layout: "bold", name: L("Consult Pro", "كونسلت برو"), tagline: L("Confident, results-led consultancy.", "استشارات بثقة ونتائج واضحة."), primary: "#72c04f", accent: "#0a0a0a", font: "display", recommendedAddons: ["blog", "email-automation"] },
-  { slug: "atelier", category: "professional", layout: "minimal", name: L("Atelier", "أتيليه"), tagline: L("Studios, architects and creatives.", "للاستوديوهات والمعماريين والمبدعين."), primary: "#111827", accent: "#e5e7eb", font: "serif", recommendedAddons: ["extra-pages"] },
+  // Fitness & sports
+  { slug: "pulse-gym", category: "fitness", name: "Pulse", tagline: L("High-energy for gyms and CrossFit boxes.", "طاقة عالية للصالات الرياضية."), style: ["bold", "banner", "dark", "sharp"], colors: ["#84cc16", "#0a0a0a"], font: "display", defaultPages: ["home", "schedule", "pricing", "team", "contact"], goals: ["leads", "sales"], recommendedAddons: ["payments", "mobile-app"] },
+  { slug: "zen-yoga", category: "fitness", name: "Zen", tagline: L("Calm and airy for yoga and pilates studios.", "هادئ ومريح لاستوديوهات اليوغا والبيلاتس."), style: ["minimal", "centered", "light", "round"], colors: ["#84a98c", "#2f3e46"], font: "rounded", defaultPages: ["home", "schedule", "pricing", "booking", "contact"], goals: ["bookings"], recommendedAddons: ["booking"] },
+  { slug: "coach-pro", category: "fitness", name: "Coach Pro", tagline: L("Personal trainers and online coaching programmes.", "للمدربين الشخصيين وبرامج التدريب أونلاين."), style: ["classic", "split", "light", "soft"], colors: ["#ef4444", "#111827"], font: "modern", defaultPages: ["home", "pricing", "testimonials", "booking", "contact"], goals: ["leads", "sales"], recommendedAddons: ["payments", "booking"] },
+  { slug: "box-club", category: "fitness", name: "Box Club", tagline: L("Gritty and bold for boxing and martial arts clubs.", "قوي وجريء لأندية الملاكمة والفنون القتالية."), style: ["bold", "split", "dark", "soft"], colors: ["#f97316", "#18181b"], font: "display", defaultPages: ["home", "schedule", "team", "gallery", "contact"], goals: ["leads"], recommendedAddons: ["booking"] },
 
-  { slug: "table", category: "restaurants", layout: "classic", name: L("Table", "تيبل"), tagline: L("Menus, reservations and location.", "القائمة والحجوزات والموقع."), primary: "#b45309", accent: "#1c1917", font: "serif", recommendedAddons: ["booking", "mobile-app"] },
-  { slug: "street-bites", category: "restaurants", layout: "bold", name: L("Street Bites", "ستريت بايتس"), tagline: L("Loud and fun for fast food & delivery.", "جريء وممتع للوجبات السريعة والتوصيل."), primary: "#dc2626", accent: "#facc15", font: "display", recommendedAddons: ["catalogue", "payments", "mobile-app"] },
-  { slug: "cafe-minimal", category: "restaurants", layout: "minimal", name: L("Café Minimal", "كافيه مينيمال"), tagline: L("Quiet elegance for cafés and bakeries.", "أناقة هادئة للمقاهي والمخابز."), primary: "#78716c", accent: "#292524", font: "rounded", recommendedAddons: ["catalogue"] },
+  // Education & training
+  { slug: "campus", category: "education", name: "Campus", tagline: L("Courses, schedules and enrolment for academies.", "الدورات والمواعيد والتسجيل للأكاديميات."), style: ["classic", "split", "light", "soft"], colors: ["#4f46e5", "#1e1b4b"], font: "modern", defaultPages: ["home", "courses", "about", "schedule", "contact"], goals: ["leads", "sales"], recommendedAddons: ["booking", "payments"] },
+  { slug: "academy-bold", category: "education", name: "Academy", tagline: L("Energetic and bold for training centres.", "حيوي وجريء لمراكز التدريب."), style: ["bold", "banner", "light", "sharp"], colors: ["#f59e0b", "#1f2937"], font: "display", defaultPages: ["home", "courses", "pricing", "team", "contact"], goals: ["sales", "leads"], recommendedAddons: ["payments", "blog"] },
+  { slug: "learn-light", category: "education", name: "Learn Light", tagline: L("Clean and simple for tutors and private lessons.", "نظيف وبسيط للمدرسين والدروس الخاصة."), style: ["minimal", "centered", "light", "round"], colors: ["#0ea5e9", "#0c4a6e"], font: "rounded", defaultPages: ["home", "courses", "booking", "contact"], goals: ["bookings"], recommendedAddons: ["booking"] },
+  { slug: "kids-club", category: "education", name: "Kids Club", tagline: L("Cheerful and colourful for nurseries and kids' activities.", "مبهج وملوّن للحضانات وأنشطة الأطفال."), style: ["bold", "centered", "light", "round"], colors: ["#8b5cf6", "#1e1b4b"], font: "rounded", defaultPages: ["home", "about", "schedule", "gallery", "contact"], goals: ["leads", "calls"], recommendedAddons: ["second-language"] },
 
-  { slug: "buildright", category: "home-services", layout: "classic", name: L("BuildRight", "بيلد رايت"), tagline: L("Contractors and construction projects.", "للمقاولين ومشاريع البناء."), primary: "#ea580c", accent: "#1c1917", font: "modern", recommendedAddons: ["extra-pages", "booking"] },
-  { slug: "fixit-pro", category: "home-services", layout: "bold", name: L("Fixit Pro", "فيكس إت برو"), tagline: L("Maintenance and repair, call-first.", "صيانة وإصلاح، الاتصال أولًا."), primary: "#2563eb", accent: "#facc15", font: "display", recommendedAddons: ["booking", "mobile-app"] },
-  { slug: "home-clean", category: "home-services", layout: "minimal", name: L("Home Clean", "هوم كلين"), tagline: L("Cleaning, gardening and home care.", "التنظيف والحدائق والعناية بالمنزل."), primary: "#10b981", accent: "#064e3b", font: "rounded", recommendedAddons: ["booking", "payments"] },
+  // Professional services
+  { slug: "counsel", category: "professional", name: "Counsel", tagline: L("Authoritative for law firms and legal advisors.", "رصين لمكاتب المحاماة والمستشارين القانونيين."), style: ["classic", "split", "light", "sharp"], colors: ["#1e3a5f", "#b08d57"], font: "serif", defaultPages: ["home", "about", "services", "team", "contact"], goals: ["leads", "calls"], recommendedAddons: ["blog", "booking"] },
+  { slug: "consult-pro", category: "professional", name: "Consult Pro", tagline: L("Confident and results-led for consultancies.", "واثق ويركز على النتائج للاستشارات."), style: ["bold", "banner", "dark", "soft"], colors: ["#72c04f", "#0a0a0a"], font: "display", defaultPages: ["home", "services", "projects", "testimonials", "contact"], goals: ["leads"], recommendedAddons: ["blog", "email-automation"] },
+  { slug: "atelier", category: "professional", name: "Atelier", tagline: L("Gallery-like for architects, studios and creatives.", "كالمعرض للمعماريين والاستوديوهات والمبدعين."), style: ["minimal", "centered", "light", "sharp"], colors: ["#111827", "#e5e7eb"], font: "serif", defaultPages: ["home", "projects", "about", "contact"], goals: ["leads"], recommendedAddons: [] },
+  { slug: "ledger", category: "professional", name: "Ledger", tagline: L("Clear and dependable for accountants and auditors.", "واضح وموثوق للمحاسبين والمراجعين."), style: ["classic", "split", "light", "soft"], colors: ["#0f766e", "#042f2e"], font: "modern", defaultPages: ["home", "services", "about", "faq", "contact"], goals: ["leads", "calls"], recommendedAddons: ["booking"] },
 
-  { slug: "showroom", category: "catalogue", layout: "classic", name: L("Showroom", "شوروم"), tagline: L("Products with WhatsApp ordering.", "منتجات مع الطلب عبر واتساب."), primary: "#7c3aed", accent: "#1e1b4b", font: "modern", minPlan: "business", recommendedAddons: ["catalogue", "mobile-app"] },
-  { slug: "market-bold", category: "catalogue", layout: "bold", name: L("Market Bold", "ماركت بولد"), tagline: L("High-energy retail and offers.", "تجزئة وعروض بطاقة عالية."), primary: "#e11d48", accent: "#111827", font: "display", minPlan: "business", recommendedAddons: ["catalogue", "payments"] },
-  { slug: "shelf", category: "catalogue", layout: "minimal", name: L("Shelf", "شيلف"), tagline: L("Calm, image-led product catalogue.", "كتالوج هادئ تقوده الصور."), primary: "#0f766e", accent: "#134e4a", font: "serif", minPlan: "business", recommendedAddons: ["catalogue"] },
+  // Real estate
+  { slug: "skyline", category: "real-estate", name: "Skyline", tagline: L("Luxury developments and premium projects.", "للمشروعات الفاخرة والتطويرات المميزة."), style: ["bold", "banner", "dark", "sharp"], colors: ["#c8a24a", "#0b0f19"], font: "serif", defaultPages: ["home", "projects", "listings", "about", "contact"], goals: ["leads"], recommendedAddons: ["second-language", "dashboard"], minPlan: "business" },
+  { slug: "home-finder", category: "real-estate", name: "Home Finder", tagline: L("Brokers and agencies with many listings.", "للوسطاء والوكالات بقوائم عقارات كثيرة."), style: ["classic", "split", "light", "soft"], colors: ["#2563eb", "#0f172a"], font: "modern", defaultPages: ["home", "listings", "services", "team", "contact"], goals: ["leads", "calls"], recommendedAddons: ["catalogue"], minPlan: "business" },
+  { slug: "villa", category: "real-estate", name: "Villa", tagline: L("Elegant single-project and resort showcase.", "عرض أنيق لمشروع واحد أو منتجع."), style: ["minimal", "centered", "light", "sharp"], colors: ["#a16207", "#1c1917"], font: "serif", defaultPages: ["home", "projects", "gallery", "contact"], goals: ["leads"], recommendedAddons: ["second-language"] },
+  { slug: "compound", category: "real-estate", name: "Compound", tagline: L("Communities, compounds and property management.", "للمجمعات السكنية وإدارة العقارات."), style: ["classic", "banner", "light", "round"], colors: ["#059669", "#022c22"], font: "modern", defaultPages: ["home", "about", "services", "listings", "faq", "contact"], goals: ["leads", "calls"], recommendedAddons: ["dashboard"] },
+
+  // Restaurants & cafés
+  { slug: "table", category: "restaurants", name: "Table", tagline: L("Warm and classic for restaurants with reservations.", "دافئ وكلاسيكي للمطاعم مع الحجوزات."), style: ["classic", "split", "light", "soft"], colors: ["#b45309", "#1c1917"], font: "serif", defaultPages: ["home", "menu", "about", "booking", "contact"], goals: ["bookings", "calls"], recommendedAddons: ["booking", "mobile-app"] },
+  { slug: "street-bites", category: "restaurants", name: "Street Bites", tagline: L("Loud and fun for fast food and delivery.", "صاخب وممتع للوجبات السريعة والتوصيل."), style: ["bold", "banner", "light", "round"], colors: ["#dc2626", "#7c2d12"], font: "display", defaultPages: ["home", "menu", "gallery", "contact"], goals: ["sales", "calls"], recommendedAddons: ["catalogue", "payments", "mobile-app"] },
+  { slug: "cafe-minimal", category: "restaurants", name: "Café", tagline: L("Quiet elegance for cafés and bakeries.", "أناقة هادئة للمقاهي والمخابز."), style: ["minimal", "centered", "light", "round"], colors: ["#78716c", "#292524"], font: "rounded", defaultPages: ["home", "menu", "gallery", "contact"], goals: ["calls"], recommendedAddons: ["catalogue"] },
+  { slug: "noir-grill", category: "restaurants", name: "Noir", tagline: L("Moody fine dining and steakhouses.", "أجواء فاخرة للمطاعم الراقية والمشويات."), style: ["classic", "banner", "dark", "sharp"], colors: ["#ea580c", "#0c0a09"], font: "serif", defaultPages: ["home", "menu", "about", "gallery", "booking", "contact"], goals: ["bookings"], recommendedAddons: ["booking"] },
+
+  // Home services & contractors
+  { slug: "buildright", category: "home-services", name: "BuildRight", tagline: L("Contractors and construction companies.", "للمقاولين وشركات البناء."), style: ["classic", "split", "light", "sharp"], colors: ["#ea580c", "#1c1917"], font: "modern", defaultPages: ["home", "services", "projects", "about", "contact"], goals: ["leads", "calls"], recommendedAddons: ["booking"] },
+  { slug: "fixit-pro", category: "home-services", name: "Fixit Pro", tagline: L("Maintenance and repairs, call-first.", "صيانة وإصلاح، الاتصال أولًا."), style: ["bold", "banner", "light", "soft"], colors: ["#2563eb", "#0f172a"], font: "display", defaultPages: ["home", "services", "pricing", "booking", "contact"], goals: ["calls", "bookings"], recommendedAddons: ["booking", "mobile-app"] },
+  { slug: "home-clean", category: "home-services", name: "Home Clean", tagline: L("Fresh and friendly for cleaning and home care.", "منعش وودود للتنظيف والعناية بالمنزل."), style: ["minimal", "centered", "light", "round"], colors: ["#10b981", "#064e3b"], font: "rounded", defaultPages: ["home", "services", "pricing", "booking", "contact"], goals: ["bookings"], recommendedAddons: ["booking", "payments"] },
+  { slug: "solar-plus", category: "home-services", name: "Solar Plus", tagline: L("Modern and technical for solar and smart-home installers.", "عصري وتقني لتركيب الطاقة الشمسية والمنازل الذكية."), style: ["bold", "split", "dark", "soft"], colors: ["#facc15", "#0f172a"], font: "modern", defaultPages: ["home", "services", "projects", "faq", "contact"], goals: ["leads"], recommendedAddons: ["email-automation"] },
+
+  // Products & catalogue
+  { slug: "showroom", category: "catalogue", name: "Showroom", tagline: L("Products with WhatsApp ordering.", "منتجات مع الطلب عبر واتساب."), style: ["classic", "split", "light", "soft"], colors: ["#7c3aed", "#1e1b4b"], font: "modern", defaultPages: ["home", "products", "about", "contact"], goals: ["catalogue", "calls"], recommendedAddons: ["catalogue", "mobile-app"], minPlan: "business" },
+  { slug: "market-bold", category: "catalogue", name: "Market", tagline: L("High-energy retail and offers.", "تجزئة وعروض بطاقة عالية."), style: ["bold", "banner", "light", "sharp"], colors: ["#e11d48", "#111827"], font: "display", defaultPages: ["home", "products", "testimonials", "contact"], goals: ["sales"], recommendedAddons: ["catalogue", "payments"], minPlan: "business" },
+  { slug: "shelf", category: "catalogue", name: "Shelf", tagline: L("Calm, image-led product catalogue.", "كتالوج هادئ تقوده الصور."), style: ["minimal", "centered", "light", "sharp"], colors: ["#0f766e", "#134e4a"], font: "serif", defaultPages: ["home", "products", "gallery", "contact"], goals: ["catalogue"], recommendedAddons: ["catalogue"], minPlan: "business" },
+  { slug: "luxe", category: "catalogue", name: "Luxe", tagline: L("Dark and premium for jewellery, perfume and fashion.", "داكن وفاخر للمجوهرات والعطور والأزياء."), style: ["minimal", "banner", "dark", "sharp"], colors: ["#d4af37", "#0a0a0a"], font: "serif", defaultPages: ["home", "products", "about", "gallery", "contact"], goals: ["sales", "catalogue"], recommendedAddons: ["catalogue", "payments"], minPlan: "business" },
+
+  // Startups & tech
+  { slug: "launchpad", category: "startups", name: "Launchpad", tagline: L("Bold launch page for new products and apps.", "صفحة إطلاق جريئة للمنتجات والتطبيقات الجديدة."), style: ["bold", "banner", "dark", "round"], colors: ["#8b5cf6", "#0b0b1a"], font: "display", defaultPages: ["home", "services", "pricing", "faq", "contact"], goals: ["leads", "sales"], recommendedAddons: ["email-automation", "mobile-app"] },
+  { slug: "saas-clean", category: "startups", name: "SaaS Clean", tagline: L("Clear features and pricing for SaaS companies.", "مميزات وأسعار واضحة لشركات البرمجيات."), style: ["minimal", "centered", "light", "soft"], colors: ["#2563eb", "#0f172a"], font: "modern", defaultPages: ["home", "services", "pricing", "testimonials", "blog", "contact"], goals: ["leads", "sales"], recommendedAddons: ["blog", "dashboard"] },
+  { slug: "orbit", category: "startups", name: "Orbit", tagline: L("Dark and futuristic for AI and tech teams.", "داكن ومستقبلي لفرق الذكاء الاصطناعي والتقنية."), style: ["classic", "split", "dark", "soft"], colors: ["#72c04f", "#050605"], font: "display", defaultPages: ["home", "services", "about", "careers", "contact"], goals: ["leads"], recommendedAddons: ["blog"] },
+  { slug: "app-landing", category: "startups", name: "App Landing", tagline: L("Mobile-app landing page with store buttons.", "صفحة هبوط لتطبيق جوال مع أزرار المتاجر."), style: ["bold", "split", "light", "round"], colors: ["#06b6d4", "#083344"], font: "rounded", defaultPages: ["home", "services", "testimonials", "faq", "contact"], goals: ["sales", "leads"], recommendedAddons: ["mobile-app"] },
 ];
 
-const FEATURES: Record<TemplateLayout, Localized[]> = {
-  classic: [L("Trust-first layout", "تخطيط يبني الثقة"), L("Sticky call & WhatsApp", "أزرار اتصال وواتساب ثابتة"), L("Reviews section", "قسم آراء العملاء")],
-  bold: [L("Big visual hero", "واجهة بصرية كبيرة"), L("Offer banners", "شرائط العروض"), L("Animated sections", "أقسام متحركة")],
-  minimal: [L("Lots of white space", "مساحات بيضاء مريحة"), L("Image-led pages", "صفحات تقودها الصور"), L("Fast and light", "سريع وخفيف")],
+const LAYOUT_FEATURES: Record<TemplateLayout, Localized[]> = {
+  classic: [L("Trust-first layout", "تخطيط يبني الثقة"), L("Sticky call & WhatsApp", "أزرار اتصال وواتساب ثابتة")],
+  bold: [L("Big visual hero", "واجهة بصرية كبيرة"), L("Offer banners", "شرائط العروض")],
+  minimal: [L("Lots of white space", "مساحات بيضاء مريحة"), L("Fast and light", "سريع وخفيف")],
 };
+const LAYOUT_TAGS: Record<TemplateLayout, Localized> = { classic: L("Classic", "كلاسيكي"), bold: L("Bold", "جريء"), minimal: L("Minimal", "بسيط") };
+const MODE_TAGS: Record<ThemeMode, Localized> = { light: L("Light", "فاتح"), dark: L("Dark", "داكن") };
 
 export function templateDocs() {
-  return TEMPLATES.map((t, i) => ({
-    slug: t.slug,
-    category: t.category,
-    layout: t.layout,
-    name: t.name,
-    tagline: t.tagline,
-    defaultBrand: { primary: t.primary, accent: t.accent, font: t.font },
-    pages: PAGES[t.category],
-    features: FEATURES[t.layout],
-    recommendedAddons: t.recommendedAddons,
-    minPlan: t.minPlan ?? "launch",
-    sortOrder: i,
-    published: true,
-  }));
+  return TEMPLATES.map((t, i) => {
+    const [layout, hero, mode, corners] = t.style;
+    return {
+      slug: t.slug,
+      category: t.category,
+      name: L(t.name, t.name),
+      tagline: t.tagline,
+      layout,
+      hero,
+      mode,
+      corners,
+      defaultBrand: { primary: t.colors[0], accent: t.colors[1], font: t.font },
+      pageKeys: CATEGORY_PAGES[t.category],
+      defaultPages: t.defaultPages,
+      tags: [LAYOUT_TAGS[layout], MODE_TAGS[mode]],
+      goals: t.goals,
+      features: LAYOUT_FEATURES[layout],
+      recommendedAddons: t.recommendedAddons,
+      minPlan: t.minPlan ?? "launch",
+      sortOrder: i,
+      published: true,
+    };
+  });
 }
 
 export function addonDocs() {
@@ -305,6 +356,9 @@ export function addonDocs() {
   }));
 }
 
+/** Extra page price (one-time), from the plan document's add-on menu. */
+const EXTRA_PAGE_PRICE = { EGP: 1000, AED: 140, USD: 40 };
+
 export function planDocs() {
-  return PLANS.map((p, i) => ({ ...p, sortOrder: i, published: true }));
+  return PLANS.map((p, i) => ({ ...p, extraPagePrice: EXTRA_PAGE_PRICE, sortOrder: i, published: true }));
 }

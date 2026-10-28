@@ -26,7 +26,9 @@ export default function QuoteSummary({
   if (!quote) return null;
   const money = (n: number) => formatMoney(n, quote.currency as Market, locale);
   const label = (key: string) =>
-    key.startsWith("plan:")
+    key === "pages:extra"
+      ? t("extraPages", { count: quote.pages.extra })
+      : key.startsWith("plan:")
       ? loc(catalog.plans.find((p) => `plan:${p.tier}` === key)?.name, locale)
       : loc(catalog.addons.find((a) => a.key === key)?.name, locale);
   const plan = catalog.plans.find((p) => `plan:${p.tier}` === quote.lines[0]?.key);

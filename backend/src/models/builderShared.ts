@@ -5,9 +5,46 @@ import { Schema } from "mongoose";
  * See docs/website-builder/README.md.
  */
 
-/** Launch verticals; the website keeps matching labels in messages/*.json → builder.categories. */
-export const BUILDER_CATEGORIES = ["clinics", "education", "professional", "restaurants", "home-services", "catalogue"] as const;
+/** Industries; the website keeps matching labels in messages/*.json → builder.categories. */
+export const BUILDER_CATEGORIES = [
+  "clinics",
+  "beauty",
+  "fitness",
+  "education",
+  "professional",
+  "real-estate",
+  "restaurants",
+  "home-services",
+  "catalogue",
+  "startups",
+] as const;
 export type BuilderCategory = (typeof BUILDER_CATEGORIES)[number];
+
+/**
+ * Page library: a template offers a subset of these and the customer picks which to include.
+ * Names, descriptions and the preview of each page live on the website (web/src/lib/builderPages.ts).
+ */
+export const PAGE_KEYS = [
+  "home",
+  "about",
+  "services",
+  "team",
+  "booking",
+  "contact",
+  "gallery",
+  "menu",
+  "pricing",
+  "blog",
+  "faq",
+  "testimonials",
+  "products",
+  "courses",
+  "projects",
+  "listings",
+  "schedule",
+  "careers",
+] as const;
+export type PageKey = (typeof PAGE_KEYS)[number];
 
 export const PLAN_TIERS = ["launch", "business", "growth", "custom"] as const;
 export type PlanTier = (typeof PLAN_TIERS)[number];
@@ -17,25 +54,41 @@ export const MARKETS = ["EGP", "AED", "USD"] as const;
 export type Market = (typeof MARKETS)[number];
 
 /**
- * Where the customer's business is. The country decides the pricing market (and so the currency and
- * payment options): Egypt → EGP, Gulf → AED (the plan's Gulf price list), everywhere else → USD.
- * The website keeps the same list in web/src/lib/builder.ts.
+ * Where the customer's business is (ISO 3166-1 alpha-2). The country decides the pricing market, and so the
+ * currency and payment options: Egypt → EGP, GCC → AED (the plan's Gulf price list), everywhere else → USD.
+ * The website keeps the same rules in web/src/lib/builder.ts.
  */
-export const COUNTRY_MARKET = {
-  EG: "EGP",
-  AE: "AED",
-  SA: "AED",
-  KW: "AED",
-  QA: "AED",
-  BH: "AED",
-  OM: "AED",
-  JO: "USD",
-  OTHER: "USD",
-} as const satisfies Record<string, Market>;
-export type Country = keyof typeof COUNTRY_MARKET;
-export const COUNTRIES = Object.keys(COUNTRY_MARKET) as Country[];
+export const COUNTRIES = (
+  "AD AE AF AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BV BW BY BZ " +
+  "CA CC CD CF CG CH CI CK CL CM CN CO CR CU CV CW CX CY CZ DE DJ DK DM DO DZ EC EE EG EH ER ES ET FI FJ FK FM FO FR " +
+  "GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GS GT GU GW GY HK HM HN HR HT HU ID IE IL IM IN IO IQ IR IS IT JE JM JO JP " +
+  "KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MF MG MH MK ML MM MN MO MP MQ MR MS MT " +
+  "MU MV MW MX MY MZ NA NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RE RO RS RU RW " +
+  "SA SB SC SD SE SG SH SI SJ SK SL SM SN SO SR SS ST SV SX SY SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG " +
+  "UM US UY UZ VA VC VE VG VI VN VU WF WS XK YE YT ZA ZM ZW"
+).split(" ");
+export type Country = string;
 
+const GCC = ["AE", "SA", "KW", "QA", "BH", "OM"];
+
+export function isCountry(value: unknown): value is Country {
+  return typeof value === "string" && COUNTRIES.includes(value);
+}
+
+export function marketFor(country: Country): Market {
+  if (country === "EG") return "EGP";
+  return GCC.includes(country) ? "AED" : "USD";
+}
+
+/** Look of a template; the website's live preview renders every combination. */
 export const TEMPLATE_LAYOUTS = ["classic", "bold", "minimal"] as const;
+export const HERO_STYLES = ["split", "centered", "banner"] as const;
+export const THEME_MODES = ["light", "dark"] as const;
+export const CORNER_STYLES = ["sharp", "soft", "round"] as const;
+export type HeroStyle = (typeof HERO_STYLES)[number];
+export type ThemeMode = (typeof THEME_MODES)[number];
+export type CornerStyle = (typeof CORNER_STYLES)[number];
+
 export type TemplateLayout = (typeof TEMPLATE_LAYOUTS)[number];
 
 export function planRank(tier: PlanTier): number {

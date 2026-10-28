@@ -4,6 +4,10 @@
  *
  *   npx ts-node scripts/seed-builder.ts            # dry run: lists what would be inserted
  *   npx ts-node scripts/seed-builder.ts --apply    # inserts
+ *   npx ts-node scripts/seed-builder.ts --apply --update
+ *       # also overwrites existing seed items (same tier/key/slug) with the seed's values and hides
+ *       # published items the seed no longer has. Use after changing builderCatalogData.ts —
+ *       # this DOES replace admin edits on those items.
  */
 import path from "path";
 import dotenv from "dotenv";
@@ -17,6 +21,7 @@ dotenv.config({ path: path.resolve(__dirname, "..", ".env"), quiet: true });
 
 async function main(): Promise<void> {
   const apply = process.argv.includes("--apply");
+  const update = process.argv.includes("--update");
   if (!process.env.DB_URI) throw new Error("DB_URI is not set");
   await mongoose.connect(process.env.DB_URI);
 
@@ -31,6 +36,16 @@ async function main(): Promise<void> {
     const missing = docs.filter((d) => !existing.has(String(d[key])));
     console.log(`${label}: ${docs.length} in seed, ${missing.length} missing${missing.length ? ` (${missing.map((d) => d[key]).join(", ")})` : ""}`);
     if (apply && missing.length) await model.insertMany(missing);
+    if (update) {
+      const existingDocs = docs.filter((d) => existing.has(String(d[key])));
+      const seedKeys = docs.map((d) => d[key]);
+      const retired = await model.find({ [key]: { $nin: seedKeys }, published: true }).select(key).lean<Record<string, unknown>[]>();
+      console.log(`  update: ${existingDocs.length} overwritten, ${retired.length} hidden${retired.length ? ` (${retired.map((d) => d[key]).join(", ")})` : ""}`);
+      if (apply) {
+        for (const d of existingDocs) await model.updateOne({ [key]: d[key] }, { $set: d }, { runValidators: true });
+        if (retired.length) await model.updateMany({ [key]: { $in: retired.map((d) => d[key]) } }, { $set: { published: false } });
+      }
+    }
   }
   console.log(apply ? "Done." : "Dry run. Re-run with --apply to insert.");
   await mongoose.disconnect();

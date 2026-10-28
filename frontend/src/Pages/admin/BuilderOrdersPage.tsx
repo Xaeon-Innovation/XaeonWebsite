@@ -16,7 +16,7 @@ type Order = {
   country?: string;
   market: string;
   locale: string;
-  config: { category: string; goal?: string; templateSlug: string; planTier: string; addonKeys: string[]; billing: string };
+  config: { category: string; goal?: string; templateSlug: string; pages?: string[]; planTier: string; addonKeys: string[]; billing: string };
   brand: { businessName: string; primary: string; accent: string; font: string; tone?: string; logoUrl?: string; assetUrls: string[]; notes?: string };
   contact: { name: string; email: string; phone: string; company?: string };
   quote: { currency: string; lines: QuoteLine[]; setup: number; monthly: number; annual: number; deposit: number; discountTotal: number; billing: string };
@@ -119,6 +119,7 @@ export function Component() {
             <section className="admin-form-section">
               <h3 className="admin-form-section-title">Website</h3>
               <p>{CATEGORY_LABELS[o.config.category] ?? o.config.category}{o.config.goal ? ` · goal: ${o.config.goal}` : ""} · template <strong>{o.config.templateSlug}</strong> · plan <strong>{o.config.planTier}</strong> · billed {o.config.billing}</p>
+              {o.config.pages?.length ? <p>Pages ({o.config.pages.length}): {o.config.pages.join(", ")}</p> : null}
               <p style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
                 <span style={{ display: "inline-flex", gap: 4 }} aria-label="Brand colours">
                   <span style={{ width: 24, height: 24, borderRadius: 6, background: o.brand.primary }} title={o.brand.primary} />

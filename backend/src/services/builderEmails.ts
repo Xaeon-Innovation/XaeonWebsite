@@ -39,8 +39,9 @@ export async function sendBuilderOrderNotice(order: IBuilderOrder): Promise<void
     ["Contact", `${order.contact.name} · ${order.contact.email} · ${order.contact.phone}`],
     ["Category", order.config.category + (order.config.goal ? ` (goal: ${order.config.goal})` : "")],
     ["Template", order.config.templateSlug],
+    ["Pages", (order.config.pages ?? []).join(", ") || "—"],
     ["Plan", `${order.config.planTier} · billed ${order.config.billing}`],
-    ["Brand", `${order.brand.primary} / ${order.brand.accent} · font ${order.brand.font}${order.brand.tone ? ` · tone ${order.brand.tone}` : ""}`],
+    ["Brand", `${order.brand.primary} / ${order.brand.accent} · font ${order.brand.font} · ${order.brand.mode ?? "light"} · ${order.brand.corners ?? "soft"} corners${order.brand.tone ? ` · tone ${order.brand.tone}` : ""}`],
   ];
   if (order.brand.logoUrl) rows.push(["Logo", order.brand.logoUrl]);
   if (order.brand.assetUrls.length) rows.push(["Assets", order.brand.assetUrls.join("\n")]);

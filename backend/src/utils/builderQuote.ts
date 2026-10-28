@@ -6,7 +6,14 @@ import { planRank, type Market, type PlanTier, type Prices } from "../models/bui
  * web/src/lib/builder.ts mirrors these rules for the live estimate; keep the two in step.
  */
 
-export type QuotePlan = { tier: PlanTier; name: string; prices: Prices; quoted: boolean };
+export type QuotePlan = {
+  tier: PlanTier;
+  name: string;
+  prices: Prices;
+  quoted: boolean;
+  includedPages: number;
+  extraPagePrice: Record<Market, number>;
+};
 export type QuoteAddon = {
   key: string;
   name: string;
@@ -16,7 +23,7 @@ export type QuoteAddon = {
   includedIn: PlanTier[];
   minPlan?: PlanTier;
 };
-export type QuoteConfig = { planTier: PlanTier; addonKeys: string[]; billing: "monthly" | "annual" };
+export type QuoteConfig = { planTier: PlanTier; addonKeys: string[]; billing: "monthly" | "annual"; pageCount: number };
 
 export type QuoteLine = {
   key: string;
@@ -44,6 +51,7 @@ export type Quote = {
   deposit: number;
   /** True when part of the price is an estimate the team confirms. */
   hasQuotedItems: boolean;
+  pages: { count: number; included: number; extra: number };
 };
 
 export class QuoteError extends Error {}
@@ -66,6 +74,21 @@ export function computeQuote(config: QuoteConfig, catalog: { plans: QuotePlan[];
       quoted: plan.quoted,
     },
   ];
+
+  // Pages beyond the plan's allowance are charged one by one.
+  const pageCount = Math.max(1, Math.round(config.pageCount || 1));
+  const extraPages = Math.max(0, pageCount - plan.includedPages);
+  if (extraPages > 0) {
+    lines.push({
+      key: "pages:extra",
+      label: `Extra pages (${extraPages})`,
+      setup: extraPages * plan.extraPagePrice[market],
+      monthly: 0,
+      discount: 0,
+      included: false,
+      quoted: plan.quoted,
+    });
+  }
 
   const keys = [...new Set(config.addonKeys)];
   for (const key of keys) {
@@ -103,6 +126,7 @@ export function computeQuote(config: QuoteConfig, catalog: { plans: QuotePlan[];
     discountTotal: sum(lines.map((l) => l.discount)),
     deposit,
     hasQuotedItems: lines.some((l) => l.quoted),
+    pages: { count: pageCount, included: plan.includedPages, extra: extraPages },
   };
 }
 

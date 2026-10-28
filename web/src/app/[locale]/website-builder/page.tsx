@@ -16,7 +16,7 @@ import BuilderWizard from "@/components/builder/BuilderWizard";
 import { CATEGORY_ICONS } from "@/components/builder/icons";
 import GalaxySection from "@/components/galaxy/GalaxySection";
 import { getBuilderCatalog } from "@/lib/api";
-import { BUILDER_CATEGORIES, formatMoney, loc } from "@/lib/builder";
+import { BUILDER_CATEGORIES, loc } from "@/lib/builder";
 import { resolveLocale, type LocaleParams } from "@/lib/page";
 import { localeUrl, pageMetadata, serviceJsonLd } from "@/lib/seo";
 
@@ -68,8 +68,11 @@ export default async function WebsiteBuilderPage({ params }: LocaleParams) {
       </section>
 
       <section className="container-x pb-16" aria-labelledby="categories-title">
-        <h2 id="categories-title" className="mb-6 text-2xl font-semibold">{t("builderPage.categoriesTitle")}</h2>
-        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="mb-6 flex flex-col gap-1">
+          <h2 id="categories-title" className="text-2xl font-semibold">{t("builderPage.templatesTitle")}</h2>
+          <p className="text-mist">{t("builderPage.templatesBody")}</p>
+        </div>
+        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
           {BUILDER_CATEGORIES.map((c) => {
             const Icon = CATEGORY_ICONS[c];
             return (
@@ -119,11 +122,7 @@ export default async function WebsiteBuilderPage({ params }: LocaleParams) {
                   {p.highlighted && <span className="self-start rounded-full bg-sage px-2 py-0.5 text-xs font-semibold text-on-sage">{t("builder.popular")}</span>}
                   <h3 className="font-display text-xl font-semibold">{loc(p.name, locale)}</h3>
                   <p className="text-sm text-mist">{loc(p.summary, locale)}</p>
-                  <p className="tabular-nums">
-                    {p.quoted && <span className="text-sm text-haze">{t("builderPage.plansFrom")} </span>}
-                    <span className="font-display text-2xl font-semibold text-fog">{formatMoney(p.prices.EGP.setup, "EGP", locale)}</span>
-                    <span className="block text-sm text-mist">+ {formatMoney(p.prices.EGP.monthly, "EGP", locale)}{t("builder.perMonth")}</span>
-                  </p>
+                  <p className="text-sm text-haze">{t("builder.pagesIncluded", { count: p.includedPages })} · {t(`builder.timeline.${p.tier}`)}</p>
                   <ul className="flex flex-col gap-1.5 text-sm text-mist">
                     {p.features.map((f) => (
                       <li key={f.en} className="flex items-start gap-2"><Check size={14} aria-hidden className="mt-1 shrink-0 text-sage" /> {loc(f, locale)}</li>
@@ -132,6 +131,9 @@ export default async function WebsiteBuilderPage({ params }: LocaleParams) {
                 </li>
               ))}
             </ul>
+            <a href="#build" className="mt-8 inline-flex min-h-11 items-center gap-2 rounded-full bg-sage px-5 py-3 text-sm font-semibold text-on-sage hover:bg-sage-strong" data-track="builder_plans_price">
+              {t("builderPage.plansCta")} <ArrowRight size={16} aria-hidden className="rtl:rotate-180" />
+            </a>
           </div>
         </section>
       )}

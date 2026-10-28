@@ -37,7 +37,7 @@ function order(overrides: Record<string, unknown> = {}) {
       country: "EG",
       market: "USD", // ignored: the country decides the currency
       locale: "en",
-      config: { category: "clinics", templateSlug: "clinic-care", planTier: "business", addonKeys: ["booking", "mobile-app"], billing: "monthly" },
+      config: { category: "clinics", templateSlug: "clinic-care", planTier: "business", addonKeys: ["booking", "mobile-app"], billing: "monthly", pages: ["home", "services", "booking", "contact"] },
       brand: { businessName: "Delta Clinics", primary: "#123456", accent: "#abcdef", font: "modern", logoUrl: "https://evil.example/x.png" },
       contact: { name: "Mona Adel", email: "Mona@Example.com", phone: "+20 100 000 0001" },
       // Prices sent by a browser must be ignored.
@@ -73,7 +73,9 @@ describe("builder catalog", () => {
   it("returns only published items", async () => {
     const res = await request(app).get("/api/v1/builder/catalog");
     expect(res.status).toBe(200);
-    expect(res.body.templates).toHaveLength(18);
+    expect(res.body.templates).toHaveLength(40);
+    expect(res.body.templates[0]).toMatchObject({ slug: "clinic-care", hero: "split", mode: "light", corners: "soft", defaultPages: expect.arrayContaining(["home", "booking"]) });
+    expect(res.body.plans[0]).toMatchObject({ tier: "launch", includedPages: 1, extraPagePrice: { EGP: 1000 } });
     expect(res.body.templates.some((t: { slug: string }) => t.slug === "draft-tpl")).toBe(false);
     expect(res.body.plans.map((p: { tier: string }) => p.tier)).toEqual(["launch", "business", "growth", "custom"]);
     expect(res.body.addons.find((a: { key: string }) => a.key === "mobile-app").discountPercent).toBe(15);
@@ -112,6 +114,17 @@ describe("builder orders", () => {
     expect(lead?.attribution?.utmSource).toBe("google");
     expect(sent.map((m) => m.subject).join("\n")).toMatch(/New website order XB-.*Delta Clinics/);
     expect(sent.map((m) => m.subject).join("\n")).toMatch(/We received your website order/);
+  });
+
+  it("keeps only pages the template offers, always with home, and prices extra pages", async () => {
+    const res = await request(app)
+      .post("/api/v1/builder/orders")
+      .send(order({ config: { category: "clinics", templateSlug: "clinic-care", planTier: "launch", pages: ["services", "team", "contact", "menu", "nope"] } }));
+    expect(res.status).toBe(201);
+    const saved = await BuilderOrder.findOne({ ref: res.body.ref }).lean();
+    expect(saved?.config.pages).toEqual(["home", "services", "team", "contact"]); // template order, "menu" isn't offered
+    expect(res.body.quote.pages).toEqual({ count: 4, included: 1, extra: 3 });
+    expect(res.body.quote.setup).toBe(7500 + 3000);
   });
 
   it("validates category, template and plan", async () => {
@@ -228,6 +241,22 @@ describe("payments", () => {
     expect(res.body.charge).toEqual({ amount: Math.round((1300 / 3.6725) * 100) / 100, currency: "USD" });
   });
 
+  it("send without paying: no checkout even when Kashier is set up", async () => {
+    kashierEnv();
+    const res = await request(app).post("/api/v1/builder/orders").send(order({ payNow: false }));
+    expect(res.body.status).toBe("submitted");
+    expect(res.body.checkoutUrl).toBeUndefined();
+    const saved = await BuilderOrder.findOne({ ref: res.body.ref }).lean();
+    expect(saved?.activity.map((a) => a.message).join(" ")).toMatch(/without paying/);
+  });
+
+  it("any ISO country works; currency follows it", async () => {
+    const de = await request(app).post("/api/v1/builder/orders").send(order({ country: "de" }));
+    expect(de.body.quote.currency).toBe("USD");
+    const kw = await request(app).post("/api/v1/builder/orders").send(order({ country: "KW" }));
+    expect(kw.body.quote.currency).toBe("AED");
+  });
+
   it("falls back to a manual order when no provider supports the currency", async () => {
     kashierEnv();
     process.env.KASHIER_CURRENCIES = "EGP"; // account without USD: Gulf orders can't be converted
@@ -241,7 +270,7 @@ describe("payments", () => {
     process.env.POLAR_ACCESS_TOKEN = "tok";
     process.env.POLAR_WEBHOOK_SECRET = "polar-secret";
     process.env.POLAR_DEPOSIT_PRODUCT_ID = "prod";
-    const created = await request(app).post("/api/v1/builder/orders").send(order({ country: "OTHER" }));
+    const created = await request(app).post("/api/v1/builder/orders").send(order({ country: "DE" }));
     const body = JSON.stringify({ type: "order.paid", data: { id: "ord_1", checkout_id: "co_1", metadata: { ref: created.body.ref } } });
     const id = "msg_1";
     const ts = String(Math.floor(Date.now() / 1000));

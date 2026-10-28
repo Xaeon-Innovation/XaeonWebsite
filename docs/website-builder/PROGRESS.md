@@ -26,6 +26,29 @@ Branch: `feature/website-builder`, fast-forwarded into `main`. **Phase 1 is LIVE
 ## Done log
 (newest first — date, step, files, notes)
 
+- 2026-10-28 **Wizard v2 (conversion-focused)**: see DECISIONS #11.
+  - **Backend:**
+    - `builderShared` gains all ISO `COUNTRIES` with `marketFor()`, 10 industries, `PAGE_KEYS`, and the style values (hero, mode, corners).
+    - Templates get style, `pageKeys`, `defaultPages`, `tags` and `goals`. Plans get `includedPages` and `extraPagePrice`.
+    - Orders store `config.pages`, `brand.mode` and `brand.corners`, and accept `payNow: false`. The quote prices extra pages.
+    - Seed data now has 40 templates; `seed-builder.ts --update` was added.
+  - **Admin:** template, plan and order pages show the new fields.
+  - **Web:**
+    - `CountrySelect` (searchable combobox), `/api/geo`, and the rewritten `BuilderWizard` (6 steps, prices only on the proposal).
+    - Rewritten `TemplatePreview` (18 page renderers; hero, mode and corners; clickable pages), `recommendPlan()`.
+    - The landing page's plans no longer show prices. New `builder.*` copy in EN/AR.
+  - **Fixes found by screenshots:**
+    - The preview label showed a raw message key.
+    - Arriving at the proposal triggered validation, because React reused the "See my proposal" button as the submit button. Distinct keys fix it.
+    - The terms links never rendered (rich-text tags).
+    - Country search ranking.
+  - **Results:** backend 57 pass, e2e 110/110, Lighthouse `/website-builder` EN/AR 100×4.
+  - **NOT deployed.** Deploy needs, in order:
+    1. Merge to `main` and push.
+    2. Run `cd backend && npm run build && pm2 restart xaeon-api --update-env`.
+    3. Run `npx ts-node scripts/seed-builder.ts --apply --update` (adds 22 templates, updates 18 plus plans and add-ons, hides `extra-pages`).
+    4. Revalidate the web cache.
+
 - 2026-10-28 **Currency conversion for non-EGP countries** (per Kashier: charges EGP/USD/GBP/EUR only)
   - Code: `services/payments/fx.ts` (Kashier rate endpoint, 1h cache, Gulf peg fallback); `paymentPlan()` (direct or convert to USD); `order.payment.{currency,rate}`; webhook amount/currency check.
   - Website: "≈ $X" in the quote and the review step.

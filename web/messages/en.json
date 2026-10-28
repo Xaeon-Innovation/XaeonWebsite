@@ -804,11 +804,11 @@
     "metaDescription": "Build your business website with Xaeon: choose your industry and a proven template, add your brand, pick add-ons and a plan, and we launch it for you. Arabic and English.",
     "steps": [
       "Business",
-      "Template",
+      "Design",
+      "Pages",
       "Brand",
-      "Add-ons",
-      "Plan",
-      "Review"
+      "Features",
+      "Proposal"
     ],
     "stepOf": "Step {current} of {total}",
     "back": "Back",
@@ -839,6 +839,22 @@
       "catalogue": {
         "title": "Products & catalogue",
         "body": "Showrooms, retail and small online stores."
+      },
+      "beauty": {
+        "title": "Beauty & wellness",
+        "body": "Salons, spas, barbers and makeup artists."
+      },
+      "fitness": {
+        "title": "Fitness & sports",
+        "body": "Gyms, studios, coaches and clubs."
+      },
+      "real-estate": {
+        "title": "Real estate",
+        "body": "Developers, brokers and compounds."
+      },
+      "startups": {
+        "title": "Startups & tech",
+        "body": "SaaS, apps and tech companies."
       }
     },
     "categoryTitle": "What does your business do?",
@@ -850,10 +866,9 @@
       "sales": "Sell online",
       "catalogue": "Show products"
     },
-    "templateTitle": "Pick a starting design",
-    "templateBody": "Every template is fully adapted to your brand. You can change direction with our team later.",
-    "minPlan": "{plan} plan or higher",
-    "pagesIncluded": "Pages",
+    "templateTitle": "Pick a design",
+    "templateBody": "{count} designs made for your industry. Each one adapts fully to your brand.",
+    "pagesIncluded": "{count, plural, one {# page} other {# pages}} included",
     "brandTitle": "Make it yours",
     "brandBody": "Add your name, colours and logo. The preview updates as you type.",
     "businessName": "Business name",
@@ -891,28 +906,20 @@
     "services": "Grow with Xaeon",
     "servicesBody": "Bundle another Xaeon product or service with your website and save.",
     "recommended": "Recommended",
-    "included": "Included in {plan}",
     "from": "from {price}",
-    "needsPlan": "Needs {plan}",
     "perMonth": "/mo",
     "oneTime": "one-time",
     "planTitle": "Choose your plan",
-    "planBody": "A one-time setup fee plus a monthly plan for hosting, updates, backups and support.",
     "popular": "Most popular",
     "monthly": "Monthly",
     "annual": "Annual (2 months free)",
-    "currency": "Currency",
     "planTooLow": "Your template or add-ons need a higher plan.",
-    "reviewTitle": "Review and send",
-    "reviewBody": "We'll confirm everything with you before we start building.",
     "contactTitle": "Your details",
     "name": "Full name",
     "email": "Email",
     "phone": "Phone / WhatsApp",
     "company": "Company (optional)",
-    "terms": "I agree to the {terms} and {privacy}.",
-    "termsLink": "terms",
-    "privacyLink": "privacy policy",
+    "terms": "I agree to the <terms>terms</terms> and <privacy>privacy policy</privacy>.",
     "errors": {
       "category": "Choose your business type.",
       "template": "Choose a template.",
@@ -935,9 +942,8 @@
     "manualNote": "No payment now — our team confirms scope and sends your invoice.",
     "quotedNote": "Items marked “from” are estimates; we confirm the final price with you.",
     "submit": "Send my order",
-    "submitPay": "Continue to payment",
+    "submitPay": "Pay {deposit} deposit and reserve",
     "sending": "Sending…",
-    "preview": "Live preview",
     "desktop": "Desktop",
     "mobile": "Mobile",
     "previewNote": "Illustrative preview. Your real site uses your content and photos.",
@@ -950,7 +956,8 @@
           "Dental",
           "Dermatology",
           "Check-ups"
-        ]
+        ],
+        "role": "Consultant"
       },
       "education": {
         "headline": "Learn skills that move you forward",
@@ -960,7 +967,8 @@
           "Courses",
           "Workshops",
           "Certificates"
-        ]
+        ],
+        "role": "Instructor"
       },
       "professional": {
         "headline": "Clear advice. Real results.",
@@ -970,7 +978,8 @@
           "Advisory",
           "Accounting",
           "Legal"
-        ]
+        ],
+        "role": "Partner"
       },
       "restaurants": {
         "headline": "Fresh food, made to share",
@@ -980,7 +989,8 @@
           "Breakfast",
           "Lunch",
           "Desserts"
-        ]
+        ],
+        "role": "Head chef"
       },
       "home-services": {
         "headline": "Done right, the first time",
@@ -990,7 +1000,8 @@
           "Maintenance",
           "Renovation",
           "Cleaning"
-        ]
+        ],
+        "role": "Engineer"
       },
       "catalogue": {
         "headline": "Quality you can see",
@@ -1000,7 +1011,52 @@
           "New in",
           "Best sellers",
           "Offers"
-        ]
+        ],
+        "role": "Advisor"
+      },
+      "beauty": {
+        "headline": "Look good, feel better",
+        "sub": "Book your favourite treatment in seconds.",
+        "cta": "Book now",
+        "items": [
+          "Hair",
+          "Nails",
+          "Skin care"
+        ],
+        "role": "Stylist"
+      },
+      "fitness": {
+        "headline": "Stronger every week",
+        "sub": "Classes, coaching and plans that fit your life.",
+        "cta": "Start free trial",
+        "items": [
+          "Strength",
+          "HIIT",
+          "Yoga"
+        ],
+        "role": "Coach"
+      },
+      "real-estate": {
+        "headline": "Find the home that fits",
+        "sub": "Handpicked properties in the best locations.",
+        "cta": "View properties",
+        "items": [
+          "Sea-view villa",
+          "City apartment",
+          "Garden duplex"
+        ],
+        "role": "Property advisor"
+      },
+      "startups": {
+        "headline": "The smarter way to run your work",
+        "sub": "One platform for your team, customers and data.",
+        "cta": "Get started",
+        "items": [
+          "Automation",
+          "Analytics",
+          "Integrations"
+        ],
+        "role": "Co-founder"
       }
     },
     "success": {
@@ -1015,22 +1071,7 @@
       "explore": "Explore our work"
     },
     "countryTitle": "Where is your business based?",
-    "countryBody": "We'll show prices in your currency and the payment options available in your country.",
-    "countries": {
-      "EG": "Egypt",
-      "AE": "UAE",
-      "SA": "Saudi Arabia",
-      "KW": "Kuwait",
-      "QA": "Qatar",
-      "BH": "Bahrain",
-      "OM": "Oman",
-      "JO": "Jordan",
-      "OTHER": "Another country"
-    },
     "currencyFor": "Prices in {currency} for {country}.",
-    "changeCountry": "Change country",
-    "payOnlineShort": "pay online by {methods}",
-    "payInvoiceShort": "we'll send your invoice",
     "paymentTitle": "Payment",
     "paymentOnline": "Pay the {deposit} deposit securely with {provider} after you send your order:",
     "paymentManual": "Online payment isn't available for {country} yet. We'll send your invoice with bank transfer details after confirming your order.",
@@ -1042,14 +1083,228 @@
       "fawry": "Fawry"
     },
     "depositInvoiced": "Deposit (invoiced)",
-    "payOnlineConverted": "pay online in {currency} by {methods}",
-    "chargedIn": "You'll be charged about {amount} — card payments are processed in {currency} at Kashier's exchange rate on the day. Your bank may add its own conversion fee."
+    "chargedIn": "You'll be charged about {amount} — card payments are processed in {currency} at Kashier's exchange rate on the day. Your bank may add its own conversion fee.",
+    "businessTitle": "Tell us about your business",
+    "pagesTitle": "Choose your pages",
+    "proposalTitle": "Your website proposal",
+    "countrySearch": "Search for your country…",
+    "countryNone": "No country matches that search.",
+    "filterLabel": "Filter designs",
+    "filters": {
+      "all": "All",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "filterGoal": "Best for: {goal}",
+    "bestForGoal": "Best for your goal",
+    "pagesCount": "{count} pages",
+    "noTemplates": "No designs match this filter.",
+    "pagesBody": "Pick the pages your customers need. Tap a page to see it in the preview. You can change this later with our team.",
+    "pagesSelected": "{count, plural, one {# page} other {# pages}} selected",
+    "pages": {
+      "home": {
+        "name": "Home",
+        "summary": "Your first impression: who you are and what to do next.",
+        "sections": "Hero, highlights, reviews, call to action"
+      },
+      "about": {
+        "name": "About",
+        "summary": "Your story, values and what makes you different.",
+        "sections": "Story, numbers, values"
+      },
+      "services": {
+        "name": "Services",
+        "summary": "Everything you offer, clearly explained.",
+        "sections": "Service cards, details, booking buttons"
+      },
+      "team": {
+        "name": "Team",
+        "summary": "The people behind your business.",
+        "sections": "Profiles, roles, photos"
+      },
+      "booking": {
+        "name": "Booking",
+        "summary": "Customers pick a day and time and book online.",
+        "sections": "Calendar, time slots, confirmation"
+      },
+      "contact": {
+        "name": "Contact",
+        "summary": "All the ways to reach you.",
+        "sections": "Form, map, hours, WhatsApp"
+      },
+      "gallery": {
+        "name": "Gallery",
+        "summary": "Show your work, space and results.",
+        "sections": "Photo grid, lightbox"
+      },
+      "menu": {
+        "name": "Menu",
+        "summary": "Your dishes and drinks with prices.",
+        "sections": "Sections, items, prices"
+      },
+      "pricing": {
+        "name": "Pricing",
+        "summary": "Packages and prices people can compare.",
+        "sections": "Price cards, what's included"
+      },
+      "blog": {
+        "name": "Blog",
+        "summary": "News, tips and offers that bring visitors from Google.",
+        "sections": "Articles, categories"
+      },
+      "faq": {
+        "name": "FAQ",
+        "summary": "Answers to the questions you hear every day.",
+        "sections": "Questions and answers"
+      },
+      "testimonials": {
+        "name": "Reviews",
+        "summary": "What your customers say about you.",
+        "sections": "Ratings, quotes"
+      },
+      "products": {
+        "name": "Products",
+        "summary": "Your catalogue, ordered on WhatsApp or online.",
+        "sections": "Product grid, prices, order buttons"
+      },
+      "courses": {
+        "name": "Courses",
+        "summary": "Programmes with dates, levels and enrolment.",
+        "sections": "Course cards, details, enrol"
+      },
+      "projects": {
+        "name": "Projects",
+        "summary": "Case studies and finished work.",
+        "sections": "Portfolio, before and after"
+      },
+      "listings": {
+        "name": "Listings",
+        "summary": "Properties with photos, size and price.",
+        "sections": "Property cards, filters"
+      },
+      "schedule": {
+        "name": "Schedule",
+        "summary": "Your weekly classes and sessions.",
+        "sections": "Timetable, class details"
+      },
+      "careers": {
+        "name": "Careers",
+        "summary": "Open roles and how to apply.",
+        "sections": "Job list, application"
+      }
+    },
+    "teamName": {
+      "clinics": "Doctors",
+      "beauty": "Specialists",
+      "fitness": "Trainers",
+      "education": "Instructors",
+      "professional": "Team",
+      "real-estate": "Agents",
+      "restaurants": "Team",
+      "home-services": "Team",
+      "catalogue": "Team",
+      "startups": "Team"
+    },
+    "modeLabel": "Theme",
+    "modes": {
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "cornersLabel": "Corners",
+    "cornerStyles": {
+      "sharp": "Sharp",
+      "soft": "Soft",
+      "round": "Round"
+    },
+    "seeProposal": "See my proposal",
+    "proposalIntro": "Here's your proposal for {name}: the {template} design with {pages, plural, one {# page} other {# pages}}. We've picked the best-value plan for exactly what you chose; you can switch below.",
+    "recommendedPlan": "Best value for you",
+    "billingLabel": "Billing",
+    "extraPages": "{count, plural, one {# extra page} other {# extra pages}}",
+    "timeline": {
+      "launch": "Live in about 1–2 weeks",
+      "business": "Live in about 2–3 weeks",
+      "growth": "Live in about 3–5 weeks",
+      "custom": "Timeline agreed with you"
+    },
+    "submitLater": "Send without paying now",
+    "guarantee": "Nothing is built until our team reviews your content and scope with you.",
+    "previewName": "Your business",
+    "previewPages": "Preview pages",
+    "previewCopy": {
+      "people": [
+        "Dr. Sara Adel",
+        "Omar Khaled",
+        "Mona Hassan",
+        "Youssef Ali"
+      ],
+      "story": "Founded to give our customers a better experience, every day.",
+      "values": [
+        "Quality",
+        "Care",
+        "Trust"
+      ],
+      "stats": [
+        "Years",
+        "Customers",
+        "Rating"
+      ],
+      "slots": [
+        "10:00",
+        "11:30",
+        "13:00",
+        "16:30"
+      ],
+      "days": [
+        "Sat",
+        "Sun",
+        "Mon",
+        "Tue",
+        "Wed"
+      ],
+      "form": [
+        "Your name",
+        "Phone or WhatsApp",
+        "How can we help?"
+      ],
+      "send": "Send message",
+      "hours": "Sat–Thu · 10:00–22:00",
+      "tiers": [
+        "Basic",
+        "Standard",
+        "Premium"
+      ],
+      "posts": [
+        "5 tips before your first visit",
+        "What's new this season",
+        "How we work with you"
+      ],
+      "faqs": [
+        "Do I need an appointment?",
+        "Which payment methods do you accept?",
+        "Where are you located?",
+        "Do you offer packages?"
+      ],
+      "quote": "Professional, friendly and always on time. Highly recommended.",
+      "order": "Order",
+      "courseMeta": "8 weeks · Beginner",
+      "listingMeta": "3 beds · 180 m²",
+      "jobs": [
+        "Customer service lead",
+        "Sales specialist",
+        "Marketing coordinator"
+      ],
+      "apply": "Apply",
+      "readMore": "Read more →",
+      "welcome": "Welcome to {name}"
+    },
+    "preview": "Live preview"
   },
   "builderPage": {
     "metaTitle": "Website Builder — launch your business website with Xaeon",
     "eyebrow": "Xaeon Website Builder",
     "title": "Choose a proven website. Make it yours. Launch with Xaeon.",
-    "intro": "Pick your industry and a template, add your brand and the features you need, and see your price instantly. Our team builds, checks and launches it for you, in Arabic and English.",
+    "intro": "Pick your industry, a design and the pages you need, add your brand and the features you want. In about two minutes you get a tailored proposal with your exact price. Our team builds, checks and launches it, in Arabic and English.",
     "start": "Start building",
     "talk": "Talk to us first",
     "badges": [
@@ -1077,7 +1332,7 @@
     "builderTitle": "Build your website",
     "builderBody": "Your choices are saved on this device, so you can come back any time.",
     "plansTitle": "Simple plans",
-    "plansBody": "A one-time setup fee plus a monthly plan. Prices shown in Egyptian pounds; switch currency in the builder.",
+    "plansBody": "Every plan includes design, hosting, SSL, updates and support. Get your exact price, in your currency, in about two minutes.",
     "plansFrom": "from",
     "crossTitle": "More than a website",
     "crossBody": "Bundle another Xaeon product with your website and save.",
@@ -1120,7 +1375,10 @@
         "q": "How do I pay?",
         "a": "Pay the deposit online by card or wallet where available, or by invoice. The rest is due before launch."
       }
-    ]
+    ],
+    "plansCta": "Get my price",
+    "templatesTitle": "40 designs across 10 industries",
+    "templatesBody": "Each with its own pages, style options and a live preview of your brand."
   },
   "galaxy": {
     "eyebrow": "Our galaxy of stars",

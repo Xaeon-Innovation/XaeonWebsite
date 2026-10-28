@@ -1,7 +1,7 @@
 import mongoose, { type Document, Schema } from "mongoose";
 import type { Attribution } from "../utils/attribution";
 import type { Quote } from "../utils/builderQuote";
-import { BUILDER_CATEGORIES, COUNTRIES, MARKETS, PLAN_TIERS, type BuilderCategory, type Country, type Market, type PlanTier } from "./builderShared";
+import { BUILDER_CATEGORIES, COUNTRIES, CORNER_STYLES, MARKETS, PAGE_KEYS, PLAN_TIERS, THEME_MODES, type BuilderCategory, type Country, type Market, type PlanTier } from "./builderShared";
 
 /**
  * submitted        → order saved, no online payment started (no provider for this market, or "from" pricing)
@@ -33,6 +33,8 @@ export interface IBuilderOrder extends Document {
     category: BuilderCategory;
     goal?: string;
     templateSlug: string;
+    /** Pages the customer chose (page library keys). */
+    pages: string[];
     planTier: PlanTier;
     addonKeys: string[];
     billing: "monthly" | "annual";
@@ -42,6 +44,8 @@ export interface IBuilderOrder extends Document {
     primary: string;
     accent: string;
     font: string;
+    mode?: string;
+    corners?: string;
     tone?: string;
     logoUrl?: string;
     assetUrls: string[];
@@ -79,6 +83,7 @@ const BuilderOrderSchema = new Schema<IBuilderOrder>(
       category: { type: String, enum: BUILDER_CATEGORIES, required: true },
       goal: { type: String, trim: true, maxlength: 40 },
       templateSlug: { type: String, required: true, trim: true },
+      pages: { type: [String], enum: PAGE_KEYS, default: [] },
       planTier: { type: String, enum: PLAN_TIERS, required: true },
       addonKeys: { type: [String], default: [] },
       billing: { type: String, enum: ["monthly", "annual"], default: "monthly" },
@@ -88,6 +93,8 @@ const BuilderOrderSchema = new Schema<IBuilderOrder>(
       primary: { type: String, trim: true, maxlength: 9 },
       accent: { type: String, trim: true, maxlength: 9 },
       font: { type: String, trim: true, maxlength: 40 },
+      mode: { type: String, enum: THEME_MODES },
+      corners: { type: String, enum: CORNER_STYLES },
       tone: { type: String, trim: true, maxlength: 40 },
       logoUrl: { type: String, trim: true },
       assetUrls: { type: [String], default: [] },

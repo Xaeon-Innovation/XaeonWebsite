@@ -10,6 +10,21 @@ Phase 1 of the Website Builder: a **guided configurator**. It is not the multi-t
 Related docs: `PLAN.md` (the approved plan), `PROGRESS.md` (status and where to resume), `DECISIONS.md`, `payments.md`, `galaxy.md`.
 The original product and pricing plan is `../../Xaeon Website Builder  Product, Technical, and Pricing Plan.md`.
 
+## Customer flow (v2, conversion-focused)
+1. **Business:**
+   - Country comes from a searchable list of all ISO countries, pre-selected from Vercel geolocation via `web/src/app/api/geo/route.ts`. It quietly sets the currency.
+   - Then business name, industry (10) and main goal.
+2. **Design:** 40 templates (4 per industry), filterable by "best for your goal" or light/dark, each with style tags and page count.
+3. **Pages:** choose from the template's pages (page library: `PAGE_KEYS`). The live preview is multi-page and clickable.
+4. **Brand:** colours, light/dark, corners, font, tone, logo and images, notes.
+5. **Features:** add-ons and cross-sells, **without prices**.
+6. **Proposal:** the first time prices appear.
+   - **Best-value plan pre-selected** (`recommendPlan`: cheapest first year for exactly their pages and features), in their currency, with an estimated launch timeline.
+   - The quote, payment options (Kashier, converted to USD where needed), contact details and terms.
+   - Two CTAs: **Pay deposit and reserve** or **Send without paying now** (`payNow: false`). Every finished wizard is a lead.
+
+Pricing: each plan has `includedPages` (Launch 1, Business 5, Growth 15, Custom 30). Extra pages cost `extraPagePrice` per page (EGP 1,000 / AED 140 / USD 40).
+
 ## Architecture
 
 ```text
@@ -35,9 +50,9 @@ Admin writes to the catalog or to stars call `revalidateOnWrite`, which refreshe
 | Model | Purpose |
 |---|---|
 | `builderShared.ts` | Shared values and helpers: categories, plan tiers, markets (EGP/AED/USD), layouts, `{en, ar}` text, price schemas, input sanitisers |
-| `BuilderTemplate` | `slug`, `category`, `name`/`tagline` (en/ar), `layout` (classic/bold/minimal; drives the live preview), `defaultBrand`, `pages`, `features`, `recommendedAddons`, `minPlan` |
+| `BuilderTemplate` | `slug`, `category`, `name`/`tagline` (en/ar), look (`layout` classic/bold/minimal, `hero` split/centered/banner, `mode` light/dark, `corners` sharp/soft/round), `defaultBrand`, `pageKeys` (pages offered), `defaultPages`, `tags`, `goals`, `features`, `recommendedAddons`, `minPlan` |
 | `BuilderAddon` | `key`, `kind` (`module` = website feature; `service` = another Xaeon offer, e.g. mobile app −15%, Polara, Velora), `prices` per market, `quoted` ("from" price, left out of the deposit), `discountPercent`, `badge`, `includedIn` plans, `minPlan`, `categories` |
-| `BuilderPlan` | `tier` (launch/business/growth/custom), `prices` per market (setup + monthly), `quoted`, `features`, `highlighted` |
+| `BuilderPlan` | `tier` (launch/business/growth/custom), `prices` per market (setup + monthly), `includedPages`, `extraPagePrice` per market, `quoted`, `features`, `highlighted` |
 | `BuilderOrder` | `ref` (XB-XXXXXX), `status` (submitted → awaiting_payment → paid → in_build → launched / cancelled), `config`, `brand`, `contact`, `quote` (computed on the server), `payment`, `lead`, `attribution`, `activity[]` |
 | `Star` | A client in the galaxy: `name`, `logoUrl`, `industry`, `product`/`constellation`, `magnitude` 1–3, `highlight`, `caseStudy` reference, `url`, `published` |
 | `ServiceRequest` | Existing CRM lead. The new `source: "builder"` holds website orders |
@@ -62,8 +77,9 @@ Admin writes to the catalog or to stars call `revalidateOnWrite`, which refreshe
 
 ```bash
 cd backend
-npx ts-node scripts/seed-builder.ts --apply   # plans, 13 add-ons, 18 templates
-                                               # inserts only missing items; never overwrites admin edits
+npx ts-node scripts/seed-builder.ts --apply           # plans, 12 add-ons, 40 templates; only inserts missing items
+npx ts-node scripts/seed-builder.ts --apply --update  # also overwrites seed items with the seed's values and hides
+                                                      # retired ones (use after editing builderCatalogData.ts)
 npx ts-node scripts/migrate-stars.ts --apply  # stars from case studies + testimonials, created hidden
 ```
 

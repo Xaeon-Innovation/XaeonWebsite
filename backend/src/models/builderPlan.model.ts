@@ -6,6 +6,9 @@ export interface IBuilderPlan extends Document {
   name: Localized;
   summary: Localized;
   prices: Prices;
+  /** Pages included in the setup fee; each extra page costs `extraPagePrice` (one-time). */
+  includedPages: number;
+  extraPagePrice: Record<"EGP" | "AED" | "USD", number>;
   /** "From" pricing (Custom): no online deposit, the team sends a scoped quote. */
   quoted: boolean;
   features: Localized[];
@@ -22,6 +25,12 @@ const BuilderPlanSchema = new Schema<IBuilderPlan>(
     name: { type: LocalizedSchema, required: true },
     summary: { type: LocalizedSchema, default: () => ({}) },
     prices: { type: PricesSchema, default: () => ({}) },
+    includedPages: { type: Number, min: 1, default: 5 },
+    extraPagePrice: {
+      EGP: { type: Number, min: 0, default: 1000 },
+      AED: { type: Number, min: 0, default: 140 },
+      USD: { type: Number, min: 0, default: 40 },
+    },
     quoted: { type: Boolean, default: false },
     features: { type: [LocalizedSchema], default: [] },
     highlighted: { type: Boolean, default: false },

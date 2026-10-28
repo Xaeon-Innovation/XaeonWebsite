@@ -66,3 +66,16 @@ The clinic system is the new product **Velora** (`/products/velora`), demo-reque
 - Kashier charges only EGP, USD, GBP and EUR, and its local-currency display at checkout is a gated feature.
 - USD is the natural card currency for Gulf and international cards, and AED, SAR and the other Gulf currencies are pegged to it, so the amount is stable.
 - The converted amount is shown before payment and stored on the order, and webhooks must match it.
+
+## 11. Conversion-focused wizard v2: price at the end, pages and multi-page preview (owner request)
+**Decision:**
+- Any country, searchable and geo-pre-selected; it silently sets the currency.
+- No prices or currency until the final Proposal step, which pre-selects the best-value plan for the customer's exact selection.
+- 40 templates across 10 industries, each with style options (hero, light/dark, corners) and selectable pages.
+- The preview is multi-page and clickable. Pages beyond the plan's allowance cost extra.
+- "Send without paying now" turns every finished wizard into a lead.
+
+**Why:**
+- Customers invest in designing their own site before seeing a number, a quiz-style funnel that keeps them going.
+- The recommendation removes plan-choice friction.
+- Page selection makes the proposal feel tailored, and it prices scope honestly.

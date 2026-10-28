@@ -10,7 +10,12 @@ import {
   ADMIN_BUILDER,
   BUILDER_CATEGORIES,
   CATEGORY_LABELS,
+  CORNER_STYLES,
+  GOAL_KEYS,
+  HERO_STYLES,
   LAYOUTS,
+  PAGE_KEYS,
+  THEME_MODES,
   PLAN_TIERS,
   linesToLocalized,
   localizedToLines,
@@ -29,8 +34,14 @@ type Template = {
   tagline: Localized;
   previewImageUrl?: string;
   layout: string;
+  hero: string;
+  mode: string;
+  corners: string;
   defaultBrand: { primary: string; accent: string; font: string };
-  pages: Localized[];
+  pageKeys: string[];
+  defaultPages: string[];
+  tags: Localized[];
+  goals: string[];
   features: Localized[];
   recommendedAddons: string[];
   minPlan: string;
@@ -47,10 +58,16 @@ type FormValues = {
   taglineAr: string;
   previewImageUrl: string;
   layout: string;
+  hero: string;
+  mode: string;
+  corners: string;
   primary: string;
   accent: string;
   font: string;
-  pages: string;
+  pageKeys: string[];
+  defaultPages: string[];
+  tags: string;
+  goals: string[];
   features: string;
   recommendedAddons: string;
   minPlan: string;
@@ -68,10 +85,16 @@ function toForm(t?: Template, order = 0): FormValues {
     taglineAr: t?.tagline?.ar ?? "",
     previewImageUrl: t?.previewImageUrl ?? "",
     layout: t?.layout ?? "classic",
+    hero: t?.hero ?? "split",
+    mode: t?.mode ?? "light",
+    corners: t?.corners ?? "soft",
     primary: t?.defaultBrand?.primary ?? "#72c04f",
     accent: t?.defaultBrand?.accent ?? "#1b3d50",
     font: t?.defaultBrand?.font ?? "modern",
-    pages: localizedToLines(t?.pages),
+    pageKeys: t?.pageKeys ?? ["home", "about", "services", "contact"],
+    defaultPages: t?.defaultPages ?? ["home", "contact"],
+    tags: localizedToLines(t?.tags),
+    goals: t?.goals ?? [],
     features: localizedToLines(t?.features),
     recommendedAddons: (t?.recommendedAddons ?? []).join(", "),
     minPlan: t?.minPlan ?? "launch",
@@ -88,8 +111,15 @@ function toPayload(v: FormValues) {
     tagline: { en: v.taglineEn, ar: v.taglineAr },
     previewImageUrl: v.previewImageUrl,
     layout: v.layout,
+    hero: v.hero,
+    mode: v.mode,
+    corners: v.corners,
     defaultBrand: { primary: v.primary, accent: v.accent, font: v.font },
-    pages: linesToLocalized(v.pages),
+    // Keep library order; defaults must be offered pages and always include home.
+    pageKeys: PAGE_KEYS.filter((k) => k === "home" || (v.pageKeys || []).includes(k)),
+    defaultPages: PAGE_KEYS.filter((k) => k === "home" || ((v.defaultPages || []).includes(k) && (v.pageKeys || []).includes(k))),
+    tags: linesToLocalized(v.tags),
+    goals: v.goals || [],
     features: linesToLocalized(v.features),
     recommendedAddons: v.recommendedAddons.split(",").map((s) => s.trim()).filter(Boolean),
     minPlan: v.minPlan,
@@ -139,7 +169,8 @@ export function Component() {
     { header: "Order", accessor: "sortOrder", sortable: true },
     { header: "Template", accessor: (r) => r.name.en, sortable: true, render: (v, r) => <><strong>{String(v)}</strong> <span className="admin-field-hint">/{r.slug}</span></> },
     { header: "Category", accessor: (r) => CATEGORY_LABELS[r.category] ?? r.category, sortable: true },
-    { header: "Layout", accessor: "layout" },
+    { header: "Style", accessor: (r) => [r.layout, r.hero, r.mode, r.corners].filter(Boolean).join(" · ") },
+    { header: "Pages", accessor: (r) => `${r.defaultPages?.length ?? 0}/${r.pageKeys?.length ?? 0}` },
     {
       header: "Colours",
       accessor: () => null,
@@ -228,7 +259,51 @@ export function Component() {
                 </select>
               </div>
             </div>
-            <LocalizedLines register={form.register} name="pages" label="Pages included" />
+            <div className="admin-form-row">
+              <div className="admin-field">
+                <label className="admin-label" htmlFor="tp-hero">Hero</label>
+                <select id="tp-hero" className="admin-select" {...form.register("hero")}>
+                  {HERO_STYLES.map((h) => <option key={h} value={h}>{h}</option>)}
+                </select>
+              </div>
+              <div className="admin-field">
+                <label className="admin-label" htmlFor="tp-mode">Theme</label>
+                <select id="tp-mode" className="admin-select" {...form.register("mode")}>
+                  {THEME_MODES.map((m) => <option key={m} value={m}>{m}</option>)}
+                </select>
+              </div>
+              <div className="admin-field">
+                <label className="admin-label" htmlFor="tp-corners">Corners</label>
+                <select id="tp-corners" className="admin-select" {...form.register("corners")}>
+                  {CORNER_STYLES.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+            </div>
+            <fieldset className="admin-field">
+              <legend className="admin-label">Pages customers can choose (home is always included)</legend>
+              {PAGE_KEYS.map((k) => (
+                <label key={k} style={{ display: "inline-flex", gap: 4, marginInlineEnd: 12 }}>
+                  <input type="checkbox" value={k} {...form.register("pageKeys")} /> {k}
+                </label>
+              ))}
+            </fieldset>
+            <fieldset className="admin-field">
+              <legend className="admin-label">Pre-selected pages</legend>
+              {PAGE_KEYS.map((k) => (
+                <label key={k} style={{ display: "inline-flex", gap: 4, marginInlineEnd: 12 }}>
+                  <input type="checkbox" value={k} {...form.register("defaultPages")} /> {k}
+                </label>
+              ))}
+            </fieldset>
+            <fieldset className="admin-field">
+              <legend className="admin-label">Best for goals</legend>
+              {GOAL_KEYS.map((g) => (
+                <label key={g} style={{ display: "inline-flex", gap: 4, marginInlineEnd: 12 }}>
+                  <input type="checkbox" value={g} {...form.register("goals")} /> {g}
+                </label>
+              ))}
+            </fieldset>
+            <LocalizedLines register={form.register} name="tags" label="Style tags" hint="One per line: English | Arabic (e.g. Bold | جريء)" />
             <LocalizedLines register={form.register} name="features" label="Highlights" />
             <div className="admin-field">
               <label className="admin-label" htmlFor="tp-addons">Recommended add-ons</label>

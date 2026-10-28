@@ -19,73 +19,99 @@ test.describe("website builder", () => {
     // Every test starts without a saved draft (cleared once per tab, so reloads keep it).
     await page.addInitScript(() => {
       if (window.sessionStorage.getItem("e2e-draft-cleared")) return;
-      window.localStorage.removeItem("xaeon-builder-draft-v1");
+      window.localStorage.removeItem("xaeon-builder-draft-v2");
       window.sessionStorage.setItem("e2e-draft-cleared", "1");
     });
   });
 
-  test("landing renders one h1, plans, cross-sells and no sideways scroll", async ({ page }) => {
+  async function chooseCountry(wizard: import("@playwright/test").Locator, name: string) {
+    const box = wizard.getByRole("combobox");
+    await box.click();
+    await box.fill(name);
+    await wizard.getByRole("option", { name: new RegExp(name) }).first().click();
+  }
+
+  test("landing renders one h1, plans without prices, cross-sells and no sideways scroll", async ({ page }) => {
     await page.goto("/website-builder");
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(page.locator("h1")).toContainText("Choose a proven website");
-    await expect(page.getByRole("heading", { name: "Simple plans" })).toBeVisible();
+    const plans = page.locator("section[aria-labelledby='plans-title']");
+    await expect(plans.getByRole("heading", { name: "Simple plans" })).toBeVisible();
+    await expect(plans).not.toContainText("EGP");
+    await expect(plans.getByRole("link", { name: "Get my price" })).toBeVisible();
     await expect(page.getByText("Save 15%").first()).toBeVisible();
     await noHorizontalScroll(page);
   });
 
-  test("full order: category → template → brand → add-ons → plan → review", async ({ page }) => {
+  test("full order: business → design → pages → brand → features → proposal", async ({ page }) => {
     await page.goto("/website-builder?utm_source=google&utm_campaign=builder-e2e");
     const wizard = page.locator("#build");
 
-    // Validation blocks an empty step.
+    // Validation blocks an empty first step.
     await wizard.getByRole("button", { name: "Continue" }).click();
     await expect(wizard.getByText("Choose your country.")).toBeVisible();
+    await expect(wizard.getByText("Enter your business name.")).toBeVisible();
     await expect(wizard.getByText("Choose your business type.")).toBeVisible();
 
-    // Country first: it decides currency and payment options.
-    await wizard.getByRole("radio", { name: "Egypt" }).click();
-    await expect(wizard.getByText("Prices in EGP for Egypt. · pay online by Bank cards (Visa, Mastercard, Meeza), Mobile wallets")).toBeVisible();
+    // No prices or currency anywhere before the proposal.
+    await chooseCountry(wizard, "Egypt");
+    await expect(wizard.getByRole("combobox")).toHaveValue("Egypt");
+    await wizard.getByLabel("Business name").fill("Delta Clinics");
     await wizard.getByRole("radio", { name: /Clinics & healthcare/ }).click();
-    await wizard.getByRole("button", { name: "Get calls & WhatsApp" }).click();
+    await wizard.getByRole("button", { name: "Take bookings" }).click();
+    await expect(wizard).not.toContainText("EGP");
     await wizard.getByRole("button", { name: "Continue" }).click();
 
-    await expect(wizard.getByRole("heading", { name: "Pick a starting design" })).toBeFocused();
+    await expect(wizard.getByRole("heading", { name: "Pick a design" })).toBeFocused();
+    await expect(wizard.getByRole("radio", { name: /Clinic Care/ })).toContainText("Best for your goal");
+    await wizard.getByRole("button", { name: "Dark" }).click();
+    await expect(wizard.getByRole("radio", { name: /Clinic Care/ })).toHaveCount(0);
+    await wizard.getByRole("button", { name: "All" }).click();
     await wizard.getByRole("radio", { name: /Clinic Care/ }).click();
     await wizard.getByRole("button", { name: "Continue" }).click();
 
-    await wizard.getByLabel("Business name").fill("Delta Clinics");
+    // Pages: template defaults are pre-selected; the preview can show each one.
+    await expect(wizard.getByText("5 pages selected")).toBeVisible();
+    await expect(wizard.getByRole("checkbox", { name: /Home/ })).toBeDisabled();
+    await wizard.getByRole("group", { name: "Preview pages" }).getByRole("button", { name: "Doctors" }).click();
+    await expect(wizard.getByRole("group", { name: "Preview pages" }).getByRole("button", { name: "Doctors" })).toHaveAttribute("aria-pressed", "true");
+    await wizard.getByRole("button", { name: "Continue" }).click();
+
+    await wizard.getByRole("button", { name: "Dark" }).click();
     await expect(wizard.getByText("© Delta Clinics")).toBeAttached(); // live preview
     await wizard.getByRole("button", { name: "Continue" }).click();
 
-    // Booking was pre-selected from the template; add the discounted mobile app.
     await expect(wizard.getByRole("checkbox", { name: /Online booking/ })).toBeChecked();
     await wizard.getByText("Mobile app for your website").click();
-    await wizard.getByRole("button", { name: "Continue" }).click();
+    await expect(wizard).not.toContainText("EGP");
+    await wizard.getByRole("button", { name: "See my proposal" }).click();
 
-    await expect(wizard.getByRole("radio", { name: /Business/ })).toHaveAttribute("aria-checked", "true");
+    // Proposal: no premature validation errors; price revealed in EGP; best-value plan for 5 pages + booking + app.
+    await expect(wizard.getByText("Please enter your name.")).toHaveCount(0);
+    await expect(wizard.getByRole("link", { name: "privacy policy" })).toHaveAttribute("href", "/privacy");
+    await expect(wizard.getByText("Prices in EGP for Egypt.")).toBeVisible();
+    await expect(wizard.getByRole("radio", { name: /Launch/ })).toHaveAttribute("aria-checked", "true");
+    await expect(wizard.getByRole("radio", { name: /Launch/ })).toContainText("Best value for you");
+    await expect(wizard.getByRole("radio", { name: /Launch/ })).toContainText("4 extra pages");
     await wizard.getByRole("button", { name: "Annual (2 months free)" }).click();
-    await wizard.getByRole("button", { name: "Continue" }).click();
-
-    await expect(wizard.getByText("Pay the EGP 9,500 deposit securely with Kashier")).toBeVisible();
-    await expect(wizard.getByText("Mobile wallets")).toBeVisible();
-    await wizard.getByRole("button", { name: "Continue to payment" }).click();
+    await wizard.getByRole("button", { name: /Pay EGP\s?14,000 deposit and reserve/ }).click();
     await expect(wizard.getByText("Please accept the terms to continue.")).toBeVisible();
     await wizard.getByLabel("Full name").fill("Mona Adel");
     await wizard.getByLabel("Email").fill("mona@example.com");
     await wizard.getByLabel("Phone / WhatsApp").fill("+20 100 000 0001");
     await wizard.getByRole("checkbox", { name: /I agree/ }).check();
-    await wizard.getByRole("button", { name: "Continue to payment" }).click();
+    await wizard.getByRole("button", { name: /Pay EGP\s?14,000 deposit and reserve/ }).click();
 
     await expect(page).toHaveURL(/\/website-builder\/success\?ref=XB-TEST01&token=tok/);
     await expect(page.locator("h1")).toHaveText("Welcome to our galaxy");
-    await expect(page.getByText("Your order XB-TEST01 is in.")).toBeVisible();
 
     const body = await lastRequest("/api/v1/builder/orders");
     expect(body?.order).toMatchObject({
       country: "EG",
+      payNow: true,
       locale: "en",
-      config: { category: "clinics", goal: "calls", templateSlug: "clinic-care", planTier: "business", billing: "annual" },
-      brand: { businessName: "Delta Clinics" },
+      config: { category: "clinics", goal: "bookings", templateSlug: "clinic-care", pages: ["home", "services", "team", "booking", "contact"], planTier: "launch", billing: "annual" },
+      brand: { businessName: "Delta Clinics", mode: "dark" },
       contact: { name: "Mona Adel", email: "mona@example.com" },
     });
     expect(body?.order.config.addonKeys).toEqual(expect.arrayContaining(["booking", "mobile-app"]));
@@ -93,49 +119,51 @@ test.describe("website builder", () => {
     expect(body?.website).toBe("");
   });
 
-  test("category deep link from Velora opens the template step, in Arabic", async ({ page }) => {
+  test("Gulf customer: AED proposal, USD charge, and 'send without paying'", async ({ page }) => {
+    await page.goto("/website-builder");
+    const wizard = page.locator("#build");
+    await chooseCountry(wizard, "United Arab Emirates");
+    await wizard.getByLabel("Business name").fill("Gulf Table");
+    await wizard.getByRole("radio", { name: /Restaurants/ }).click();
+    await wizard.getByRole("button", { name: "Continue" }).click();
+    await wizard.getByRole("radio", { name: /Table/ }).click();
+    for (let i = 0; i < 3; i += 1) await wizard.getByRole("button", { name: "Continue" }).click();
+    await wizard.getByRole("button", { name: "See my proposal" }).click();
+    await expect(wizard.getByText("Prices in AED for United Arab Emirates.")).toBeVisible();
+    // Launch AED 950 + 2 extra pages × 140 = 1,230 deposit → USD 334.93 at 0.2723.
+    await expect(wizard.getByText("You'll be charged about $334.93", { exact: false })).toBeVisible();
+    await wizard.getByLabel("Full name").fill("Ali Hassan");
+    await wizard.getByLabel("Email").fill("ali@example.com");
+    await wizard.getByLabel("Phone / WhatsApp").fill("+971 50 000 0000");
+    await wizard.getByRole("checkbox", { name: /I agree/ }).check();
+    await wizard.getByRole("button", { name: "Send without paying now" }).click();
+    await expect(page).toHaveURL(/\/website-builder\/success/);
+    const body = await lastRequest("/api/v1/builder/orders");
+    expect(body?.order).toMatchObject({ country: "AE", payNow: false, config: { templateSlug: "table", pages: ["home", "menu", "contact"] } });
+  });
+
+  test("category deep link from Velora, in Arabic, with Arabic country search", async ({ page }) => {
     await page.goto("/ar/products/velora");
     await expect(page.locator("h1")).toHaveCount(1);
     await page.getByRole("link", { name: "اربطه بموقع إلكتروني" }).click();
     await expect(page).toHaveURL(/\/ar\/website-builder\?category=clinics/);
     await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
-    // No country yet: the wizard stays on the first step with clinics already chosen.
     const wizard = page.locator("#build");
     await expect(wizard.getByRole("radio", { name: /العيادات والرعاية الصحية/ })).toHaveAttribute("aria-checked", "true");
-    await wizard.getByRole("radio", { name: "السعودية" }).click();
-    await expect(wizard.getByText("الأسعار بعملة AED لـالسعودية.", { exact: false })).toBeVisible();
+    await chooseCountry(wizard, "السعودية");
+    await wizard.getByLabel("اسم النشاط").fill("عيادات دلتا");
     await wizard.getByRole("button", { name: "متابعة" }).click();
-    await expect(wizard.getByRole("heading", { name: "اختر تصميمًا للبداية" })).toBeVisible();
-    // Medica Plus needs the Business plan.
-    await expect(page.locator("#build").getByText("باقة أعمال أو أعلى")).toBeVisible();
-  });
-
-  test("Gulf customers see AED prices and a USD charge at Kashier's rate", async ({ page }) => {
-    await page.goto("/website-builder");
-    const wizard = page.locator("#build");
-    await wizard.getByRole("radio", { name: "UAE" }).click();
-    await expect(wizard.getByText("pay online in USD by Bank cards", { exact: false })).toBeVisible();
-    await wizard.getByRole("radio", { name: /Restaurants/ }).click();
-    await wizard.getByRole("button", { name: "Continue" }).click();
-    await wizard.getByRole("radio", { name: /Table/ }).click();
-    await wizard.getByRole("button", { name: "Continue" }).click();
-    await wizard.getByLabel("Business name").fill("Gulf Table");
-    await wizard.getByRole("button", { name: "Continue" }).click();
-    await wizard.getByRole("button", { name: "Continue" }).click();
-    await expect(wizard.getByText("Prices in AED for UAE.")).toBeVisible();
-    await expect(wizard.getByRole("radio", { name: /Business/ })).toContainText("AED");
-    await wizard.getByRole("button", { name: "Continue" }).click();
-    // Business AED 2,250 setup → AED 1,125 deposit → USD 306.34 at 0.2723.
-    await expect(wizard.getByText("You'll be charged about $306.34", { exact: false })).toBeVisible();
-    await expect(wizard.getByRole("button", { name: "Continue to payment" })).toBeVisible();
+    await expect(wizard.getByRole("heading", { name: "اختر تصميمًا" })).toBeVisible();
   });
 
   test("draft survives a reload", async ({ page }) => {
     await page.goto("/website-builder");
-    await page.locator("#build").getByRole("radio", { name: "Egypt" }).click();
-    await page.locator("#build").getByRole("radio", { name: /Restaurants/ }).click();
-    await page.locator("#build").getByRole("button", { name: "Continue" }).click();
-    await expect(page.locator("#build").getByRole("radio", { name: /Table/ })).toBeVisible();
+    const wizard = page.locator("#build");
+    await chooseCountry(wizard, "Egypt");
+    await wizard.getByLabel("Business name").fill("Nile Bites");
+    await wizard.getByRole("radio", { name: /Restaurants/ }).click();
+    await wizard.getByRole("button", { name: "Continue" }).click();
+    await expect(wizard.getByRole("radio", { name: /Table/ })).toBeVisible();
     await page.evaluate(() => window.location.reload());
     await expect(page.locator("#build").getByRole("radio", { name: /Table/ })).toBeVisible();
   });
